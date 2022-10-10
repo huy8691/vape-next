@@ -386,6 +386,7 @@ const Register: NextPageWithLayout = () => {
                         <OutlinedInput
                           id="email"
                           fullWidth
+                          placeholder="Enter email"
                           error={!!errorsCheckMail.email}
                           {...field}
                           onChange={(event: any) => {
@@ -453,6 +454,7 @@ const Register: NextPageWithLayout = () => {
                         <TextFieldCustom
                           id="first_name"
                           error={!!errors.first_name}
+                          placeholder="Enter first name"
                           {...field}
                         />
                         <FormHelperText error={!!errors.first_name}>
@@ -480,6 +482,7 @@ const Register: NextPageWithLayout = () => {
                         <TextFieldCustom
                           id="last_name"
                           error={!!errors.last_name}
+                          placeholder="Enter last name"
                           {...field}
                         />
                         <FormHelperText error={!!errors.last_name}>
@@ -506,6 +509,7 @@ const Register: NextPageWithLayout = () => {
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="phone_number"
+                          placeholder="Enter phone number"
                           error={!!errors.phone_number}
                           {...field}
                         />
@@ -534,6 +538,7 @@ const Register: NextPageWithLayout = () => {
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="business_name"
+                          placeholder="Enter business name"
                           error={!!errors.business_name}
                           {...field}
                         />
@@ -1059,6 +1064,7 @@ const Register: NextPageWithLayout = () => {
                         <TextFieldCustom
                           id="federal_tax_id"
                           error={!!errors.federal_tax_id}
+                          placeholder="Enter federal tax ID"
                           {...field}
                         />
                         <FormHelperText error={!!errors.federal_tax_id}>

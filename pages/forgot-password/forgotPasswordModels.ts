@@ -1,20 +1,13 @@
-export interface LoginType {
+export interface EmailType {
   email: string
-  password: string
-  user_type: string
 }
 
-export interface UserInfoType {
-  avatar?: string | null
-  email?: string
-  fullName?: string
-  id?: number
-  phoneNumber?: string
-  status?: number
+export interface TokenCodeType {
+  email: string
+  token: string
 }
-export interface LoginResponseType {
-  data: {
-    access_token: string
-    userInfo: UserInfoType
-  }
+export interface NewPasswordType {
+  email: string
+  token: string
+  new_password: string
 }

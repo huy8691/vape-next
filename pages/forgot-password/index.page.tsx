@@ -1,5 +1,5 @@
 // react
-import React, { useState } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import type { ReactElement } from 'react'
 // react
 
@@ -7,6 +7,7 @@ import type { ReactElement } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 // next
 
 // mui
@@ -37,6 +38,7 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 
 // other
 import ReactCodeInput from 'react-code-input'
+import Cookies from 'js-cookie'
 // other
 
 // custom style
@@ -51,6 +53,17 @@ import {
 import classes from './styles.module.scss'
 // style
 
+// api
+import { useAppDispatch } from 'src/store/hooks'
+import {
+  checkMailApi,
+  checkTokenCodeApi,
+  resendTokenCodeApi,
+  setNewPasswordApi,
+} from './forgetPasswordAPI'
+import { loadingActions } from 'src/store/loading/loadingSlice'
+import { notificationActions } from 'src/store/notification/notificationSlice'
+
 const TypographyH1Custom = styled(Typography)({
   fontSize: '14px',
   fontWeight: 'bold',
@@ -60,12 +73,20 @@ const TypographyTextCustom = styled(Typography)({
   color: '#49516F',
   opacity: '0.7',
 })
+const TypographyBodyCustom = styled(Typography)({
+  maxWidth: '300px',
+  margin: '0px auto',
+})
 
 const ForgotPassword: NextPageWithLayout = () => {
-  const [value, setValue] = React.useState('1')
+  const dispatch = useAppDispatch()
+  const router = useRouter()
+  const [stateCount, setStateCount] = useState<number>(60)
+  const [stateCheckMail, setStateCheckMail] = React.useState<string>('')
+  const [stateActiveStep, setStateActiveStep] = React.useState('1')
 
   const [pinCode, setPinCode] = useState('')
-  const [error, setError] = useState(true)
+  const [error, setError] = useState(false)
 
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
@@ -92,35 +113,136 @@ const ForgotPassword: NextPageWithLayout = () => {
   })
 
   const onSubmit = (values: any) => {
-    console.log('sdfds', values)
-    setValue('2')
+    dispatch(loadingActions.doLoading())
+    checkMailApi(values)
+      .then((response) => {
+        const data = response.data
+        setStateCheckMail(values.email)
+        dispatch(loadingActions.doLoadingSuccess())
+        dispatch(
+          notificationActions.doNotification({
+            message: data.message,
+          })
+        )
+        setStateActiveStep('2')
+      })
+      .catch((error) => {
+        const data = error.response?.data
+        dispatch(loadingActions.doLoadingFailure())
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : 'Error',
+            type: 'error',
+          })
+        )
+      })
   }
 
-  const onSubmitPassword = (values: any) => {
-    setValue('2')
-  }
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue)
-  }
-
-  const checkPinCode = () => {
-    if (pinCode.length < 4) {
-      setError(false)
-      setTimeout(function () {
-        setError(true)
-      }, 3000)
+  const handleCheckPinCode = () => {
+    if (pinCode.length < 6) {
+      setError(true)
     } else {
-      handlePinCode(pinCode)
+      dispatch(loadingActions.doLoading())
+      checkTokenCodeApi({
+        email: stateCheckMail,
+        token: pinCode,
+      })
+        .then((response) => {
+          const data = response.data
+          dispatch(loadingActions.doLoadingSuccess())
+          dispatch(
+            notificationActions.doNotification({
+              message: data.message,
+            })
+          )
+          setStateActiveStep('3')
+        })
+        .catch((error) => {
+          const data = error.response?.data
+          dispatch(loadingActions.doLoadingFailure())
+          dispatch(
+            notificationActions.doNotification({
+              message: data?.message ? data?.message : 'Error',
+              type: 'error',
+            })
+          )
+        })
     }
   }
-
-  const handlePinChange = (pinCode) => {
-    setPinCode(pinCode)
+  const handleResendTokenCode = () => {
+    if (stateCount > 0 && stateCount < 60) {
+      return
+    }
+    dispatch(loadingActions.doLoading())
+    resendTokenCodeApi({
+      email: stateCheckMail,
+    })
+      .then((response) => {
+        const data = response.data
+        dispatch(loadingActions.doLoadingSuccess())
+        dispatch(
+          notificationActions.doNotification({
+            message: data.message,
+          })
+        )
+        // set count down
+        let time = Math.floor(Date.now() / 1000)
+        Cookies.set('timeCountCookies', time.toString())
+        setStateCount(59)
+        let countDown = setInterval(() => {
+          setStateCount((prevCount) => {
+            if (prevCount === 1) {
+              clearInterval(countDown)
+              prevCount = 120
+              return prevCount
+            }
+            prevCount = prevCount - 1
+            return prevCount
+          })
+        }, 1000)
+      })
+      .catch((error) => {
+        const data = error.response?.data
+        dispatch(loadingActions.doLoadingFailure())
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : 'Error',
+            type: 'error',
+          })
+        )
+      })
+  }
+  const onSubmitPassword = (values: any) => {
+    dispatch(loadingActions.doLoading())
+    setNewPasswordApi({
+      email: stateCheckMail,
+      token: pinCode,
+      new_password: values.new_password,
+    })
+      .then((response) => {
+        const data = response.data
+        dispatch(loadingActions.doLoadingSuccess())
+        dispatch(
+          notificationActions.doNotification({
+            message: data.message,
+          })
+        )
+        router.push('/login')
+      })
+      .catch((error) => {
+        const data = error.response?.data
+        dispatch(loadingActions.doLoadingFailure())
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : 'Error',
+            type: 'error',
+          })
+        )
+      })
   }
 
   const props = {
-    className: `${classes.reactCodeInput} ${!error && classes.error}`,
+    className: `${classes.reactCodeInput} ${error && classes.error}`,
     inputStyle: {
       margin: '5px',
       width: '60px',
@@ -129,20 +251,45 @@ const ForgotPassword: NextPageWithLayout = () => {
       borderRadius: '10px',
       textAlign: 'center',
       fontSize: '40px',
-      '& :focus': {
-        boxShadow: '1px 2px 1px #000',
-      },
-    },
-    inputStyleInvalid: {
-      margin: '5px',
-      width: '60px',
-      height: '60px',
-      border: '1px solid #E1E6EF',
-      borderRadius: '10px',
-      textAlign: 'center',
-      fontSize: '40px',
     },
   }
+
+  // set time count down in cookie
+  const countFunction = useMemo(() => {
+    let time = Math.floor(Date.now() / 1000)
+    let timeCountCookies = Cookies.get('timeCountCookies')
+    if (timeCountCookies) {
+      if (time - parseInt(timeCountCookies) > 60) {
+        setStateCount(60)
+        Cookies.remove('timeCountCookies')
+      } else {
+        setStateActiveStep('2')
+        setStateCount(60 - time + parseInt(timeCountCookies))
+        let countDown = setInterval(() => {
+          setStateCount((prevCount) => {
+            if (prevCount === 1) {
+              clearInterval(countDown)
+              prevCount = 60
+              return prevCount
+            }
+            prevCount = prevCount - 1
+            return prevCount
+          })
+        }, 1000)
+      }
+    }
+  }, [])
+
+  // fix error when use next theme
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
+  // fix error when use next theme
 
   return (
     <div className={classes['forgot-password-page']}>
@@ -164,7 +311,7 @@ const ForgotPassword: NextPageWithLayout = () => {
             </Link>
           </Box>
           <Box sx={{ width: '100%', typography: 'body1' }}>
-            <TabContext value={value}>
+            <TabContext value={stateActiveStep}>
               <TabPanel value="1">
                 <Box mb={4} style={{ textAlign: 'center' }}>
                   <TypographyH1Custom variant="h1" mb={2}>
@@ -220,31 +367,43 @@ const ForgotPassword: NextPageWithLayout = () => {
                   <TypographyH1Custom variant="h1" mb={2}>
                     Forgot your password?
                   </TypographyH1Custom>
-                  <Typography variant="body2">
+                  <TypographyBodyCustom variant="body2">
                     Please enter security code that we’ve sent to your email
                     address
-                  </Typography>
+                  </TypographyBodyCustom>
                 </Box>
                 <Box style={{ textAlign: 'center' }}>
                   <ReactCodeInput
                     type="number"
                     fields={6}
-                    onChange={handlePinChange}
+                    onChange={(value) => setPinCode(value)}
                     {...props}
-                    value={pinCode}
+                    // value={pinCode}
                   />
                   <Typography variant="body2" mb={3}>
                     Don’t receive code?
-                    <span>Request again</span>
+                    <span
+                      className={`${
+                        classes['forgot-password-page__resendOTP']
+                      } ${
+                        stateCount > 0 && stateCount < 60 && classes['disable']
+                      }`}
+                      onClick={() => handleResendTokenCode()}
+                    >
+                      Request again
+                    </span>
                   </Typography>
-                  <Typography variant="body2" mb={3}>
-                    Please retry in 60 seconds
-                  </Typography>
+                  {stateCount > 0 && stateCount < 60 && (
+                    <Typography variant="body2" mb={3}>
+                      Please retry in {stateCount} seconds
+                    </Typography>
+                  )}
+
                   <ButtonCustom
                     variant="contained"
                     size="large"
                     type="submit"
-                    onClick={() => setValue('3')}
+                    onClick={() => handleCheckPinCode()}
                   >
                     Next
                   </ButtonCustom>
@@ -255,22 +414,22 @@ const ForgotPassword: NextPageWithLayout = () => {
                   <TypographyH1Custom variant="h1" mb={2}>
                     Set New Password
                   </TypographyH1Custom>
-                  <Typography variant="body2">
+                  <TypographyBodyCustom variant="body2">
                     Your new password must be different to previously used
                     passwords.
-                  </Typography>
+                  </TypographyBodyCustom>
                 </Box>
                 <form onSubmit={handleSubmitPassword(onSubmitPassword)}>
                   <Box mb={2}>
                     <Controller
                       control={controlPassword}
-                      name="password"
+                      name="new_password"
                       defaultValue=""
                       render={({ field }) => (
                         <>
                           <InputLabelCustom
                             htmlFor="outlined-adornment-password"
-                            error={!!errorsPassword.password}
+                            error={!!errorsPassword.new_password}
                           >
                             New password
                           </InputLabelCustom>
@@ -292,11 +451,11 @@ const ForgotPassword: NextPageWithLayout = () => {
                                   </IconButton>
                                 </InputAdornment>
                               }
-                              error={!!errorsPassword.password}
+                              error={!!errorsPassword.new_password}
                             />
                             <FormHelperText error>
-                              {errorsPassword.password &&
-                                `${errorsPassword.password.message}`}
+                              {errorsPassword.new_password &&
+                                `${errorsPassword.new_password.message}`}
                             </FormHelperText>
                           </TextFieldPasswordCustom>
                         </>

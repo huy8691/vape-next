@@ -5,10 +5,10 @@ const schema = Yup.object().shape({
 })
 
 const schemaPassword = Yup.object().shape({
-  password: Yup.string().required('Password is required'),
+  new_password: Yup.string().required('Password is required'),
   confirmPassword: Yup.string()
     .required('Confirm password is required')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    .oneOf([Yup.ref('new_password'), null], 'Passwords must match'),
 })
 
 export { schema, schemaPassword }

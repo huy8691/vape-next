@@ -94,7 +94,7 @@ const Login: NextPageWithLayout = () => {
     dispatch(
       loginActions.doLogin({
         ...values,
-        user_type: 'ADMIN',
+        user_type: 'CUSTOMER',
       })
     )
   }

@@ -48,7 +48,7 @@
   border: 1px solid #e1e6ef;
   border-radius: 8px;
   &.error {
-    border: 2px solid red;
+    border: 2px solid $error;
     animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;

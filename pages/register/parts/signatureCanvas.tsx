@@ -4,7 +4,7 @@ import Box from '@mui/material/Box'
 import ReplayIcon from '@mui/icons-material/Replay'
 import SignaturePad from 'react-signature-canvas'
 import classes from '../styles.module.scss'
-import { ButtonCustom, InputLabelCustom } from 'src/components'
+import { InputLabelCustom } from 'src/components'
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
@@ -162,5 +162,5 @@ const SignatureCanvas = forwardRef(
     )
   }
 )
-
+SignatureCanvas.displayName = 'SignatureCanvas'
 export default SignatureCanvas
