@@ -1,0 +1,21 @@
+.sidebarSetting {
+  position: fixed;
+  top: 0;
+  right: -270px;
+  height: 100%;
+  width: 250px;
+  transition: right 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  &.open {
+    right: 0px;
+  }
+  &__inner {
+    height: 100%;
+    box-shadow: rgb(145 158 171 / 16%) -24px 12px 32px -4px;
+    padding: 30px;
+    [data-theme='dark'] & {
+      box-shadow: rgb(145 158 171 / 16%) -5px 12px 32px -4px;
+    }
+  }
+}

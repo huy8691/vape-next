@@ -1,0 +1,56 @@
+@import 'styles/colors.scss';
+.register-page {
+  background-image: url('/images/Background.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  &__container {
+    min-height: 100vh;
+    background-color: white;
+  }
+  &__content {
+    padding-top: 50px;
+  }
+  &__logo {
+    width: 100%;
+    text-align: center;
+    a {
+      margin-left: -80px;
+    }
+  }
+}
+.register-form {
+  width: 100%;
+  padding-bottom: 50px;
+}
+.link {
+  color: rgba($link, 0.7);
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}
+
+// signing
+.block-signature {
+  position: relative;
+  &__button-clear {
+    position: absolute !important;
+    top: 10px;
+    right: 10px;
+  }
+}
+.signatureCanvas {
+  width: 100%;
+  min-height: 360px;
+  // background-color: #baf8d3;
+  border: 1px solid #e1e6ef;
+  border-radius: 8px;
+  &.error {
+    border: 2px solid red;
+    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+  }
+}
