@@ -12,7 +12,6 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Badge from '@mui/material/Badge'
-import NotificationsIcon from '@mui/icons-material/Notifications'
 import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import TuneIcon from '@mui/icons-material/Tune'
@@ -24,6 +23,10 @@ import SideBarSetting from '../sidebarSetting'
 
 // next theme
 import { useTheme } from 'next-themes'
+
+// other
+import { Bell } from 'phosphor-react'
+// other
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -78,6 +81,9 @@ const TuneIconCustom = styled(TuneIcon)({
   zIndex: 1,
   cursor: 'pointer',
 })
+const BellCustom = styled(Bell)(({ theme }) => ({
+  color: theme.palette.primary.main,
+}))
 
 const HeaderInner = () => {
   const dispatch = useAppDispatch()
@@ -135,10 +141,10 @@ const HeaderInner = () => {
           label=""
         />
       </Box>
-      <Box sx={{ flexGrow: 0, display: 'flex' }}>
+      <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
         <IconButton size="large" color="inherit">
           <Badge badgeContent={10} color="error">
-            <NotificationsIcon />
+            <BellCustom size={20} />
           </Badge>
         </IconButton>
         <Box sx={{ flexGrow: 0 }}>
@@ -174,8 +180,10 @@ const HeaderInner = () => {
         </Box>
         <Stack direction="row" alignItems="center">
           <ClickAwayListener onClickAway={handleClickAway}>
-            <Box ml={1}>
-              <TuneIconCustom onClick={handleViewSidebar} />
+            <Box>
+              <IconButton size="large" color="inherit">
+                <TuneIconCustom onClick={handleViewSidebar} />
+              </IconButton>
               <SideBarSetting isOpen={sidebarOpen} />
             </Box>
           </ClickAwayListener>

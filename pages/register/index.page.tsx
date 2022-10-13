@@ -38,6 +38,8 @@ import Typography from '@mui/material/Typography'
 
 // other
 import SignatureCanvas from './parts/signatureCanvas'
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
 // other
 
 // form
@@ -105,6 +107,11 @@ type CheckMail = {
   valueEmail: string
 }
 const Register: NextPageWithLayout = () => {
+  const router = useRouter()
+  const token = Boolean(Cookies.get('token'))
+  if (token) {
+    router.push('/')
+  }
   const signatureRef = useRef()
   const [stateCheckMail, setStateCheckMail] = React.useState<CheckMail>({
     status: '',

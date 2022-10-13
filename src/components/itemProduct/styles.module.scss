@@ -1,0 +1,39 @@
+@import "styles/colors.scss";
+
+.itemProduct {
+  .image {
+    > span {
+      border-radius: 6px;
+      overflow: hidden;
+    }
+  }
+  .priceUnit {
+    font-weight: bold;
+    margin-bottom: 10px;
+    .price {
+      color: $primary;
+      font-weight: normal;
+    }
+  }
+  .rating {
+    margin-top: -10px;
+    margin-bottom: -5px;
+    transform: scale(0.8) translateX(-12%);
+  }
+  .addToCart {
+    margin-top: 10px;
+    .addToCartButton {
+      padding-left: 10px;
+      padding-right: 5px;
+      border-radius: 0 20px 20px 0;
+      .iconCart {
+        background-color: white;
+        padding: 4px 2px;
+        color: #152935;
+        margin-left: 10px;
+        border-radius: 50%;
+        font-size: 12px;
+      }
+    }
+  }
+}

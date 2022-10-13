@@ -1,8 +1,8 @@
 export interface ProductDataType {
   id: number
   name: string
-  thumbnails: Array<{ url: string }>
-  prices: Array<{ price: number }>
+  thumbnail: string
+  price: number
   unit: string
 }
 

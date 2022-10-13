@@ -5,6 +5,9 @@ import type { ReactElement } from 'react'
 // import { withStyles } from '@material-ui/core/styles'
 import { styled, Theme, CSSObject } from '@mui/material/styles'
 
+import Link from 'next/link'
+import Image from 'next/image'
+
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MuiDrawer from '@mui/material/Drawer'
 import Toolbar from '@mui/material/Toolbar'
@@ -93,10 +96,10 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
+  width: `calc(${theme.spacing(8)} + 1px)`,
+  // [theme.breakpoints.up('sm')]: {
+  //   width: `calc(${theme.spacing(8)} + 1px)`,
+  // },
 })
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -108,6 +111,16 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }))
 
+const LogoHeader = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: open ? 'space-between' : 'center',
+  padding: open ? theme.spacing(1, 2) : theme.spacing(1, 0),
+  ...theme.mixins.toolbar,
+}))
+
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
 }
@@ -115,15 +128,25 @@ interface AppBarProps extends MuiAppBarProps {
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
+  left: `calc(${theme.spacing(8)} + 1px)`,
+  width: `calc(100% - ${theme.spacing(8)} - 1px)`,
+  // [theme.breakpoints.up('sm')]: {
+  //   width: `calc(100% - ${`calc(${theme.spacing(8)} + 1px)`}`,
+  //   left: `calc(${theme.spacing(8)} + 1px)`,
+  // },
+  boxShadow:
+    '0px 1px 0px -1px rgb(0 0 0 / 20%), 0px 0px 3px 0px rgb(0 0 0 / 14%), 0px 0px 0px 0px rgb(0 0 0 / 12%)',
+  backgroundColor:
+    theme.palette.mode === 'light' ? '#fff' : theme.palette.background.default,
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+  transition: theme.transitions.create(['width', 'left'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
+    left: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(['width', 'left'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -162,24 +185,39 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
           <ThemeMui>
             <Box sx={{ display: 'flex' }}>
               <CssBaseline />
-              <AppBar position="fixed">
+              <AppBar position="fixed" open={open}>
                 <Toolbar>
+                  <HeaderInner />
+                </Toolbar>
+              </AppBar>
+              <Drawer variant="permanent" open={open}>
+                {/* <DrawerHeader /> */}
+                <LogoHeader open={open}>
+                  {open && (
+                    <Link href="/">
+                      <a>
+                        <Image
+                          src="/images/logo.svg"
+                          alt="Logo"
+                          width="100"
+                          height="40"
+                        />
+                      </a>
+                    </Link>
+                  )}
+
                   <IconButton
                     color="inherit"
                     aria-label="open drawer"
                     onClick={handleDrawer}
                     edge="start"
                     sx={{
-                      marginRight: 5,
+                      marginLeft: 0,
                     }}
                   >
                     <MenuIcon />
                   </IconButton>
-                  <HeaderInner />
-                </Toolbar>
-              </AppBar>
-              <Drawer variant="permanent" open={open}>
-                <DrawerHeader />
+                </LogoHeader>
                 <SideBar open={open} />
               </Drawer>
               <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

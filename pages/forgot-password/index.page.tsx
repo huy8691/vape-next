@@ -22,8 +22,6 @@ import TabPanel from '@mui/lab/TabPanel'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
 // mui
 
 // form
@@ -39,6 +37,7 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 // other
 import ReactCodeInput from 'react-code-input'
 import Cookies from 'js-cookie'
+import { Eye, EyeSlash } from 'phosphor-react'
 // other
 
 // custom style
@@ -79,8 +78,12 @@ const TypographyBodyCustom = styled(Typography)({
 })
 
 const ForgotPassword: NextPageWithLayout = () => {
-  const dispatch = useAppDispatch()
   const router = useRouter()
+  const token = Boolean(Cookies.get('token'))
+  if (token) {
+    router.push('/')
+  }
+  const dispatch = useAppDispatch()
   const [stateCount, setStateCount] = useState<number>(60)
   const [stateCheckMail, setStateCheckMail] = React.useState<string>('')
   const [stateActiveStep, setStateActiveStep] = React.useState('1')
@@ -112,7 +115,7 @@ const ForgotPassword: NextPageWithLayout = () => {
     mode: 'onBlur',
   })
 
-  const onSubmit = (values: any) => {
+  const onSubmitEmail = (values: any) => {
     dispatch(loadingActions.doLoading())
     checkMailApi(values)
       .then((response) => {
@@ -227,7 +230,10 @@ const ForgotPassword: NextPageWithLayout = () => {
             message: data.message,
           })
         )
-        router.push('/login')
+
+        setTimeout(() => {
+          router.push('/login')
+        }, 2000)
       })
       .catch((error) => {
         const data = error.response?.data
@@ -263,7 +269,7 @@ const ForgotPassword: NextPageWithLayout = () => {
         setStateCount(60)
         Cookies.remove('timeCountCookies')
       } else {
-        setStateActiveStep('2')
+        // setStateActiveStep('2')
         setStateCount(60 - time + parseInt(timeCountCookies))
         let countDown = setInterval(() => {
           setStateCount((prevCount) => {
@@ -322,7 +328,7 @@ const ForgotPassword: NextPageWithLayout = () => {
                   </Typography>
                 </Box>
                 <form
-                  onSubmit={handleSubmit(onSubmit)}
+                  onSubmit={handleSubmit(onSubmitEmail)}
                   className={classes['forgot-password-form']}
                 >
                   <Box mb={2}>
@@ -395,7 +401,11 @@ const ForgotPassword: NextPageWithLayout = () => {
                   </Typography>
                   {stateCount > 0 && stateCount < 60 && (
                     <Typography variant="body2" mb={3}>
-                      Please retry in {stateCount} seconds
+                      Please retry in{' '}
+                      <span className={classes['forgot-password-page__count']}>
+                        {stateCount}
+                      </span>{' '}
+                      seconds
                     </Typography>
                   )}
 
@@ -444,9 +454,9 @@ const ForgotPassword: NextPageWithLayout = () => {
                                     onClick={handleClickShowPassword}
                                   >
                                     {showPassword ? (
-                                      <VisibilityOffOutlinedIcon />
+                                      <EyeSlash size={24} />
                                     ) : (
-                                      <VisibilityOutlinedIcon />
+                                      <Eye size={24} />
                                     )}
                                   </IconButton>
                                 </InputAdornment>
@@ -486,9 +496,9 @@ const ForgotPassword: NextPageWithLayout = () => {
                                     onClick={handleClickShowPassword}
                                   >
                                     {showPassword ? (
-                                      <VisibilityOffOutlinedIcon />
+                                      <EyeSlash size={24} />
                                     ) : (
-                                      <VisibilityOutlinedIcon />
+                                      <Eye size={24} />
                                     )}
                                   </IconButton>
                                 </InputAdornment>

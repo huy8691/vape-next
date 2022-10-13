@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 // import Link from 'next/link'
 // import {
@@ -13,19 +13,39 @@ import { useRouter } from 'next/router'
 //   Alert,
 // } from 'antd'
 // import { FileSyncOutlined, ClearOutlined } from '@ant-design/icons'
-// import classes from './styles.module.scss'
-// import { ItemProduct } from 'src/components'
-// import { getProducts } from './apiProducts'
-// import { ProductDataType } from './modelProducts'
+import classes from './styles.module.scss'
+
+import { styled } from '@mui/material/styles'
+import Card from '@mui/material/Card'
+import Divider from '@mui/material/Divider'
+import CardContent from '@mui/material/CardContent'
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
+import FormLabel from '@mui/material/FormLabel'
+import FormControl from '@mui/material/FormControl'
+import FormGroup from '@mui/material/FormGroup'
+import Stack from '@mui/material/Stack'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+
+import { ItemProduct } from 'src/components'
+import { getProducts } from './apiProducts'
+import { ProductDataType } from './modelProducts'
 // import SideBarProducts from './parts/sidebarProducts'
 import { useAppDispatch } from 'src/store/hooks'
-// import { loadingActions } from 'src/store/loading/loadingSlice'
-// import { ProductListDataResponseType } from './modelProducts'
+import { loadingActions } from 'src/store/loading/loadingSlice'
+import { notificationActions } from 'src/store/notification/notificationSlice'
+import { ProductListDataResponseType } from './modelProducts'
 // import { objToStringParam, isEmptyObject } from 'src/utils/global.utils'
 // layout
 import type { ReactElement } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
 import type { NextPageWithLayout } from 'pages/_app.page'
+
+const CardCustom = styled(Card)(({ theme }) => ({
+  backgroundColor:
+    theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
+}))
 
 // const tabsData = [
 //   {
@@ -64,11 +84,38 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 // const { TabPane } = Tabs
 
 const Products: NextPageWithLayout = () => {
-  // const [dataProducts, setDataProducts] =
-  //   useState<ProductListDataResponseType>()
+  const [dataProducts, setDataProducts] =
+    useState<ProductListDataResponseType>()
   // const [defaultActiveTabs, setDefaultActiveTabs] = useState<string>('0')
   const router = useRouter()
   const dispatch = useAppDispatch()
+
+  const [checked, setChecked] = React.useState([true, false])
+
+  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([event.target.checked, event.target.checked])
+  }
+
+  const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([event.target.checked, checked[1]])
+  }
+
+  const handleChange3 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([checked[0], event.target.checked])
+  }
+
+  const children = (
+    <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
+      <FormControlLabel
+        label="Category1"
+        control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
+      />
+      <FormControlLabel
+        label="Category2"
+        control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
+      />
+    </Box>
+  )
 
   // handle tabs
   // const handleChangeTabs = (key: string) => {
@@ -126,92 +173,57 @@ const Products: NextPageWithLayout = () => {
     //       dispatch(loadingActions.doLoadingFailure())
     //     })
     // }
-    // if (router.asPath === '/products') {
-    //   getProducts(router.query)
-    //     .then((res) => {
-    //       const data = res.data
-    //       setDataProducts(data)
-    //       dispatch(loadingActions.doLoadingSuccess())
-    //     })
-    //     .catch((error) => {
-    //       const errors = error.response ? error.response.data : true
-    //       setDataProducts({
-    //         errors: errors,
-    //       })
-    //       dispatch(loadingActions.doLoadingFailure())
-    //     })
-    // }
+    if (router.asPath === '/products') {
+      dispatch(loadingActions.doLoading())
+      getProducts(router.query)
+        .then((res) => {
+          const data = res.data
+          setDataProducts(data)
+          dispatch(loadingActions.doLoadingSuccess())
+        })
+        .catch((error) => {
+          const data = error.response?.data
+
+          dispatch(loadingActions.doLoadingFailure())
+          dispatch(
+            notificationActions.doNotification({
+              message: data?.message ? data?.message : 'Error',
+              type: 'error',
+            })
+          )
+        })
+    }
   }, [router, dispatch])
 
-  // const renderResult = () => {
-  //   if (dataProducts?.errors) {
-  //     return <Alert message="Đã xảy ra lỗi" type="error" />
-  //   }
-  //   if (dataProducts?.data?.length === 0) {
-  //     return (
-  //       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-  //         <Row gutter={20} justify="space-between" align="middle">
-  //           <Col></Col>
-  //           {!isEmptyObject(router.query) && (
-  //             <Col>
-  //               <Button size="small">
-  //                 <Link href="/san-pham">
-  //                   <a>
-  //                     Xoá tất cả <ClearOutlined />
-  //                   </a>
-  //                 </Link>
-  //               </Button>
-  //             </Col>
-  //           )}
-  //         </Row>
-  //         <Result
-  //           icon={<FileSyncOutlined />}
-  //           title={<Title level={5}>Không tìm thấy sản phẩm</Title>}
-  //         />
-  //       </Space>
-  //     )
-  //   }
-  //   return (
-  //     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-  //       <Row gutter={20} justify="space-between" align="middle">
-  //         <Col>{dataProducts?.total && `${dataProducts?.total} sản phẩm`}</Col>
-  //         {!isEmptyObject(router.query) && (
-  //           <Col>
-  //             <Button size="small">
-  //               <Link href="/san-pham">
-  //                 <a>
-  //                   Xoá tất cả <ClearOutlined />
-  //                 </a>
-  //               </Link>
-  //             </Button>
-  //           </Col>
-  //         )}
-  //       </Row>
-  //       <Row gutter={24}>
-  //         {dataProducts?.data?.map((item: ProductDataType, index: number) => (
-  //           <Col span={6} key={index + Math.random()}>
-  //             <div className={classes.itemProduct}>
-  //               <ItemProduct dataProduct={{ ...item, isShowRating: true }} />
-  //             </div>
-  //           </Col>
-  //         ))}
-  //       </Row>
-  //       {dataProducts?.total && dataProducts?.total > 20 && (
-  //         <Pagination
-  //           defaultCurrent={1}
-  //           current={router.query.page ? parseInt(router.query.page[0]) : 1}
-  //           total={dataProducts?.total}
-  //           pageSize={20}
-  //           onChange={handleChangePagination}
-  //           showSizeChanger={false}
-  //         />
-  //       )}
-  //     </Space>
-  //   )
-  // }
+  const renderResult = () => {
+    // if (dataProducts?.errors) {
+    //   return <Alert message="Đã xảy ra lỗi" type="error" />
+    // }
+    if (dataProducts?.data?.length === 0) {
+      return <div>Không tìm thấy sản phẩm</div>
+    }
+    return (
+      <>
+        <Stack direction="row" style={{ flexWrap: 'wrap' }} spacing={2}>
+          {dataProducts?.data?.map((item: ProductDataType, index: number) => (
+            <ItemProduct dataProduct={item} key={index} />
+          ))}
+        </Stack>
+        {/* {dataProducts?.total && dataProducts?.total > 20 && (
+          <Pagination
+            defaultCurrent={1}
+            current={router.query.page ? parseInt(router.query.page[0]) : 1}
+            total={dataProducts?.total}
+            pageSize={20}
+            onChange={handleChangePagination}
+            showSizeChanger={false}
+          />
+        )} */}
+      </>
+    )
+  }
   return (
     <>
-      <div>Product</div>
       {/* <Row gutter={30}>
         <Col span={6}>
           <SideBarProducts />
@@ -229,6 +241,54 @@ const Products: NextPageWithLayout = () => {
           {renderResult()}
         </Col>
       </Row> */}
+      <Grid container spacing={2}>
+        <Grid item xs={2}>
+          <CardCustom>
+            <CardContent>
+              <FormControl>
+                <FormControlLabel
+                  label="Category"
+                  control={
+                    <Checkbox
+                      checked={checked[0] && checked[1]}
+                      indeterminate={checked[0] !== checked[1]}
+                      onChange={handleChange1}
+                    />
+                  }
+                />
+                {children}
+              </FormControl>
+              <Divider />
+              <FormControl
+                sx={{ mt: 2 }}
+                component="fieldset"
+                variant="standard"
+              >
+                <FormLabel component="legend">Brand</FormLabel>
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox name="gilad" />}
+                    label="Gilad Gray"
+                  />
+                  <FormControlLabel
+                    control={<Checkbox name="jason" />}
+                    label="Jason Killian"
+                  />
+                  <FormControlLabel
+                    control={<Checkbox name="antoine" />}
+                    label="Antoine Llorca"
+                  />
+                </FormGroup>
+              </FormControl>
+            </CardContent>
+          </CardCustom>
+        </Grid>
+        <Grid item xs>
+          <CardCustom>
+            <CardContent>{renderResult()}</CardContent>
+          </CardCustom>
+        </Grid>
+      </Grid>
     </>
   )
 }

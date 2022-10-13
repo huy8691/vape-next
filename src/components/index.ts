@@ -1,5 +1,6 @@
 import ActiveLink from './activeLink'
 import ComponentFileUploader from './FileUploader'
+import ItemProduct from './itemProduct'
 import { styled } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -88,4 +89,5 @@ export {
   MenuItemSelectCustom,
   ComponentFileUploader,
   TextFieldPasswordCustom,
+  ItemProduct,
 }

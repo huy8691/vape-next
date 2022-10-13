@@ -12,9 +12,9 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     // limit of 50 domains values
     domains: [
-      'vrs-product-images-dev.s3.ap-southeast-1.amazonaws.com',
+      'develop-bizbookly.s3.ap-southeast-1.amazonaws.com',
       'images.pexels.com',
-      'dev.vuarausach.vn',
+      // 'dev.vuarausach.vn',
       'via.placeholder.com',
     ],
     // path prefix for Image Optimization API, useful with `loader`

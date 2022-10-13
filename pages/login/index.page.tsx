@@ -16,8 +16,6 @@ import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
 import OutlinedInput from '@mui/material/OutlinedInput'
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import FormHelperText from '@mui/material/FormHelperText'
@@ -38,6 +36,12 @@ import { loginActions } from './loginSlice'
 import WrapLayout from 'src/layout/wrapLayout'
 import type { NextPageWithLayout } from 'pages/_app.page'
 // layout
+
+// other
+import { Eye, EyeSlash } from 'phosphor-react'
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
+// other
 
 // custom style
 import {
@@ -81,6 +85,11 @@ const TagHr = styled('div')(({ theme }) => ({
 }))
 
 const Login: NextPageWithLayout = () => {
+  const router = useRouter()
+  const token = Boolean(Cookies.get('token'))
+  if (token) {
+    router.replace('/')
+  }
   const {
     handleSubmit,
     control,
@@ -135,7 +144,7 @@ const Login: NextPageWithLayout = () => {
               <Controller
                 control={control}
                 name="email"
-                defaultValue="duythong31306@gmail.com"
+                defaultValue="huy8691@gmail.com"
                 render={({ field }) => (
                   <>
                     <InputLabelCustom htmlFor="email" error={!!errors.email}>
@@ -161,7 +170,7 @@ const Login: NextPageWithLayout = () => {
               <Controller
                 control={control}
                 name="password"
-                defaultValue="dev123!@#"
+                defaultValue="huy1234567"
                 render={({ field }) => (
                   <>
                     <InputLabelCustom
@@ -182,9 +191,9 @@ const Login: NextPageWithLayout = () => {
                               onClick={handleClickShowPassword}
                             >
                               {showPassword ? (
-                                <VisibilityOffOutlinedIcon />
+                                <EyeSlash size={24} />
                               ) : (
-                                <VisibilityOutlinedIcon />
+                                <Eye size={24} />
                               )}
                             </IconButton>
                           </InputAdornment>
@@ -253,5 +262,7 @@ const Login: NextPageWithLayout = () => {
 Login.getLayout = function getLayout(page: ReactElement) {
   return <WrapLayout>{page}</WrapLayout>
 }
+
 Login.theme = 'light'
+
 export default Login

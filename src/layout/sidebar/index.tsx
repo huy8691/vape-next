@@ -18,14 +18,23 @@ import StarBorder from '@mui/icons-material/StarBorder'
 
 // import classes from './styles.module.scss'
 
+// other
+import { House, Cube, Storefront } from 'phosphor-react'
+// other
+
 type Props = {
   open: boolean
 }
 const Menu = [
   {
-    icon: <PersonIcon />,
-    text: 'User',
-    link: '/list-user',
+    icon: <House size={24} />,
+    text: 'Dashboard',
+    link: '/',
+  },
+  {
+    icon: <Cube size={24} />,
+    text: 'Product',
+    link: '/products',
   },
 ]
 
@@ -37,7 +46,7 @@ const SideBar = ({ open }: Props) => {
   }
   return (
     <>
-      <List>
+      {/* <List>
         <ListItem disablePadding sx={{ display: 'block' }}>
           <Link href="/">
             <a>
@@ -65,8 +74,8 @@ const SideBar = ({ open }: Props) => {
             </a>
           </Link>
         </ListItem>
-      </List>
-      <Divider />
+      </List> */}
+      {/* <Divider /> */}
       <List>
         {Menu.map((item, index) => (
           <ListItem
@@ -101,15 +110,15 @@ const SideBar = ({ open }: Props) => {
             </Link>
           </ListItem>
         ))}
-      </List>
-      <List>
-        <ListItemButton onClick={handleClick}>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary="Page" />
-          {openCollapse ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
+        <ListItem disablePadding sx={{ display: 'block' }}>
+          <ListItemButton onClick={handleClick}>
+            <ListItemIcon>
+              <Storefront size={24} />
+            </ListItemIcon>
+            <ListItemText primary="Market Place" />
+            {openCollapse ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
         <Collapse in={openCollapse} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <Link href="/register">

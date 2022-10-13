@@ -39,6 +39,9 @@
       text-decoration: none;
     }
   }
+  &__count {
+    color: $error;
+  }
 }
 .forgot-password-form {
   width: 100%;
@@ -53,7 +56,7 @@
 }
 
 .reactCodeInput {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   display: flex !important;
   justify-content: center;
 

@@ -6,11 +6,10 @@ type Props = {
   isOpen: boolean
 }
 
-// const DrawerHeader = styled('div')(({ theme }) => {
-//   console.log('theme1', theme.mixins.toolbar)
-
-//   return theme.mixins.toolbar
-// })
+const SideBarInner = styled('div')(({ theme }) => ({
+  backgroundColor:
+    theme.palette.mode === 'dark' ? theme.palette.background.default : '#fff',
+}))
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
@@ -22,7 +21,10 @@ const SideBarSetting = (props: Props) => {
   return (
     <div className={sidebarClass}>
       <DrawerHeader></DrawerHeader>
-      <div className={classes.sidebarSetting__inner}> I slide into view </div>
+      <SideBarInner className={classes.sidebarSetting__inner}>
+        {' '}
+        I slide into view{' '}
+      </SideBarInner>
     </div>
   )
 }

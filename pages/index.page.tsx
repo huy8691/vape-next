@@ -1,6 +1,20 @@
 import Head from 'next/head'
 import { useTheme } from 'next-themes'
 import React, { useState, useEffect } from 'react'
+
+// mui
+import Grid from '@mui/material/Grid'
+import Stack from '@mui/material/Stack'
+import Fab from '@mui/material/Fab'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+
+// mui
+
 // import {
 //   getNewProductList,
 //   getSellingProductList,
@@ -19,10 +33,9 @@ import type { ReactElement } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
 import type { NextPageWithLayout } from 'pages/_app.page'
 
-// mui
-import Button from '@mui/material/Button'
-// mui
-import { ButtonCustom } from 'src/components'
+// other
+import { Folder } from 'phosphor-react'
+// other
 
 const Home: NextPageWithLayout = () => {
   const { theme, setTheme } = useTheme()
@@ -49,18 +62,88 @@ const Home: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <div>Dashboard</div>
-        <div>
-          The current theme is: {theme}
-          <button onClick={() => setTheme('light')}>Light Mode</button>
-          <button onClick={() => setTheme('dark')}>Dark Mode</button>
-          <ButtonCustom variant="contained" size="large" type="submit">
-            Sign In
-          </ButtonCustom>
-          <Button variant="contained" size="large">
-            Contained
-          </Button>
-        </div>
+        <Grid container spacing={3}>
+          <Grid item xs={3}>
+            <Card>
+              <CardContent>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Box>
+                    <Typography variant="h5">3</Typography>
+                    <Typography variant="subtitle1">Low Stock Items</Typography>
+                  </Box>
+                  <Fab size="small" color="primary" aria-label="add">
+                    <Folder size={24} />
+                  </Fab>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3}>
+            <Card>
+              <CardContent>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Box>
+                    <Typography variant="h5">3</Typography>
+                    <Typography variant="subtitle1">Low Stock Items</Typography>
+                  </Box>
+                  <Fab size="small" color="primary" aria-label="add">
+                    <Folder size={24} />
+                  </Fab>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3}>
+            <Card>
+              <CardContent>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Box>
+                    <Typography variant="h5">3</Typography>
+                    <Typography variant="subtitle1">Low Stock Items</Typography>
+                  </Box>
+                  <Fab size="small" color="primary" aria-label="add">
+                    <Folder size={24} />
+                  </Fab>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3}>
+            <Card>
+              <CardContent>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Box>
+                    <Typography variant="h5">3</Typography>
+                    <Typography variant="subtitle1">Low Stock Items</Typography>
+                  </Box>
+                  <Fab size="small" color="primary" aria-label="add">
+                    <Folder size={24} />
+                  </Fab>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </div>
 
       {/* <SectionPromotion dataPromotion={dataPromotion} />
