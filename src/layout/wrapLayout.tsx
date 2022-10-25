@@ -6,12 +6,15 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { useAppSelector } from 'src/store/hooks'
 import { Provider } from 'react-redux'
 import { store } from 'src/store/store'
-import classes from './styles.module.scss'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import Cookies from 'js-cookie'
 // import vi_VN from 'antd/lib/locale/vi_VN'
 // import 'moment/locale/vi'
+
+// next
+import { useRouter } from 'next/router'
 
 // Snackbar
 type SnackbarType = {
@@ -92,13 +95,13 @@ const InnerLayout = ({ children }: Props) => {
         type: notificationApp.type,
       })
     }
-  }, [notificationApp])
+  }, [notificationApp, valueSnackbar])
   // Snackbar
   return (
     <div style={{ minHeight: '100vh' }}>
       {children}
       {loading.isLoading && (
-        <div className={classes.loading}>
+        <div className="loading">
           <CircularProgress />
         </div>
       )}
@@ -115,6 +118,30 @@ const InnerLayout = ({ children }: Props) => {
   )
 }
 const WrapLayout = ({ children }: Props) => {
+  const router = useRouter()
+  const token = Boolean(Cookies.get('token'))
+  const [mounted, setMounted] = useState<boolean>(false)
+  useEffect(() => {
+    if (
+      (router.asPath === '/login' ||
+        router.asPath === '/register' ||
+        router.asPath === '/forgot-password') &&
+      token
+    ) {
+      router.replace('/')
+    } else {
+      setMounted(true)
+    }
+  }, [token, router])
+  if (!mounted) {
+    return (
+      <div className="loading">
+        <ThemeProvider theme={theme}>
+          <CircularProgress />
+        </ThemeProvider>
+      </div>
+    )
+  }
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>

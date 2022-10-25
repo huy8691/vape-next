@@ -112,7 +112,7 @@ const ForgotPassword: NextPageWithLayout = () => {
     formState: { errors: errorsPassword },
   } = useForm({
     resolver: yupResolver(schemaPassword),
-    mode: 'onBlur',
+    mode: 'all',
   })
 
   const onSubmitEmail = (values: any) => {
@@ -230,7 +230,6 @@ const ForgotPassword: NextPageWithLayout = () => {
             message: data.message,
           })
         )
-
         setTimeout(() => {
           router.push('/login')
         }, 2000)
@@ -414,6 +413,7 @@ const ForgotPassword: NextPageWithLayout = () => {
                     size="large"
                     type="submit"
                     onClick={() => handleCheckPinCode()}
+                    disabled={pinCode.length < 6 ? true : false}
                   >
                     Next
                   </ButtonCustom>

@@ -36,4 +36,6 @@ yarn-error.log*
 
 /pages/_app.page.tsx
 
+/pages/forgot-password/index.page.tsx
+
 *Slice.ts

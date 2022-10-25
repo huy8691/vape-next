@@ -1,5 +1,5 @@
 // react
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { ReactElement } from 'react'
 // react
 
@@ -20,6 +20,7 @@ import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import FormHelperText from '@mui/material/FormHelperText'
 import Typography from '@mui/material/Typography'
+import CircularProgress from '@mui/material/CircularProgress'
 // mui
 
 // form
@@ -87,9 +88,7 @@ const TagHr = styled('div')(({ theme }) => ({
 const Login: NextPageWithLayout = () => {
   const router = useRouter()
   const token = Boolean(Cookies.get('token'))
-  if (token) {
-    router.replace('/')
-  }
+
   const {
     handleSubmit,
     control,
@@ -113,6 +112,22 @@ const Login: NextPageWithLayout = () => {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
   }
+  // fix error when use next theme
+  // if (token) {
+  //   router.push('/')
+  // }
+  // const [mounted, setMounted] = useState<boolean>(false)
+  // useEffect(() => {
+  //   setMounted(true)
+  // }, [])
+
+  // if (!mounted) {
+  //   return (
+  //     <div className="loading">
+  //       <CircularProgress />
+  //     </div>
+  //   )
+  // }
 
   return (
     <div className={classes['login-page']}>
@@ -170,7 +185,7 @@ const Login: NextPageWithLayout = () => {
               <Controller
                 control={control}
                 name="password"
-                defaultValue="huy1234567"
+                defaultValue="huy123456"
                 render={({ field }) => (
                   <>
                     <InputLabelCustom

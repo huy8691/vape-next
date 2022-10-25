@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 import { call, put, takeLatest } from 'redux-saga/effects'
 import { loginAPI } from './loginAPI'
 import { LoginResponseType } from './loginModels'
@@ -18,7 +18,7 @@ function* handleLogin({ payload }: ReturnType<typeof loginActions.doLogin>) {
     yield put(loadingActions.doLoadingSuccess())
     yield put(
       notificationActions.doNotification({
-        message: data.message,
+        message: 'Sign in successfully',
       })
     )
     yield (window.location.href = '/')
@@ -35,19 +35,19 @@ function* handleLogin({ payload }: ReturnType<typeof loginActions.doLogin>) {
   }
 }
 
-function* handleLogout() {
-  yield Cookies.remove('token')
-  yield (window.location.href = '/login')
-  yield put(
-    notificationActions.doNotification({
-      message: 'Logout success',
-    })
-  )
-}
+// function* handleLogout() {
+//   yield Cookies.remove('token')
+//   yield (window.location.href = '/login')
+//   yield put(
+//     notificationActions.doNotification({
+//       message: 'Logout success',
+//     })
+//   )
+// }
 
 function* loginSaga() {
   yield takeLatest(loginActions.doLogin.type, handleLogin)
-  yield takeLatest(loginActions.doLogout.type, handleLogout)
+  // yield takeLatest(loginActions.doLogout.type, handleLogout)
 }
 
 export default loginSaga

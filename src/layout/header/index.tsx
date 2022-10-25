@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react'
 
+import { useRouter } from 'next/router'
+
 import { useAppDispatch } from 'src/store/hooks'
-import { loginActions } from '../../../pages/login/loginSlice'
+import { logOutAPI } from '../../../pages/login/loginAPI'
+import { loadingActions } from 'src/store/loading/loadingSlice'
+import { notificationActions } from 'src/store/notification/notificationSlice'
+import Cookies from 'js-cookie'
 
 // mui
 import { styled } from '@mui/material/styles'
@@ -87,6 +92,7 @@ const BellCustom = styled(Bell)(({ theme }) => ({
 
 const HeaderInner = () => {
   const dispatch = useAppDispatch()
+  const router = useRouter()
   // next theme
   const { theme, setTheme } = useTheme()
   // handle setting user
@@ -122,7 +128,29 @@ const HeaderInner = () => {
 
   // function
   const handleLogout = () => {
-    dispatch(loginActions.doLogout())
+    // dispatch(loginActions.doLogout())
+    dispatch(loadingActions.doLoading())
+    logOutAPI()
+      .then(() => {
+        dispatch(loadingActions.doLoadingSuccess())
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Sign out successfully',
+          })
+        )
+        Cookies.remove('token')
+        // router.push('/login')
+        window.location.href = '/login'
+      })
+      .catch(() => {
+        dispatch(loadingActions.doLoadingFailure())
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Error',
+            type: 'error',
+          })
+        )
+      })
   }
 
   return (

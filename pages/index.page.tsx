@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import { useTheme } from 'next-themes'
 import React, { useState, useEffect } from 'react'
 
 // mui
@@ -7,9 +6,7 @@ import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Fab from '@mui/material/Fab'
 import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 
@@ -38,16 +35,11 @@ import { Folder } from 'phosphor-react'
 // other
 
 const Home: NextPageWithLayout = () => {
-  const { theme, setTheme } = useTheme()
-
   // fix error when use next theme
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
   }, [])
-  useEffect(() => {
-    console.log('theme', theme)
-  }, [theme])
 
   if (!mounted) {
     return null

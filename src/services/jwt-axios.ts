@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-let urlApi = 'http://192.168.22.31:8000'
+let urlApi = 'http://192.168.31.238:8000'
 
 const env = process.env.ENV
 if (env === 'prod') {
@@ -53,7 +53,7 @@ callAPIWithToken.interceptors.response.use(
     }
     if (err.response && err.response.status === 403) {
       window.location.href = '/403'
-      Cookies.remove('token')
+      // Cookies.remove('token')
     }
     return Promise.reject(err)
   }

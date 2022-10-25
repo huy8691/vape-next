@@ -88,12 +88,12 @@ const ComponentFileUploader = ({
       //   return
       // }
       if (fileInput.size) {
-        const size = fileInput.size / 1024 / 1024 < 10
+        const size = fileInput.size / 1024 / 1024 < 5
         if (!size) {
           onFileSelectError()
           dispatch(
             notificationActions.doNotification({
-              message: 'File cannot be large than 10MB',
+              message: 'File cannot be large than 5MB',
               type: 'error',
             })
           )
@@ -201,7 +201,7 @@ const ComponentFileUploader = ({
         type="file"
         onChange={handleFileInput}
         // accept="image/*"
-        accept=".doc,.docx,application/pdf"
+        accept=".doc,.docx,application/pdf,.png,.jpg,.jpeg"
         hidden
         ref={fileInputRef}
       />

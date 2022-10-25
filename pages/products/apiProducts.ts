@@ -11,7 +11,7 @@ const getProducts = (
     method: 'get',
     params: {
       ...params,
-      limit: 20,
+      limit: 18,
     },
   })
 }

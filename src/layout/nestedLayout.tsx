@@ -179,8 +179,8 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
   }
 
   return (
-    <RequireAuth>
-      <WrapLayout>
+    <WrapLayout>
+      <RequireAuth>
         <ThemeProviderNext>
           <ThemeMui>
             <Box sx={{ display: 'flex' }}>
@@ -227,8 +227,8 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
             </Box>
           </ThemeMui>
         </ThemeProviderNext>
-      </WrapLayout>
-    </RequireAuth>
+      </RequireAuth>
+    </WrapLayout>
   )
 }
 

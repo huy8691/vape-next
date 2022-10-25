@@ -213,7 +213,7 @@ const SideBarProducts: React.FC = () => {
         <h4 className={classes.itemSideBarTitle}>Giá</h4>
         <Radio.Group
           buttonStyle="solid"
-          onChange={(e) => handleChangePriceRadio(e)}
+          onChange={(e: any) => handleChangePriceRadio(e)}
           value={valueDefaultRadioPrice}
         >
           <Space direction="vertical">

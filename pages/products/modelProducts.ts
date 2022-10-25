@@ -8,6 +8,6 @@ export interface ProductDataType {
 
 export interface ProductListDataResponseType {
   data?: ProductDataType[]
-  total?: number
+  totalPages?: number
   errors?: any
 }

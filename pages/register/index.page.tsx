@@ -95,7 +95,7 @@ const TextFieldCheckMailCustom = styled(FormControl)({
   '& .MuiOutlinedInput-root': {
     borderRadius: '8px',
     fontSize: '1.4rem',
-    paddingRight: '5px',
+    paddingRight: '0px',
   },
   '& .MuiInputBase-input': {
     padding: '10px 15px',
@@ -146,6 +146,8 @@ const Register: NextPageWithLayout = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    // reValidateMode: 'onChange',
+    mode: 'all',
   })
 
   // check mail
@@ -157,7 +159,8 @@ const Register: NextPageWithLayout = () => {
     // reset: resetCheckMail,
   } = useForm({
     resolver: yupResolver(schemaCheckMail),
-    mode: 'onBlur',
+    // reValidateMode: 'onChange',
+    mode: 'all',
   })
   const dispatch = useAppDispatch()
 
@@ -327,7 +330,7 @@ const Register: NextPageWithLayout = () => {
           })
         )
       })
-  }, [])
+  }, [dispatch])
 
   return (
     <div className={classes['register-page']}>
@@ -404,16 +407,22 @@ const Register: NextPageWithLayout = () => {
                             })
                           }}
                           endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton>
-                                {stateCheckMail.status === 'success' && (
-                                  <CheckCircleIcon color="success" />
-                                )}
-                                {stateCheckMail.status === 'error' && (
-                                  <ErrorIcon color="error" />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
+                            <>
+                              {stateCheckMail.status === 'success' && (
+                                <InputAdornment position="end">
+                                  <IconButton>
+                                    <CheckCircleIcon color="success" />
+                                  </IconButton>
+                                </InputAdornment>
+                              )}
+                              {stateCheckMail.status === 'error' && (
+                                <InputAdornment position="end">
+                                  <IconButton>
+                                    <CheckCircleIcon color="error" />
+                                  </IconButton>
+                                </InputAdornment>
+                              )}
+                            </>
                           }
                         />
                       </Grid>

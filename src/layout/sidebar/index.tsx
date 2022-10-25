@@ -89,7 +89,6 @@ const SideBar = ({ open }: Props) => {
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
                   }}
                 >
                   <ListItemIcon
