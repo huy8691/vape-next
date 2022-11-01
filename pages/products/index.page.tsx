@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import Cookies from 'js-cookie'
 // import Link from 'next/link'
 // import {
 //   Result,
@@ -29,15 +28,21 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Slider from '@mui/material/Slider'
 import Pagination from '@mui/material/Pagination'
+import Skeleton from '@mui/material/Skeleton'
 
 import { ItemProduct } from 'src/components'
-import { getProducts } from './apiProducts'
+import { getProducts, getProductCategory, getProductBrand } from './apiProducts'
 import { ProductDataType } from './modelProducts'
 // import SideBarProducts from './parts/sidebarProducts'
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
 import { notificationActions } from 'src/store/notification/notificationSlice'
-import { ProductListDataResponseType } from './modelProducts'
+import {
+  ProductListDataResponseType,
+  ProductCategoryResponseType,
+  ProductBrandResponseType,
+  ProductBrandType,
+} from './modelProducts'
 import { objToStringParam, isEmptyObject } from 'src/utils/global.utils'
 // layout
 import type { ReactElement } from 'react'
@@ -94,6 +99,10 @@ const Products: NextPageWithLayout = () => {
   const minDistance = 10
   const [dataProducts, setDataProducts] =
     useState<ProductListDataResponseType>()
+  const [stateProductCategory, setStateProductCategory] =
+    useState<ProductCategoryResponseType>()
+  const [stateProductBrand, setStateProductBrand] =
+    useState<ProductBrandResponseType>()
   // const [defaultActiveTabs, setDefaultActiveTabs] = useState<string>('0')
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -172,7 +181,6 @@ const Products: NextPageWithLayout = () => {
 
   // handleChangePagination
   const handleChangePagination = (e: any, page: number) => {
-    console.log('page', page)
     let routerQuery = {
       ...router.query,
       page: page,
@@ -183,29 +191,58 @@ const Products: NextPageWithLayout = () => {
     })
   }
 
+  // handle change brand
+  const handleChangeBrand = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('change brand', event.target.name)
+    let routerQuery = {
+      ...router.query,
+      page: 1,
+      brand: event.target.name,
+    }
+    let search = objToStringParam(routerQuery)
+    router.replace({
+      search: `${search}`,
+    })
+  }
+
+  useEffect(() => {
+    getProductCategory()
+      .then((res) => {
+        const data = res.data
+        setStateProductCategory(data)
+      })
+      .catch((error) => {
+        const data = error.response?.data
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : '',
+            type: 'error',
+          })
+        )
+      })
+    getProductBrand()
+      .then((res) => {
+        const data = res.data
+        setStateProductBrand(data)
+      })
+      .catch((error) => {
+        const data = error.response?.data
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : '',
+            type: 'error',
+          })
+        )
+      })
+  }, [])
+
   useEffect(() => {
     // handleActiveTabs(
     //   router.query.sort ? router.query.sort : '',
     //   router.query.order ? router.query.order : ''
     // )
-    // setDataProducts({})
-    // if (!isEmptyObject(router.query)) {
-    //   dispatch(loadingActions.doLoading())
-    //   getProducts(router.query)
-    //     .then((res) => {
-    //       const data = res.data
-    //       setDataProducts(data)
-    //       dispatch(loadingActions.doLoadingSuccess())
-    //     })
-    //     .catch((error) => {
-    //       const errors = error.response ? error.response.data : true
-    //       setDataProducts({
-    //         errors: errors,
-    //       })
-    //       dispatch(loadingActions.doLoadingFailure())
-    //     })
-    // }
-    if (router) {
+    setDataProducts({})
+    if (!isEmptyObject(router.query)) {
       dispatch(loadingActions.doLoading())
       getProducts(router.query)
         .then((res) => {
@@ -223,18 +260,53 @@ const Products: NextPageWithLayout = () => {
             })
           )
         })
-      console.log('datat', router.query)
+    }
+    if (router.asPath === '/products') {
+      getProducts()
+        .then((res) => {
+          const data = res.data
+          setDataProducts(data)
+          dispatch(loadingActions.doLoadingSuccess())
+        })
+        .catch((error) => {
+          const data = error.response?.data
+          dispatch(loadingActions.doLoadingFailure())
+          dispatch(
+            notificationActions.doNotification({
+              message: data?.message ? data?.message : 'Error',
+              type: 'error',
+            })
+          )
+        })
     }
   }, [router, dispatch])
 
   const renderResult = () => {
-    // if (dataProducts?.errors) {
-    //   return <Alert message="Đã xảy ra lỗi" type="error" />
+    // if (!dataProducts?.data) {
+    //   let arrSkeleton = []
+    //   for (var i = 0; i < 18; i++) {
+    //     arrSkeleton.push(i)
+    //   }
+    //   return (
+    //     <Box mb={4}>
+    //       <Grid container spacing={2}>
+    //         {arrSkeleton.map((item: any, index: number) => (
+    //           <Grid item xs={2} key={index}>
+    //             <Skeleton
+    //               animation="wave"
+    //               variant="rectangular"
+    //               width={206.16}
+    //               height={333.16}
+    //             />
+    //           </Grid>
+    //         ))}
+    //       </Grid>
+    //     </Box>
+    //   )
     // }
     if (dataProducts?.data?.length === 0) {
       return <div>Không tìm thấy sản phẩm</div>
     }
-
     return (
       <>
         <Box mb={4}>
@@ -316,25 +388,19 @@ const Products: NextPageWithLayout = () => {
                 {children}
               </FormControl>
               <Divider />
-              <FormControl
-                sx={{ mt: 2 }}
-                component="fieldset"
-                variant="standard"
-              >
+              <FormControl sx={{ mt: 2 }}>
                 <FormLabel component="legend">Brand</FormLabel>
                 <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox name="gilad" />}
-                    label="Gilad Gray"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="jason" />}
-                    label="Jason Killian"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox name="antoine" />}
-                    label="Antoine Llorca"
-                  />
+                  {stateProductBrand?.data?.map(
+                    (item: ProductBrandType, index: number) => (
+                      <FormControlLabel
+                        control={<Checkbox name={item.id?.toString()} />}
+                        label={item.name}
+                        onChange={handleChangeBrand}
+                        key={index}
+                      />
+                    )
+                  )}
                 </FormGroup>
               </FormControl>
             </CardContent>

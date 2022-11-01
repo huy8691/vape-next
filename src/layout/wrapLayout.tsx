@@ -85,17 +85,17 @@ const InnerLayout = ({ children }: Props) => {
           message: notificationApp.message,
           type: 'success',
         })
-        return
+      } else {
+        setValueSnackbar({
+          ...valueSnackbar,
+          open: true,
+          autoHideDuration: notificationApp.duration,
+          message: notificationApp.message,
+          type: notificationApp.type,
+        })
       }
-      setValueSnackbar({
-        ...valueSnackbar,
-        open: true,
-        autoHideDuration: notificationApp.duration,
-        message: notificationApp.message,
-        type: notificationApp.type,
-      })
     }
-  }, [notificationApp, valueSnackbar])
+  }, [notificationApp])
   // Snackbar
   return (
     <div style={{ minHeight: '100vh' }}>

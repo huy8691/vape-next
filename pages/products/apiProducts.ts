@@ -1,9 +1,13 @@
 import { AxiosResponse } from 'axios'
 import { callAPIWithToken } from 'src/services/jwt-axios'
-import { ProductListDataResponseType } from './modelProducts'
+import {
+  ProductListDataResponseType,
+  ProductCategoryResponseType,
+  ProductBrandResponseType,
+} from './modelProducts'
 
 const getProducts = (
-  params: object
+  params?: object
 ): Promise<AxiosResponse<ProductListDataResponseType>> => {
   console.log('parm', params)
   return callAPIWithToken({
@@ -16,4 +20,21 @@ const getProducts = (
   })
 }
 
-export { getProducts }
+const getProductCategory = (): Promise<
+  AxiosResponse<ProductCategoryResponseType>
+> => {
+  return callAPIWithToken({
+    url: `/api/customer/category/`,
+    method: 'get',
+  })
+}
+const getProductBrand = (): Promise<
+  AxiosResponse<ProductBrandResponseType>
+> => {
+  return callAPIWithToken({
+    url: `/api/customer/brands/`,
+    method: 'get',
+  })
+}
+
+export { getProducts, getProductCategory, getProductBrand }

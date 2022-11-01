@@ -30,7 +30,7 @@ type Props = {
 const ItemProduct: React.FC<Props> = (props: Props) => {
   return (
     <CardCustom variant="outlined">
-      <Link href={`/detail/${props.dataProduct.id}`}>
+      <Link href={`/product-detail/${props.dataProduct.id}`}>
         <a>
           <Image
             alt={props.dataProduct.name}

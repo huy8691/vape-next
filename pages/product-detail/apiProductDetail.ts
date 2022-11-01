@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { callAPI } from 'src/services/jwt-axios'
+import { callAPI, callAPIWithToken } from 'src/services/jwt-axios'
 import {
   ProductDetailResponseType,
   ProductListDataResponseType,
@@ -7,12 +7,12 @@ import {
 } from './modelProductDetail'
 
 const getProductDetail = (
-  productId?: string
+  productId?: string | undefined
 ): Promise<AxiosResponse<ProductDetailResponseType>> => {
-  return callAPI({
-    url: `/products/customer/${productId}`,
+  console.log('6666', productId)
+  return callAPIWithToken({
+    url: `/api/customer/products/${productId}`,
     method: 'get',
-    params: {},
   })
 }
 

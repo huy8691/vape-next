@@ -1,7 +1,10 @@
 import * as Yup from 'yup'
 
 const schema = Yup.object().shape({
-  email: Yup.string().email().max(255).required('Email is a required field'),
+  email: Yup.string()
+    .email('Email must be a valid email')
+    .max(255)
+    .required('Email is a required field'),
 })
 
 const schemaPassword = Yup.object().shape({

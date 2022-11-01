@@ -1,16 +1,13 @@
 export interface ProductDetailType {
   id: number
   name: string
-  images?: Array<{ url: string }>
-  retailPrice: number
-  categories: Array<{ name: string }>
+  images?: Array<string>
+  code: string
   description?: string
-  rating?: number
-  minQuantity?: number
-  unit: number
-  supplier: {
-    name: string
-  }
+  longDescription?: string
+  price?: number
+  unit_types?: string
+  inStock?: number
 }
 
 export interface ProductDetailResponseType {

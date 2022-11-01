@@ -1,5 +1,5 @@
 // react
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import type { ReactElement } from 'react'
 // react
 
@@ -7,6 +7,7 @@ import type { ReactElement } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
+// import { useRouter } from 'next/router'
 // next
 
 // mui
@@ -20,7 +21,8 @@ import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import FormHelperText from '@mui/material/FormHelperText'
 import Typography from '@mui/material/Typography'
-import CircularProgress from '@mui/material/CircularProgress'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 // mui
 
 // form
@@ -30,7 +32,10 @@ import { schema } from './validations'
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
-import { loginActions } from './loginSlice'
+import { loginAPI } from './loginAPI'
+import { loadingActions } from 'src/store/loading/loadingSlice'
+import { notificationActions } from 'src/store/notification/notificationSlice'
+import { setAuthToken } from 'src/services/jwt-axios'
 // api
 
 // layout
@@ -40,8 +45,6 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 
 // other
 import { Eye, EyeSlash } from 'phosphor-react'
-import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
 // other
 
 // custom style
@@ -85,10 +88,16 @@ const TagHr = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }))
 
-const Login: NextPageWithLayout = () => {
-  const router = useRouter()
-  const token = Boolean(Cookies.get('token'))
+const Storage = () => {
+  // set(key, value) {
+  //   localStorage.setItem(key, value)
+  // }
+  // get(key) {
+  //   return localStorage.getItem(key)
+  // }
+}
 
+const Login: NextPageWithLayout = () => {
   const {
     handleSubmit,
     control,
@@ -99,12 +108,45 @@ const Login: NextPageWithLayout = () => {
   const dispatch = useAppDispatch()
 
   const onSubmit = (values: any) => {
-    dispatch(
-      loginActions.doLogin({
-        ...values,
-        user_type: 'CUSTOMER',
+    console.log('4444', values)
+    // dispatch(
+    //   loginActions.doLogin({
+    //     ...values,
+    //     user_type: 'CUSTOMER',
+    //   })
+    // )
+    dispatch(loadingActions.doLoading())
+    loginAPI({
+      ...values,
+      user_type: 'CUSTOMER',
+    })
+      .then((response) => {
+        const { data } = response.data
+        setAuthToken(data?.access_token)
+        dispatch(loadingActions.doLoadingSuccess())
+        // router.push('/')
+        // if (values.remember) {
+        //   localStorage.setItem('email', values.email)
+        //   localStorage.setItem('password', values.password)
+        // }
+
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Sign in successfully',
+          })
+        )
+        window.location.href = '/'
       })
-    )
+      .catch((error) => {
+        const data = error.response?.data
+        dispatch(loadingActions.doLoadingFailure())
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : 'Error',
+            type: 'error',
+          })
+        )
+      })
   }
 
   const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -112,23 +154,6 @@ const Login: NextPageWithLayout = () => {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
   }
-  // fix error when use next theme
-  // if (token) {
-  //   router.push('/')
-  // }
-  // const [mounted, setMounted] = useState<boolean>(false)
-  // useEffect(() => {
-  //   setMounted(true)
-  // }, [])
-
-  // if (!mounted) {
-  //   return (
-  //     <div className="loading">
-  //       <CircularProgress />
-  //     </div>
-  //   )
-  // }
-
   return (
     <div className={classes['login-page']}>
       <Head>
@@ -181,7 +206,7 @@ const Login: NextPageWithLayout = () => {
                 )}
               />
             </Box>
-            <Box mb={5}>
+            <Box mb={1}>
               <Controller
                 control={control}
                 name="password"
@@ -223,6 +248,19 @@ const Login: NextPageWithLayout = () => {
                 )}
               />
             </Box>
+            <Box mb={4}>
+              <FormControlLabel
+                control={
+                  <Controller
+                    name="remember"
+                    control={control}
+                    render={({ field }) => <Checkbox {...field} />}
+                  />
+                }
+                label="Remember me"
+              />
+            </Box>
+
             <Stack alignItems="center">
               <ButtonCustom variant="contained" size="large" type="submit">
                 Sign In

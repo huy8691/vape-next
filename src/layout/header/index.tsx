@@ -133,13 +133,14 @@ const HeaderInner = () => {
     logOutAPI()
       .then(() => {
         dispatch(loadingActions.doLoadingSuccess())
+
+        Cookies.remove('token')
+        // router.push('/login')
         dispatch(
           notificationActions.doNotification({
             message: 'Sign out successfully',
           })
         )
-        Cookies.remove('token')
-        // router.push('/login')
         window.location.href = '/login'
       })
       .catch(() => {
@@ -209,8 +210,12 @@ const HeaderInner = () => {
         <Stack direction="row" alignItems="center">
           <ClickAwayListener onClickAway={handleClickAway}>
             <Box>
-              <IconButton size="large" color="inherit">
-                <TuneIconCustom onClick={handleViewSidebar} />
+              <IconButton
+                size="large"
+                color="inherit"
+                onClick={handleViewSidebar}
+              >
+                <TuneIconCustom />
               </IconButton>
               <SideBarSetting isOpen={sidebarOpen} />
             </Box>

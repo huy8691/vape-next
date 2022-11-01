@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-let urlApi = 'http://192.168.31.238:8000'
+let urlApi = 'http://192.168.22.30:8000'
 
 const env = process.env.ENV
 if (env === 'prod') {
@@ -38,15 +38,17 @@ const callAPIWithToken = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY3Mjc4MTUxLCJpYXQiOjE2NjcxOTE3NTEsImp0aSI6ImIxNDUyOTJmYTM1NjRmM2Y5MjY3N2U2MDZhMzNkOWQzIiwidXNlcl9pZCI6NSwicGhvbmVfbnVtYmVyIjoiMDk2ODYxNzE1NSIsImVtYWlsIjoiaHV5ODY5MUBnbWFpbC5jb20iLCJ1c2VyX3R5cGUiOiJDVVNUT01FUiJ9.4hPS-bcEpyUIR7dKB2_TKSsJwXeqy48iHBJnpOmM9gM`,
   },
 })
 
 callAPIWithToken.interceptors.response.use(
   (res) => {
+    console.log('res', res)
     return res
   },
   (err) => {
+    console.log('err', err)
     if (err.response && err.response.status === 401) {
       window.location.href = '/login'
       Cookies.remove('token')

@@ -7,6 +7,7 @@ import type { ReactElement } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 // next
 
 // mui
@@ -39,7 +40,7 @@ import Typography from '@mui/material/Typography'
 // other
 import SignatureCanvas from './parts/signatureCanvas'
 import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
+
 // other
 
 // form
@@ -418,7 +419,7 @@ const Register: NextPageWithLayout = () => {
                               {stateCheckMail.status === 'error' && (
                                 <InputAdornment position="end">
                                   <IconButton>
-                                    <CheckCircleIcon color="error" />
+                                    <ErrorIcon color="error" />
                                   </IconButton>
                                 </InputAdornment>
                               )}
