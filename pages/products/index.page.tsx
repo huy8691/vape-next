@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 // import Link from 'next/link'
 // import {
 //   Result,
@@ -13,7 +14,7 @@ import { useRouter } from 'next/router'
 //   Alert,
 // } from 'antd'
 // import { FileSyncOutlined, ClearOutlined } from '@ant-design/icons'
-// import classes from './styles.module.scss'
+import classes from './styles.module.scss'
 
 import { styled } from '@mui/material/styles'
 import Card from '@mui/material/Card'
@@ -29,9 +30,22 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Slider from '@mui/material/Slider'
 import Pagination from '@mui/material/Pagination'
 import Skeleton from '@mui/material/Skeleton'
+import MenuItem from '@mui/material/MenuItem'
+import Button from '@mui/material/Button'
+import ButtonGroup from '@mui/material/ButtonGroup'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import Select from '@mui/material/Select'
+import IconButton from '@mui/material/IconButton'
+import FormHelperText from '@mui/material/FormHelperText'
+import InputLabel from '@mui/material/InputLabel'
 
 import { ItemProduct } from 'src/components'
-import { getProducts, getProductCategory, getProductBrand } from './apiProducts'
+import {
+  getProducts,
+  getProductCategory,
+  getProductBrand,
+  getProductManufacturer,
+} from './apiProducts'
 import { ProductDataType } from './modelProducts'
 // import SideBarProducts from './parts/sidebarProducts'
 import { useAppDispatch } from 'src/store/hooks'
@@ -42,6 +56,9 @@ import {
   ProductCategoryResponseType,
   ProductBrandResponseType,
   ProductBrandType,
+  ProductCategoryType,
+  ProductManufacturerResponseType,
+  ProductManufacturerType,
 } from './modelProducts'
 import { objToStringParam, isEmptyObject } from 'src/utils/global.utils'
 // layout
@@ -49,51 +66,80 @@ import type { ReactElement } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
 import type { NextPageWithLayout } from 'pages/_app.page'
 
+// form
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { schema, schemaPrice } from './validations'
+
+// custom style
+import { ButtonCustom, TextFieldCustom, InputLabelCustom } from 'src/components'
+
+// other
+import {
+  FunnelSimple,
+  Eraser,
+  MagnifyingGlass,
+  KeyReturn,
+} from 'phosphor-react'
+
 const CardCustom = styled(Card)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
   boxShadow: 'none',
 }))
 
-// const tabsData = [
-//   {
-//     label: 'Phổ biến',
-//     sort: '',
-//     order: '',
-//     key: '0',
-//   },
-//   {
-//     label: 'Bán chạy',
-//     sort: 'soldQuantity',
-//     order: '',
-//     key: '1',
-//   },
-//   {
-//     label: 'Hàng mới',
-//     sort: 'approved_at',
-//     order: '',
-//     key: '2',
-//   },
-//   {
-//     label: 'Giá thấp - cao',
-//     key: '3',
-//     sort: 'pr.price',
-//     order: 'ASC',
-//   },
-//   {
-//     label: 'Giá cao - thấp',
-//     key: '4',
-//     sort: 'pr.price',
-//     order: 'DESC',
-//   },
-// ]
+const CardSideBarCustom = styled(CardCustom)(() => ({
+  // maxHeight: 'calc(100vh - 110px)',
+  // overflow: 'auto',
+}))
+const FormControlLabelCustom = styled(FormControlLabel)(() => ({
+  fontSize: '1.4rem',
+  '& .MuiTypography-root': {
+    fontSize: '1.4rem',
+  },
+}))
 
-// const { Title } = Typography
-// const { TabPane } = Tabs
+const FormLabelCustom = styled(FormLabel)(({ theme }) => ({
+  fontWeight: '600',
+}))
 
-function valuetext(value: number) {
-  return `${value}°C`
-}
+const TextFieldSearchCustom = styled(TextFieldCustom)(({ theme }) => ({
+  '& .MuiInputBase-input': {
+    padding: '10px 45px 10px 15px',
+    textOverflow: 'ellipsis',
+  },
+}))
+
+const BoxCustom = styled(Box)(({ theme }) => ({
+  position: 'relative',
+}))
+const BoxSort = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: '50%',
+  left: '10px',
+  transform: 'translateY(-50%)',
+  lineHeight: '1',
+}))
+
+const SelectCustomSort = styled(Select)({
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderRadius: '8px',
+    fontSize: '1.4rem',
+  },
+  '& .MuiOutlinedInput-input': {
+    padding: '8.5px 15px 8.5px 40px',
+    fontSize: '1.4rem',
+    '&[aria-expanded="true"]': {
+      '& ~ .MuiSvgIcon-root': {
+        transform: 'rotate(180deg)',
+        width: '1.5em',
+      },
+    },
+  },
+  '& .MuiSvgIcon-root': {
+    width: '1.5em',
+  },
+})
 
 const Products: NextPageWithLayout = () => {
   const minDistance = 10
@@ -103,12 +149,44 @@ const Products: NextPageWithLayout = () => {
     useState<ProductCategoryResponseType>()
   const [stateProductBrand, setStateProductBrand] =
     useState<ProductBrandResponseType>()
-  // const [defaultActiveTabs, setDefaultActiveTabs] = useState<string>('0')
+  const [stateProductManufacturer, setStateProductManufacturer] =
+    useState<ProductManufacturerResponseType>()
+  const [stateDisableFilter, setStateDisableFilter] = useState<boolean>(false)
   const router = useRouter()
   const dispatch = useAppDispatch()
 
   const [checked, setChecked] = React.useState([true, false])
-  const [valuePrice, setValuePrice] = React.useState<number[]>([1000, 4000])
+  const [valueRangePrice, setValueRangPrice] = React.useState<number[]>([0, 40])
+  // const [stateMaxPrice, setStateMaxPrice] = React.useState<number>(0)
+
+  const CategoryItem = ({ list }: any) => {
+    return list?.map((item: ProductCategoryType, index: number) => {
+      return (
+        <Box key={index}>
+          <FormControlLabelCustom
+            label={item.name}
+            control={
+              <Checkbox
+                checked={item.checked ? true : false}
+                indeterminate={item.indeterminate ? true : false}
+                name={item.id?.toString()}
+                onChange={(e) => handleChangeCategory(e, item)}
+              />
+            }
+          />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              ml: 3,
+            }}
+          >
+            <CategoryItem list={item?.child_category} />
+          </Box>
+        </Box>
+      )
+    })
+  }
 
   const handleChangePrice = (
     event: Event,
@@ -119,65 +197,80 @@ const Products: NextPageWithLayout = () => {
       return
     }
 
-    if (newValue[1] - newValue[0] < minDistance) {
-      if (activeThumb === 0) {
-        const clamped = Math.min(newValue[0], 10000 - minDistance)
-        setValuePrice([clamped, clamped + minDistance])
-      } else {
-        const clamped = Math.max(newValue[1], minDistance)
-        setValuePrice([clamped - minDistance, clamped])
-      }
+    if (activeThumb === 0) {
+      setValueRangPrice([
+        Math.min(newValue[0], valueRangePrice[1] - minDistance),
+        valueRangePrice[1],
+      ])
     } else {
-      setValuePrice(newValue as number[])
+      setValueRangPrice([
+        valueRangePrice[0],
+        Math.max(newValue[1], valueRangePrice[0] + minDistance),
+      ])
     }
+    setValuePrice('from', valueRangePrice[0])
+    setValuePrice('to', valueRangePrice[1])
   }
 
-  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([event.target.checked, event.target.checked])
+  // form search
+  const {
+    handleSubmit,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: 'all',
+  })
+
+  // check Price
+  const {
+    setValue: setValuePrice,
+    handleSubmit: handleSubmitPrice,
+    control: controlPrice,
+    // reset: resetCheckMail,
+  } = useForm({
+    resolver: yupResolver(schemaPrice),
+    // reValidateMode: 'onChange',
+    mode: 'all',
+  })
+
+  const onSubmitSearch = (values: any) => {
+    handleClearFilterBrand()
+    handleClearFilterManufacturer()
+    let routerQuery = {
+      // ...router.query,
+      key: values.key,
+      page: 1,
+    }
+    let search = objToStringParam(routerQuery)
+    router.replace({
+      search: `${search}`,
+    })
   }
 
-  const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([event.target.checked, checked[1]])
+  const onSubmitPrice = (values: any) => {
+    console.log('value', values)
+    if (values.to < values.from) {
+      dispatch(
+        notificationActions.doNotification({
+          message: 'Max price must be greater than or equal to min price',
+          type: 'error',
+        })
+      )
+      return
+    }
+    setStateDisableFilter(true)
+    let routerQuery = {
+      ...router.query,
+      price_gte: values.from,
+      price_lte: values.to,
+    }
+    let search = objToStringParam(routerQuery)
+    router.replace({
+      search: `${search}`,
+    })
   }
-
-  const handleChange3 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([checked[0], event.target.checked])
-  }
-
-  const children = (
-    <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-      <FormControlLabel
-        label="Category1"
-        control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-      />
-      <FormControlLabel
-        label="Category2"
-        control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-      />
-    </Box>
-  )
-
-  // handle tabs
-  // const handleChangeTabs = (key: string) => {
-  //   let routerQuery = {
-  //     ...router.query,
-  //     sort: tabsData[parseInt(key)].sort,
-  //     order: tabsData[parseInt(key)].order,
-  //     page: 1,
-  //   }
-  //   let search = objToStringParam(routerQuery)
-  //   router.replace({
-  //     search: `${search}`,
-  //   })
-  // }
-
-  // const handleActiveTabs = (sort: any, order: any) => {
-  //   for (let i = 0; i < tabsData.length; i++) {
-  //     if (sort === tabsData[i].sort && order === tabsData[i].order) {
-  //       setDefaultActiveTabs(tabsData[i].key)
-  //     }
-  //   }
-  // }
 
   // handleChangePagination
   const handleChangePagination = (e: any, page: number) => {
@@ -191,21 +284,193 @@ const Products: NextPageWithLayout = () => {
     })
   }
 
+  const handleChangeCategory = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    item: ProductCategoryType
+  ) => {
+    console.log('item', item)
+    const newArrCategory = stateProductCategory?.data?.map((object) => {
+      let newChildCategory = object.child_category
+      if (object.child_category?.length > 0) {
+        newChildCategory = object.child_category?.map((item) => {
+          if (event.target.name === item.id.toString()) {
+            return { ...item, checked: !item.checked }
+          }
+          return item
+        })
+      }
+      if (event.target.name === object.id.toString()) {
+        return {
+          ...object,
+          checked: !object.checked,
+          child_category: newChildCategory,
+        }
+      }
+      return {
+        ...object,
+        indeterminate: false,
+        child_category: newChildCategory,
+        checked: false,
+      }
+    })
+    // const newCategory = fun(stateProductCategory?.data)
+    console.log('newArrCategory', newArrCategory)
+    setStateProductCategory({
+      ...stateProductCategory,
+      data: newArrCategory,
+    })
+  }
+
   // handle change brand
-  const handleChangeBrand = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('change brand', event.target.name)
+  const handleChangeBrand = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setStateDisableFilter(true)
+    console.log('eee3', event.target.name)
+    //
+    const newArrBrand = stateProductBrand?.data?.map((object) => {
+      if (event.target.name === object.id.toString()) {
+        return { ...object, checked: !object.checked }
+      }
+      return object
+    })
+    setStateProductBrand({
+      ...stateProductBrand,
+      data: newArrBrand,
+    })
+
+    //
+    let brand = await router.query.brand
+    if (!brand) {
+      brand = `${event.target.name}`
+    } else {
+      let arrayBrand = await brand?.split(',')
+      const index = await arrayBrand.indexOf(event.target.name)
+      if (index > -1) {
+        await arrayBrand.splice(index, 1)
+        brand = await arrayBrand.join(',')
+      } else {
+        await arrayBrand.push(event.target.name)
+        brand = await arrayBrand.join(',')
+      }
+    }
     let routerQuery = {
       ...router.query,
       page: 1,
-      brand: event.target.name,
+      brand: brand,
     }
-    let search = objToStringParam(routerQuery)
-    router.replace({
+    let search = await objToStringParam(routerQuery)
+    await router.replace({
       search: `${search}`,
     })
   }
 
+  // handle change manufacturer
+  const handleChangeManufacturer = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setStateDisableFilter(true)
+    //
+    const newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
+      if (event.target.name === object.id.toString()) {
+        return { ...object, checked: !object.checked }
+      }
+      return object
+    })
+    setStateProductManufacturer({
+      ...stateProductManufacturer,
+      data: newArrManufacturer,
+    })
+
+    //
+    let manufacturer = await router.query.manufacturer
+    if (!manufacturer) {
+      manufacturer = `${event.target.name}`
+    } else {
+      let arrayManufacturer = await manufacturer?.split(',')
+      const index = await arrayManufacturer.indexOf(event.target.name)
+      if (index > -1) {
+        await arrayManufacturer.splice(index, 1)
+        manufacturer = await arrayManufacturer.join(',')
+      } else {
+        await arrayManufacturer.push(event.target.name)
+        manufacturer = await arrayManufacturer.join(',')
+      }
+    }
+    let routerQuery = {
+      ...router.query,
+      page: 1,
+      manufacturer: manufacturer,
+    }
+    let search = await objToStringParam(routerQuery)
+    await router.replace({
+      search: `${search}`,
+    })
+  }
+
+  // handle clear brand
+  const handleClearFilterBrand = () => {
+    if (router.query.brand) {
+      let routerQuery = {
+        ...router.query,
+        page: 1,
+        brand: null,
+      }
+      let search = objToStringParam(routerQuery)
+      router.replace({
+        search: `${search}`,
+      })
+    }
+    let newArrBrand = stateProductBrand?.data?.map((object) => {
+      return { ...object, checked: false }
+    })
+    setStateProductBrand({
+      ...stateProductBrand,
+      data: newArrBrand,
+    })
+  }
+  // handle clear manufacturer
+  const handleClearFilterManufacturer = () => {
+    if (router.query.manufacturer) {
+      let routerQuery = {
+        ...router.query,
+        page: 1,
+        manufacturer: null,
+      }
+      let search = objToStringParam(routerQuery)
+      router.replace({
+        search: `${search}`,
+      })
+    }
+    let newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
+      return { ...object, checked: false }
+    })
+    setStateProductManufacturer({
+      ...stateProductManufacturer,
+      data: newArrManufacturer,
+    })
+  }
+  // handle clear manufacturer and brand
+  // const handleClearFilterManufacturerBrand = () => {
+  //   let newArrBrand = stateProductBrand?.data?.map((object) => {
+  //     return { ...object, checked: false }
+  //   })
+  //   console.log('33333', newArrBrand)
+  //   let newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
+  //     return { ...object, checked: false }
+  //   })
+  //   setStateProductBrand({
+  //     ...stateProductBrand,
+  //     data: newArrBrand,
+  //   })
+  //   setStateProductManufacturer({
+  //     ...stateProductManufacturer,
+  //     data: newArrManufacturer,
+  //   })
+  // }
+
   useEffect(() => {
+    let asPath = router.asPath
     getProductCategory()
       .then((res) => {
         const data = res.data
@@ -223,7 +488,30 @@ const Products: NextPageWithLayout = () => {
     getProductBrand()
       .then((res) => {
         const data = res.data
-        setStateProductBrand(data)
+        // setStateProductBrand(data)
+
+        // find brand
+        if (asPath.indexOf('brand=') !== -1) {
+          let sliceAsPathBrand = asPath.slice(
+            asPath.indexOf('brand=') + 6, //position start
+            asPath.indexOf('&', asPath.indexOf('brand=')) // position end
+          )
+          let arrayBrand = sliceAsPathBrand?.split(',')
+          const newArr = data?.data?.map((object) => {
+            for (let i = 0; i < arrayBrand.length; i++) {
+              if (arrayBrand[i] === object.id.toString()) {
+                return { ...object, checked: true }
+              }
+            }
+            return { ...object, checked: false }
+          })
+          setStateProductBrand({
+            ...data,
+            data: newArr,
+          })
+        } else {
+          setStateProductBrand(data)
+        }
       })
       .catch((error) => {
         const data = error.response?.data
@@ -234,21 +522,75 @@ const Products: NextPageWithLayout = () => {
           })
         )
       })
+
+    getProductManufacturer()
+      .then((res) => {
+        const data = res.data
+        // find Manufacturer
+        if (asPath.indexOf('manufacturer=') !== -1) {
+          let sliceAsPathManufacturer = asPath.slice(
+            asPath.indexOf('manufacturer=') + 13, //position start
+            asPath.indexOf('&', asPath.indexOf('manufacturer=')) // position end
+          )
+          let arrayManufacturer = sliceAsPathManufacturer?.split(',')
+          const newArr = data?.data?.map((object) => {
+            for (let i = 0; i < arrayManufacturer.length; i++) {
+              if (arrayManufacturer[i] === object.id.toString()) {
+                return { ...object, checked: true }
+              }
+            }
+            return { ...object, checked: false }
+          })
+          setStateProductManufacturer({
+            ...data,
+            data: newArr,
+          })
+        } else {
+          setStateProductManufacturer(data)
+        }
+      })
+      .catch((error) => {
+        const data = error.response?.data
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : '',
+            type: 'error',
+          })
+        )
+      })
+
+    // find key search
+    if (asPath.indexOf('key=') !== -1) {
+      let sliceAsPathKeySearch = asPath.slice(
+        asPath.indexOf('key=') + 4, //position start
+        asPath.indexOf('&', asPath.indexOf('key=')) // position end
+      )
+      setValue('key', sliceAsPathKeySearch)
+    }
   }, [])
 
+  // show err key search
   useEffect(() => {
-    // handleActiveTabs(
-    //   router.query.sort ? router.query.sort : '',
-    //   router.query.order ? router.query.order : ''
-    // )
-    setDataProducts({})
+    if (errors.key) {
+      dispatch(
+        notificationActions.doNotification({
+          message: 'Key search must be at most 200 characters',
+          type: 'error',
+        })
+      )
+    }
+  }, [errors])
+
+  useEffect(() => {
     if (!isEmptyObject(router.query)) {
       dispatch(loadingActions.doLoading())
       getProducts(router.query)
         .then((res) => {
+          setDataProducts({})
           const data = res.data
           setDataProducts(data)
           dispatch(loadingActions.doLoadingSuccess())
+          setStateDisableFilter(false)
         })
         .catch((error) => {
           const data = error.response?.data
@@ -264,6 +606,7 @@ const Products: NextPageWithLayout = () => {
     if (router.asPath === '/products') {
       getProducts()
         .then((res) => {
+          setDataProducts({})
           const data = res.data
           setDataProducts(data)
           dispatch(loadingActions.doLoadingSuccess())
@@ -278,6 +621,10 @@ const Products: NextPageWithLayout = () => {
             })
           )
         })
+      // handleClearFilterManufacturerBrand()
+      handleClearFilterBrand()
+      handleClearFilterManufacturer()
+      setValue('key', '')
     }
   }, [router, dispatch])
 
@@ -305,14 +652,14 @@ const Products: NextPageWithLayout = () => {
     //   )
     // }
     if (dataProducts?.data?.length === 0) {
-      return <div>Không tìm thấy sản phẩm</div>
+      return <div>Not found</div>
     }
     return (
       <>
         <Box mb={4}>
           <Grid container spacing={2}>
             {dataProducts?.data?.map((item: ProductDataType, index: number) => (
-              <Grid item xs={2} key={index}>
+              <Grid item lg={3} xl={2} key={index}>
                 <ItemProduct dataProduct={item} />
               </Grid>
             ))}
@@ -333,6 +680,9 @@ const Products: NextPageWithLayout = () => {
   }
   return (
     <>
+      <Head>
+        <title>Products | VAPE</title>
+      </Head>
       {/* <Row gutter={30}>
         <Col span={6}>
           <SideBarProducts />
@@ -351,31 +701,181 @@ const Products: NextPageWithLayout = () => {
         </Col>
       </Row> */}
       <Grid container spacing={2}>
-        <Grid item xs={2}>
-          <CardCustom>
+        <Grid item xs={2} style={{ minWidth: '270px' }}>
+          <CardSideBarCustom>
             <CardContent>
-              <FormControl
-                component="fieldset"
-                variant="standard"
-                sx={{ mb: 2 }}
-                fullWidth
-              >
-                <FormLabel component="legend">Price</FormLabel>
+              <FormControl component="fieldset" variant="standard" fullWidth>
+                <FormLabelCustom>Price</FormLabelCustom>
                 <Slider
-                  getAriaLabel={() => 'Minimum distance shift'}
-                  value={valuePrice}
+                  // getAriaLabel={() => 'Minimum distance shift'}
+                  value={valueRangePrice}
                   onChange={handleChangePrice}
                   valueLabelDisplay="auto"
                   disableSwap
-                  getAriaValueText={valuetext}
+                  // getAriaValueText={valuetext}
                   step={10}
-                  max={10000}
+                  max={100}
+                  marks={[
+                    {
+                      value: 0,
+                      label: '$0',
+                    },
+                    {
+                      value: 100,
+                      label: '$100',
+                    },
+                  ]}
                 />
               </FormControl>
+              <form onSubmit={handleSubmitPrice(onSubmitPrice)}>
+                <Grid container spacing={1} mb={2}>
+                  <Grid item xs>
+                    <Controller
+                      control={controlPrice}
+                      defaultValue={valueRangePrice[0]}
+                      name="from"
+                      render={({ field }) => (
+                        <Box>
+                          <InputLabelCustom htmlFor="from">
+                            From
+                          </InputLabelCustom>
+                          <FormControl fullWidth>
+                            <TextFieldCustom
+                              id="from"
+                              type="number"
+                              InputProps={{
+                                inputProps: { min: 0 },
+                              }}
+                              onKeyPress={(event) => {
+                                if (
+                                  event?.key === '-' ||
+                                  event?.key === '+' ||
+                                  event?.key === ',' ||
+                                  event?.key === '.' ||
+                                  event?.key === 'e'
+                                ) {
+                                  event.preventDefault()
+                                }
+                              }}
+                              {...field}
+                              // onChange={(e) => {
+                              //   setStateMaxPrice(Number(e.target.value))
+                              //   setValuePrice('from', e.target.value)
+                              // }}
+                              onBlur={(e) => {
+                                if (!e.target.value) {
+                                  setValuePrice('from', 0)
+                                } else {
+                                  setValuePrice('from', e.target.value)
+                                }
+                              }}
+                            />
+                          </FormControl>
+                        </Box>
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs>
+                    <Controller
+                      control={controlPrice}
+                      defaultValue={valueRangePrice[1]}
+                      name="to"
+                      render={({ field }) => (
+                        <Box>
+                          <InputLabelCustom htmlFor="to">To</InputLabelCustom>
+                          <FormControl fullWidth>
+                            <TextFieldCustom
+                              id="to"
+                              type="number"
+                              InputProps={{
+                                inputProps: { min: 0 },
+                              }}
+                              onKeyPress={(event) => {
+                                if (
+                                  event?.key === '-' ||
+                                  event?.key === '+' ||
+                                  event?.key === ',' ||
+                                  event?.key === '.' ||
+                                  event?.key === 'e'
+                                ) {
+                                  event.preventDefault()
+                                }
+                              }}
+                              {...field}
+                              onBlur={(e) => {
+                                if (!e.target.value) {
+                                  setValuePrice('to', 0)
+                                } else {
+                                  setValuePrice('to', e.target.value)
+                                }
+                              }}
+                            />
+                          </FormControl>
+                        </Box>
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={24}>
+                    <ButtonCustom
+                      variant="contained"
+                      type="submit"
+                      size="small"
+                      fullWidth
+                      disabled={stateDisableFilter}
+                    >
+                      Submit
+                    </ButtonCustom>
+                  </Grid>
+                </Grid>
+              </form>
               <Divider />
               <FormControl sx={{ mt: 2 }}>
-                <FormLabel component="legend">Category</FormLabel>
-                <FormControlLabel
+                <FormLabelCustom>Category</FormLabelCustom>
+                <CategoryItem list={stateProductCategory?.data} />
+                {/* {stateProductCategory?.data?.map(
+                  (item: ProductCategoryType, index: number) => {
+                    return (
+                      <Box key={index}>
+                        <FormControlLabel
+                          label={item.name}
+                          control={
+                            <Checkbox
+                              checked={checked[0] && checked[1]}
+                              indeterminate={checked[0] !== checked[1]}
+                              onChange={handleChange1}
+                            />
+                          }
+                        />
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            ml: 3,
+                          }}
+                        >
+                          {item?.child_category?.map(
+                            (item: ProductCategoryType, index: number) => {
+                              return (
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox
+                                      name={item.id?.toString()}
+                                      // checked={checked[1]}
+                                      // onChange={handleChange3}
+                                    />
+                                  }
+                                  label={item.name}
+                                  key={index}
+                                />
+                              )
+                            }
+                          )}
+                        </Box>
+                      </Box>
+                    )
+                  }
+                )} */}
+                {/* <FormControlLabel
                   label="Category"
                   control={
                     <Checkbox
@@ -385,30 +885,152 @@ const Products: NextPageWithLayout = () => {
                     />
                   }
                 />
-                {children}
+                <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
+                  <FormControlLabel
+                    label="Category1"
+                    control={
+                      <Checkbox checked={checked[0]} onChange={handleChange2} />
+                    }
+                  />
+                  <FormControlLabel
+                    label="Category2"
+                    control={
+                      <Checkbox checked={checked[1]} onChange={handleChange3} />
+                    }
+                  />
+                </Box> */}
               </FormControl>
               <Divider />
-              <FormControl sx={{ mt: 2 }}>
-                <FormLabel component="legend">Brand</FormLabel>
+              <FormControl sx={{ mt: 2 }} disabled={stateDisableFilter}>
+                <FormLabelCustom>
+                  Brand{' '}
+                  <IconButton
+                    aria-label="delete"
+                    size="small"
+                    onClick={() => handleClearFilterBrand()}
+                  >
+                    <Eraser size={20} />
+                  </IconButton>
+                </FormLabelCustom>
                 <FormGroup>
                   {stateProductBrand?.data?.map(
-                    (item: ProductBrandType, index: number) => (
-                      <FormControlLabel
-                        control={<Checkbox name={item.id?.toString()} />}
-                        label={item.name}
-                        onChange={handleChangeBrand}
-                        key={index}
-                      />
-                    )
+                    (item: ProductBrandType, index: number) => {
+                      return (
+                        <FormControlLabelCustom
+                          control={
+                            <Checkbox
+                              name={item.id?.toString()}
+                              onChange={handleChangeBrand}
+                              checked={item.checked ? true : false}
+                            />
+                          }
+                          label={item.name}
+                          key={index}
+                        />
+                      )
+                    }
+                  )}
+                </FormGroup>
+              </FormControl>
+              <Divider />
+              <FormControl sx={{ mt: 2 }} disabled={stateDisableFilter}>
+                <FormLabelCustom>
+                  Manufacturer{' '}
+                  <IconButton
+                    aria-label="delete"
+                    size="small"
+                    onClick={() => handleClearFilterManufacturer()}
+                  >
+                    <Eraser size={20} />
+                  </IconButton>
+                </FormLabelCustom>
+                <FormGroup>
+                  {stateProductManufacturer?.data?.map(
+                    (item: ProductManufacturerType, index: number) => {
+                      return (
+                        <FormControlLabelCustom
+                          control={
+                            <Checkbox
+                              name={item.id?.toString()}
+                              onChange={handleChangeManufacturer}
+                              checked={item.checked ? true : false}
+                            />
+                          }
+                          label={item.name}
+                          key={index}
+                        />
+                      )
+                    }
                   )}
                 </FormGroup>
               </FormControl>
             </CardContent>
-          </CardCustom>
+          </CardSideBarCustom>
         </Grid>
         <Grid item xs>
           <CardCustom>
-            <CardContent>{renderResult()}</CardContent>
+            <CardContent>
+              <Grid container spacing={2} mb={2}>
+                <Grid item xs>
+                  <form
+                    onSubmit={handleSubmit(onSubmitSearch)}
+                    className={classes[`form-search`]}
+                  >
+                    <Controller
+                      control={control}
+                      name="key"
+                      render={({ field }) => (
+                        <>
+                          <FormControl fullWidth>
+                            <TextFieldSearchCustom
+                              id="key"
+                              error={!!errors.key}
+                              {...field}
+                            />
+                          </FormControl>
+                        </>
+                      )}
+                    />
+                    <IconButton
+                      aria-label="Search"
+                      type="submit"
+                      className={classes[`form-search__button`]}
+                    >
+                      <MagnifyingGlass size={20} />
+                    </IconButton>
+                  </form>
+                </Grid>
+                <Grid item xs={2}>
+                  <BoxCustom>
+                    <BoxSort>
+                      <FunnelSimple size={16} />
+                    </BoxSort>
+                    <SelectCustomSort
+                      fullWidth
+                      IconComponent={() => <KeyboardArrowDownIcon />}
+                      // renderValue={(value: any) => {
+                      //   if (value === '') {
+                      //     return (
+                      //       <PlaceholderSelect>
+                      //         <div>Select value</div>
+                      //       </PlaceholderSelect>
+                      //     )
+                      //   }
+                      //   return stateSelectMonthlySale.find(
+                      //     (obj) => obj.id === value
+                      //   )?.monthly_sale
+                      // }}
+                      onChange={(event: any) => {}}
+                      defaultValue="0"
+                    >
+                      <MenuItem value="0">Newest</MenuItem>
+                      <MenuItem value="1">Oldest</MenuItem>
+                    </SelectCustomSort>
+                  </BoxCustom>
+                </Grid>
+              </Grid>
+              {renderResult()}
+            </CardContent>
           </CardCustom>
         </Grid>
       </Grid>

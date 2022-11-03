@@ -7,6 +7,7 @@ import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { formatMoney } from 'src/utils/money.utils'
+import classes from './styles.module.scss'
 // import defaultImage from "/image/ProductImageComingSoon.png";
 
 const CardCustom = styled(Card)(({ theme }) => ({
@@ -17,6 +18,7 @@ const CardCustom = styled(Card)(({ theme }) => ({
       ? '1px solid #E1E6EF'
       : '1px solid rgba(255, 255, 255, 0.12)',
 }))
+
 type Props = {
   dataProduct: {
     id: number
@@ -25,11 +27,15 @@ type Props = {
     price: number
     unit_types?: string
     quantity?: number
+    code?: string
+    category?: {
+      name: string
+    }
   }
 }
 const ItemProduct: React.FC<Props> = (props: Props) => {
   return (
-    <CardCustom variant="outlined">
+    <CardCustom variant="outlined" className={classes['item-product']}>
       <Link href={`/product-detail/${props.dataProduct.id}`}>
         <a>
           <Image
@@ -45,12 +51,22 @@ const ItemProduct: React.FC<Props> = (props: Props) => {
           />
         </a>
       </Link>
-      <CardContent>
-        <Typography variant="h6">{props.dataProduct.name}</Typography>
-        <Typography variant="body1">{props.dataProduct.quantity}</Typography>
-        <Box>
-          {formatMoney(props.dataProduct.price)}
-          {props.dataProduct.unit_types}
+      <CardContent style={{ paddingBottom: '16px' }}>
+        <Typography
+          variant="body1"
+          component="div"
+          className={classes['item-product__category']}
+        >
+          {props.dataProduct.category?.name}
+        </Typography>
+        <Typography variant="h6" className={classes['item-product__name']}>
+          {props.dataProduct.name}
+        </Typography>
+        <Box className={classes['item-product__price']}>
+          {formatMoney(props.dataProduct.price)}/{props.dataProduct.unit_types}
+        </Box>
+        <Box className={classes['item-product__code']}>
+          {props.dataProduct.code}
         </Box>
       </CardContent>
     </CardCustom>

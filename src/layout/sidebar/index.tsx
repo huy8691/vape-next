@@ -120,23 +120,33 @@ const SideBar = ({ open }: Props) => {
         </ListItem>
         <Collapse in={openCollapse} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <Link href="/register">
+            <Link href="/">
               <a>
-                <ListItemButton sx={{ pl: 4 }}>
-                  <ListItemIcon>
+                <ListItemButton sx={{ pl: 6 }}>
+                  {/* <ListItemIcon>
                     <StarBorder />
-                  </ListItemIcon>
-                  <ListItemText primary="Register" />
+                  </ListItemIcon> */}
+                  <ListItemText primary="Browse products" />
                 </ListItemButton>
               </a>
             </Link>
-            <Link href="/login">
+            <Link href="/">
               <a>
-                <ListItemButton sx={{ pl: 4 }}>
-                  <ListItemIcon>
+                <ListItemButton sx={{ pl: 6 }}>
+                  {/* <ListItemIcon>
                     <StarBorder />
-                  </ListItemIcon>
-                  <ListItemText primary="Login" />
+                  </ListItemIcon> */}
+                  <ListItemText primary="Cart" />
+                </ListItemButton>
+              </a>
+            </Link>
+            <Link href="/">
+              <a>
+                <ListItemButton sx={{ pl: 6 }}>
+                  {/* <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon> */}
+                  <ListItemText primary="Wishlist" />
                 </ListItemButton>
               </a>
             </Link>

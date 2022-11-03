@@ -37,4 +37,18 @@ const getProductBrand = (): Promise<
   })
 }
 
-export { getProducts, getProductCategory, getProductBrand }
+const getProductManufacturer = (): Promise<
+  AxiosResponse<ProductBrandResponseType>
+> => {
+  return callAPIWithToken({
+    url: `/api/customer/manufacturer/`,
+    method: 'get',
+  })
+}
+
+export {
+  getProducts,
+  getProductCategory,
+  getProductBrand,
+  getProductManufacturer,
+}

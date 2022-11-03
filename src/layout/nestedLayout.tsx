@@ -111,6 +111,16 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }))
 
+const BoxMain = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  width: open ? `calc(100vw - ${drawerWidth}px)` : `calc(100vw - 65px)`,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+}))
+
 const LogoHeader = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -220,10 +230,10 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
                 </LogoHeader>
                 <SideBar open={open} />
               </Drawer>
-              <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+              <BoxMain component="main" sx={{ flexGrow: 1, p: 3 }} open={open}>
                 <DrawerHeader />
                 {children}
-              </Box>
+              </BoxMain>
             </Box>
           </ThemeMui>
         </ThemeProviderNext>

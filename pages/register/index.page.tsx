@@ -615,7 +615,9 @@ const Register: NextPageWithLayout = () => {
                           id="monthly_purchase"
                           displayEmpty
                           disabled={
-                            stateSelectMonthlyPurchase.length > 0 ? false : true
+                            stateSelectMonthlyPurchase?.length > 0
+                              ? false
+                              : true
                           }
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
@@ -626,7 +628,7 @@ const Register: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return stateSelectMonthlyPurchase.find(
+                            return stateSelectMonthlyPurchase?.find(
                               (obj) => obj.id === value
                             )?.monthly
                           }}
@@ -637,7 +639,7 @@ const Register: NextPageWithLayout = () => {
                             handleChangeMonthlyPurchase(event.target.value)
                           }}
                         >
-                          {stateSelectMonthlyPurchase.map((item, index) => {
+                          {stateSelectMonthlyPurchase?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}
@@ -701,7 +703,7 @@ const Register: NextPageWithLayout = () => {
                           id="monthly_sale"
                           displayEmpty
                           disabled={
-                            stateSelectMonthlySale.length > 0 ? false : true
+                            stateSelectMonthlySale?.length > 0 ? false : true
                           }
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
@@ -712,7 +714,7 @@ const Register: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return stateSelectMonthlySale.find(
+                            return stateSelectMonthlySale?.find(
                               (obj) => obj.id === value
                             )?.monthly_sale
                           }}
@@ -723,7 +725,7 @@ const Register: NextPageWithLayout = () => {
                             handleChangeMonthlySale(event.target.value)
                           }}
                         >
-                          {stateSelectMonthlySale.map((item, index) => {
+                          {stateSelectMonthlySale?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}
@@ -785,7 +787,7 @@ const Register: NextPageWithLayout = () => {
                           id="type_of_sale"
                           displayEmpty
                           disabled={
-                            stateSelectTypeOfSale.length > 0 ? false : true
+                            stateSelectTypeOfSale?.length > 0 ? false : true
                           }
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
@@ -796,7 +798,7 @@ const Register: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return stateSelectTypeOfSale.find(
+                            return stateSelectTypeOfSale?.find(
                               (obj) => obj.id === value
                             )?.type_of_sale
                           }}
@@ -807,7 +809,7 @@ const Register: NextPageWithLayout = () => {
                             handleChangeTypeOfSale(event.target.value)
                           }}
                         >
-                          {stateSelectTypeOfSale.map((item, index) => {
+                          {stateSelectTypeOfSale?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}
@@ -898,7 +900,7 @@ const Register: NextPageWithLayout = () => {
                           id="find_us_over"
                           displayEmpty
                           disabled={
-                            stateSelectFindUsOver.length > 0 ? false : true
+                            stateSelectFindUsOver?.length > 0 ? false : true
                           }
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
@@ -909,7 +911,7 @@ const Register: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return stateSelectFindUsOver.find(
+                            return stateSelectFindUsOver?.find(
                               (obj) => obj.id === value
                             )?.find_us_over
                           }}
@@ -920,7 +922,7 @@ const Register: NextPageWithLayout = () => {
                             handleChangeFindUsOver(event.target.value)
                           }}
                         >
-                          {stateSelectFindUsOver.map((item, index) => {
+                          {stateSelectFindUsOver?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}

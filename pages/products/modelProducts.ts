@@ -17,7 +17,9 @@ export interface ProductCategoryType {
   id: number
   name: string
   is_displayed: boolean
-  parent_category: object
+  checked?: boolean
+  indeterminate?: boolean
+  child_category: ProductCategoryType[]
 }
 
 export interface ProductCategoryResponseType {
@@ -31,9 +33,24 @@ export interface ProductBrandType {
   id: number
   name: string
   logo: string
+  checked?: boolean
 }
 
 export interface ProductBrandResponseType {
+  data?: ProductBrandType[]
+  totalPages?: number
+  errors?: any
+}
+
+// manufacturer
+export interface ProductManufacturerType {
+  id: number
+  name: string
+  logo: string
+  checked?: boolean
+}
+
+export interface ProductManufacturerResponseType {
   data?: ProductBrandType[]
   totalPages?: number
   errors?: any
