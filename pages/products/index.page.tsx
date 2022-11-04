@@ -29,15 +29,10 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Slider from '@mui/material/Slider'
 import Pagination from '@mui/material/Pagination'
-import Skeleton from '@mui/material/Skeleton'
 import MenuItem from '@mui/material/MenuItem'
-import Button from '@mui/material/Button'
-import ButtonGroup from '@mui/material/ButtonGroup'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import Select from '@mui/material/Select'
 import IconButton from '@mui/material/IconButton'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputLabel from '@mui/material/InputLabel'
 
 import { ItemProduct } from 'src/components'
 import {
@@ -75,12 +70,7 @@ import { schema, schemaPrice } from './validations'
 import { ButtonCustom, TextFieldCustom, InputLabelCustom } from 'src/components'
 
 // other
-import {
-  FunnelSimple,
-  Eraser,
-  MagnifyingGlass,
-  KeyReturn,
-} from 'phosphor-react'
+import { FunnelSimple, Eraser, MagnifyingGlass } from 'phosphor-react'
 
 const CardCustom = styled(Card)(({ theme }) => ({
   backgroundColor:
@@ -99,7 +89,7 @@ const FormControlLabelCustom = styled(FormControlLabel)(() => ({
   },
 }))
 
-const FormLabelCustom = styled(FormLabel)(({ theme }) => ({
+const FormLabelCustom = styled(FormLabel)(() => ({
   fontWeight: '600',
 }))
 
@@ -107,13 +97,20 @@ const TextFieldSearchCustom = styled(TextFieldCustom)(({ theme }) => ({
   '& .MuiInputBase-input': {
     padding: '10px 45px 10px 15px',
     textOverflow: 'ellipsis',
+    backgroundColor:
+      theme.palette.mode === 'light' ? '#ffffff' : theme.palette.action.hover,
   },
 }))
-
-const BoxCustom = styled(Box)(({ theme }) => ({
+const GirdProduct = styled(Grid)(() => ({
+  ['@media (min-width:1536px) and (max-width:1700px)']: {
+    flexBasis: '20%',
+    maxWidth: '20%',
+  },
+}))
+const BoxCustom = styled(Box)(() => ({
   position: 'relative',
 }))
-const BoxSort = styled(Box)(({ theme }) => ({
+const BoxSort = styled(Box)(() => ({
   position: 'absolute',
   top: '50%',
   left: '10px',
@@ -155,7 +152,6 @@ const Products: NextPageWithLayout = () => {
   const router = useRouter()
   const dispatch = useAppDispatch()
 
-  const [checked, setChecked] = React.useState([true, false])
   const [valueRangePrice, setValueRangPrice] = React.useState<number[]>([0, 40])
   // const [stateMaxPrice, setStateMaxPrice] = React.useState<number>(0)
 
@@ -284,11 +280,13 @@ const Products: NextPageWithLayout = () => {
     })
   }
 
-  const handleChangeCategory = (
+  const handleChangeCategory = async (
     event: React.ChangeEvent<HTMLInputElement>,
     item: ProductCategoryType
   ) => {
     console.log('item', item)
+    setStateDisableFilter(true)
+
     const newArrCategory = stateProductCategory?.data?.map((object) => {
       let newChildCategory = object.child_category
       if (object.child_category?.length > 0) {
@@ -310,7 +308,6 @@ const Products: NextPageWithLayout = () => {
         ...object,
         indeterminate: false,
         child_category: newChildCategory,
-        checked: false,
       }
     })
     // const newCategory = fun(stateProductCategory?.data)
@@ -318,6 +315,23 @@ const Products: NextPageWithLayout = () => {
     setStateProductCategory({
       ...stateProductCategory,
       data: newArrCategory,
+    })
+
+    //
+    let category = await router.query.category
+    if (!category) {
+      category = `${event.target.name}`
+    } else {
+      category = ''
+    }
+
+    let routerQuery = {
+      ...router.query,
+      category: category,
+    }
+    let search = objToStringParam(routerQuery)
+    router.replace({
+      search: `${search}`,
     })
   }
 
@@ -604,6 +618,7 @@ const Products: NextPageWithLayout = () => {
         })
     }
     if (router.asPath === '/products') {
+      dispatch(loadingActions.doLoading())
       getProducts()
         .then((res) => {
           setDataProducts({})
@@ -659,19 +674,20 @@ const Products: NextPageWithLayout = () => {
         <Box mb={4}>
           <Grid container spacing={2}>
             {dataProducts?.data?.map((item: ProductDataType, index: number) => (
-              <Grid item lg={3} xl={2} key={index}>
+              <GirdProduct item lg={3} xl={2} key={index}>
                 <ItemProduct dataProduct={item} />
-              </Grid>
+              </GirdProduct>
             ))}
           </Grid>
         </Box>
         {dataProducts?.totalPages > 1 && (
           <Pagination
+            color="primary"
             count={dataProducts?.totalPages}
             variant="outlined"
             shape="rounded"
             defaultPage={1}
-            page={Number(router.query.page | 1)}
+            page={Number(router.query.page) ? Number(router.query.page) : 1}
             onChange={(e, page: number) => handleChangePagination(e, page)}
           />
         )}
@@ -985,6 +1001,7 @@ const Products: NextPageWithLayout = () => {
                             <TextFieldSearchCustom
                               id="key"
                               error={!!errors.key}
+                              placeholder="Search product by code, name..."
                               {...field}
                             />
                           </FormControl>
@@ -1020,7 +1037,7 @@ const Products: NextPageWithLayout = () => {
                       //     (obj) => obj.id === value
                       //   )?.monthly_sale
                       // }}
-                      onChange={(event: any) => {}}
+                      onChange={() => {}}
                       defaultValue="0"
                     >
                       <MenuItem value="0">Newest</MenuItem>

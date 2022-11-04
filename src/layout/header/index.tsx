@@ -197,7 +197,7 @@ const HeaderInner = () => {
             onClose={handleCloseUserMenu}
           >
             <MenuItem onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">Profile</Typography>
+              <Typography textAlign="center">Setting</Typography>
             </MenuItem>
             <MenuItem onClick={handleCloseUserMenu}>
               <Typography textAlign="center">My account</Typography>

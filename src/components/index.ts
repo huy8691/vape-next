@@ -24,6 +24,7 @@ const TextFieldCustom = styled(TextField)({
   '& .MuiOutlinedInput-root': {
     borderRadius: '8px',
     fontSize: '1.4rem',
+    overflow: 'hidden',
   },
   '& .MuiInputBase-multiline': {
     padding: '0px',

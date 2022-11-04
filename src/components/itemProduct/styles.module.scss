@@ -5,13 +5,19 @@
   height: 100%;
   &__category {
     color: $primary;
+    font-size: 1.4rem;
   }
   &__name {
     margin-bottom: 5px;
+    font-size: 1.6rem;
   }
   &__price {
     color: $error;
     margin-bottom: 5px;
+    &__unit {
+      font-size: 14px;
+      text-transform: lowercase;
+    }
   }
   &__code {
     font-size: 1rem;

@@ -57,6 +57,7 @@ const ThemeMui = ({ children }: Props) => {
           fontSize: 14,
           htmlFontSize: 10,
         },
+
         // typography: {
         //   fontSize: 13,
         // },

@@ -22,8 +22,7 @@ const SideBarSetting = (props: Props) => {
     <div className={sidebarClass}>
       <DrawerHeader></DrawerHeader>
       <SideBarInner className={classes.sidebarSetting__inner}>
-        {' '}
-        I slide into view{' '}
+        Setting
       </SideBarInner>
     </div>
   )

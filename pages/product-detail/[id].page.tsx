@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import Slider from 'react-slick'
-// import RelatedProduct from './parts/relatedProduct'
+import RelatedProduct from './parts/relatedProduct'
+
 // import CommentProduct from './parts/commentProduct'
 import { getProductDetail } from './apiProductDetail'
+
 import { ProductDetailType } from './modelProductDetail'
 // import { messageError } from 'src/constants/message.constant'
 import { formatMoney } from 'src/utils/money.utils'
@@ -27,6 +28,7 @@ import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import Skeleton from '@mui/material/Skeleton'
 import Paper from '@mui/material/Paper'
+import IconButton from '@mui/material/IconButton'
 
 // layout
 import type { ReactElement } from 'react'
@@ -38,35 +40,55 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './validations'
 
+//slick
+import Slider from 'react-slick'
+
 // other
 import { ShoppingCart, Heart } from 'phosphor-react'
 
 // style
 const TypographyH1 = styled(Typography)(() => ({
   fontSize: '32px',
+  fontWeight: 'bold',
 }))
-const TypographyH2 = styled(Typography)(() => ({
+const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
+  fontWeight: 'bold',
+  color: theme.palette.mode === 'dark' ? '#ddd' : '#888888',
+}))
+const TypographyColor = styled('div')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  fontWeight: 'bold',
 }))
 
 const TabPanelCustom = styled('div')(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
   padding: theme.spacing(2),
+  minHeight: '300px',
 }))
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
-  padding: theme.spacing(1),
+  padding: theme.spacing(2),
   color: theme.palette.text.secondary,
+  boxShadow: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+  borderRadius: '4px',
+}))
+const CardCustom = styled(Card)(({ theme }) => ({
+  backgroundColor:
+    theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
   boxShadow: 'none',
 }))
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
-import { notificationActions } from 'src/store/notification/notificationSlice'
+// import { notificationActions } from 'src/store/notification/notificationSlice'
 
 // custom style
 import { ButtonCustom, TextFieldCustom } from 'src/components'
@@ -80,34 +102,27 @@ const ProductDetail: NextPageWithLayout = () => {
   const [stateProductDetail, setStateProductDetail] =
     useState<ProductDetailType>()
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
+  const settings1 = {
     slidesToShow: 1,
-    slidesToScroll: 1,
-  }
-
-  const detailSlide1 = {
-    slidesToShow: 1,
-    arrows: false,
+    arrows: true,
     dots: false,
   }
-  const detailSlide2 = {
+  const settings2 = {
     dots: true,
-    // infinite:
-    //   stateProductDetail?.images && stateProductDetail?.images?.length > 1
-    //     ? true
-    //     : false,
+    infinite:
+      stateProductDetail?.images && stateProductDetail?.images?.length > 3
+        ? true
+        : false,
     slidesToShow: 3,
     slidesToScroll: 1,
     focusOnSelect: true,
     centerMode: true,
+    arrows: false,
     centerPadding: '0px',
   }
 
   // tabs
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
   interface TabPanelProps {
@@ -151,6 +166,7 @@ const ProductDetail: NextPageWithLayout = () => {
     console.log('4444', values)
   }
 
+  // Call api "get product detail" and assign variables
   useEffect(() => {
     console.log('4444', router.query)
     if (router.query.id) {
@@ -164,29 +180,30 @@ const ProductDetail: NextPageWithLayout = () => {
         })
         .catch((error) => {
           const data = error.response?.data
+
           dispatch(loadingActions.doLoadingFailure())
-          dispatch(
-            notificationActions.doNotification({
-              message: data?.message ? data?.message : 'Error',
-              type: 'error',
-            })
-          )
+          // dispatch(
+          //   notificationActions.doNotification({
+          //     message: data?.message ? data?.message : 'Error',
+          //     type: 'error',
+          //   })
+          // )
         })
     }
-  }, [router])
+  }, [router, dispatch])
 
   const renderSlides1 = () => {
     if (!stateProductDetail?.images) {
       return (
-        <Skeleton animation="wave" variant="rounded" height={330} width={275} />
+        <Skeleton animation="wave" variant="rounded" height={460} width={296} />
       )
     }
     if (stateProductDetail?.images.length === 0) {
       return (
         <div
           style={{
-            width: '275px',
-            height: '330px',
+            width: '296px',
+            height: '340px',
             backgroundColor: '#F8F9FC',
           }}
         ></div>
@@ -194,16 +211,16 @@ const ProductDetail: NextPageWithLayout = () => {
     }
 
     return (
-      <Slider {...settings}>
+      <Slider {...settings1} asNavFor={nav1} ref={(c: any) => setNav2(c)}>
         {stateProductDetail?.images.map((item: any, idx: number) => {
           return (
-            <div key={idx} style={{ width: '0px' }}>
+            <div key={idx}>
               <Image
                 alt={stateProductDetail?.name}
                 src={item}
-                objectFit="cover"
-                width="275"
-                height="330"
+                objectFit="contain"
+                width="296"
+                height="340"
               />
             </div>
           )
@@ -213,12 +230,13 @@ const ProductDetail: NextPageWithLayout = () => {
   }
 
   return (
-    <>
+    <div className={classes['product-detail']}>
       <Head>
         {/* <title>{dataProductDetail.data?.name} | VAPE</title> */}
         <link
           rel="stylesheet"
           type="text/css"
+          charSet="UTF-8"
           href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
         />
         <link
@@ -228,14 +246,14 @@ const ProductDetail: NextPageWithLayout = () => {
         />
       </Head>
 
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={3}>
-          <Grid xs>
-            <div className={classes.rowSlideShow}>
-              {renderSlides1()}
-              <div className={classes.slideShowSmall}>
-                {/* <Slider
-                  {...detailSlide2}
+      <Grid container spacing={3} mb={5}>
+        <Grid xs>
+          <CardCustom>
+            <CardContent>
+              <Box mb={2}>{renderSlides1()}</Box>
+              <Box className={classes['product-detail__slick-carousel']}>
+                <Slider
+                  {...settings2}
                   asNavFor={nav2}
                   ref={(c: any) => setNav1(c)}
                 >
@@ -245,31 +263,26 @@ const ProductDetail: NextPageWithLayout = () => {
                         <Image
                           alt={stateProductDetail.name}
                           src={item}
-                          // objectFit="cover"
-                          width="90"
-                          height="90"
+                          objectFit="contain"
+                          width="130"
+                          height="130"
                         />
                       </div>
                     )
                   })}
-                </Slider> */}
-              </div>
-            </div>
-          </Grid>
-          <Grid xs={6}>
-            <TypographyH2 variant="h2" mb={2}>
-              Product details
-            </TypographyH2>
-            <Breadcrumbs aria-label="breadcrumb" mb={2}>
-              <Link underline="hover" color="inherit" href="/">
-                MUI
-              </Link>
-              <Link
-                underline="hover"
-                color="inherit"
-                href="/material-ui/getting-started/installation/"
-              >
-                Core
+                </Slider>
+              </Box>
+            </CardContent>
+          </CardCustom>
+        </Grid>
+        <Grid xs={6}>
+          <TypographyH2 variant="h2" mb={3}>
+            Product details
+          </TypographyH2>
+          <Box mb={3}>
+            <Breadcrumbs separator=">" aria-label="breadcrumb">
+              <Link underline="hover" color="link" href="/">
+                Home
               </Link>
               <Link
                 underline="hover"
@@ -277,223 +290,256 @@ const ProductDetail: NextPageWithLayout = () => {
                 href="/material-ui/react-breadcrumbs/"
                 aria-current="page"
               >
-                Breadcrumbs
+                {stateProductDetail?.name}
               </Link>
             </Breadcrumbs>
-            <Box mb={3}>
-              {stateProductDetail?.name ? (
-                <TypographyH1 variant="h1">
-                  {stateProductDetail?.name}
-                </TypographyH1>
-              ) : (
-                <Skeleton
-                  animation="wave"
-                  variant="text"
-                  sx={{ fontSize: '32px' }}
-                />
-              )}
-            </Box>
-
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={2}
-              mb={2}
-            >
-              {stateProductDetail?.code ? (
-                <div>{stateProductDetail?.code}</div>
-              ) : (
-                <Skeleton
-                  animation="wave"
-                  variant="text"
-                  sx={{ fontSize: '1.6rem' }}
-                  width="100%"
-                />
-              )}
-              {stateProductDetail?.price ? (
-                <div>
-                  {formatMoney(stateProductDetail?.price)}/
-                  {stateProductDetail?.unit_types}
-                </div>
-              ) : (
-                <Skeleton
-                  animation="wave"
-                  variant="text"
-                  sx={{ fontSize: '1.6rem' }}
-                  width="100%"
-                />
-              )}
-            </Stack>
-
-            {stateProductDetail?.description ? (
-              <Typography variant="body2">
-                {stateProductDetail?.description}
+          </Box>
+          <Box mb={3}>
+            {stateProductDetail?.name ? (
+              <TypographyH1 variant="h1">
+                {stateProductDetail?.name}
+              </TypographyH1>
+            ) : (
+              <Skeleton
+                animation="wave"
+                variant="text"
+                sx={{ fontSize: '32px' }}
+              />
+            )}
+          </Box>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+            mb={2}
+          >
+            {stateProductDetail?.code ? (
+              <Typography component="div" sx={{ fontWeight: 'bold' }}>
+                {stateProductDetail?.code}
               </Typography>
             ) : (
               <Skeleton
                 animation="wave"
                 variant="text"
-                sx={{ fontSize: '1.4rem' }}
+                sx={{ fontSize: '1.6rem' }}
+                width="100%"
               />
             )}
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-              >
-                <Tab label="Overview" {...a11yProps(0)} />
-                <Tab label="Specification" {...a11yProps(1)} />
-              </Tabs>
-            </Box>
+            {stateProductDetail?.price ? (
+              <TypographyColor className={classes['product-detail__priceUnit']}>
+                <span>{formatMoney(stateProductDetail?.price)}</span>
+                <span className={classes['product-detail__priceUnit__unit']}>
+                  /unit
+                </span>
+              </TypographyColor>
+            ) : (
+              <Skeleton
+                animation="wave"
+                variant="text"
+                sx={{ fontSize: '1.6rem' }}
+                width="100%"
+              />
+            )}
+          </Stack>
+          {stateProductDetail?.description ? (
+            <Typography variant="body2" mb={2}>
+              Short description: {stateProductDetail?.description}
+            </Typography>
+          ) : (
+            <Skeleton
+              animation="wave"
+              variant="text"
+              sx={{ fontSize: '1.4rem' }}
+            />
+          )}
+          <Box>
+            <Tabs
+              value={value}
+              onChange={handleChangeTab}
+              aria-label="basic tabs example"
+            >
+              <Tab label="Overview" {...a11yProps(0)} />
+              <Tab label="Specification" {...a11yProps(1)} />
+              <Tab label="Reviews" {...a11yProps(2)} />
+            </Tabs>
             <TabPanel value={value} index={0}>
-              <Box sx={{ width: '100%' }}>
-                <Stack spacing={2}>
-                  <Box>
-                    <Typography variant="subtitle2">Product name</Typography>
-
-                    {stateProductDetail?.name ? (
-                      <Item>{stateProductDetail?.name}</Item>
-                    ) : (
-                      <Skeleton
-                        animation="wave"
-                        variant="rounded"
-                        height={36.2}
-                      />
-                    )}
-                  </Box>
-
-                  <Box>
-                    <Typography variant="subtitle2">Brand</Typography>
-
-                    {stateProductDetail?.name ? (
-                      <Item>{stateProductDetail?.name}</Item>
-                    ) : (
-                      <Skeleton
-                        animation="wave"
-                        variant="rounded"
-                        height={36.2}
-                      />
-                    )}
-                  </Box>
-                  <Box>
-                    <Typography variant="subtitle2">Manufacturer</Typography>
-
-                    {stateProductDetail?.name ? (
-                      <Item>{stateProductDetail?.name}</Item>
-                    ) : (
-                      <Skeleton
-                        animation="wave"
-                        variant="rounded"
-                        height={36.2}
-                      />
-                    )}
-                  </Box>
-                  <Box>
-                    <Typography variant="subtitle2">Unit type</Typography>
-
-                    {stateProductDetail?.name ? (
-                      <Item>{stateProductDetail?.name}</Item>
-                    ) : (
-                      <Skeleton
-                        animation="wave"
-                        variant="rounded"
-                        height={36.2}
-                      />
-                    )}
-                  </Box>
-                </Stack>
-              </Box>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
               <div
                 dangerouslySetInnerHTML={{
-                  __html: stateProductDetail?.longDescription,
+                  __html: stateProductDetail?.longDescription!,
                 }}
               />
             </TabPanel>
-          </Grid>
-          <Grid xs>
-            <Card>
-              <CardContent>
+            <TabPanel value={value} index={1}>
+              <Stack spacing={2}>
+                <Box>
+                  <Typography variant="subtitle2">Product name</Typography>
+                  {stateProductDetail?.name ? (
+                    <Item>{stateProductDetail?.name}</Item>
+                  ) : (
+                    <Skeleton
+                      animation="wave"
+                      variant="rounded"
+                      height={36.2}
+                    />
+                  )}
+                </Box>
+                <Box>
+                  <Typography variant="subtitle2">Brand</Typography>
+                  {stateProductDetail?.brand.name ? (
+                    <Item>
+                      <Image
+                        alt={stateProductDetail?.brand?.name}
+                        src={stateProductDetail.brand?.logo}
+                        objectFit="cover"
+                        width="34"
+                        height="34"
+                      />
+                      {stateProductDetail?.brand?.name}
+                    </Item>
+                  ) : (
+                    <Skeleton
+                      animation="wave"
+                      variant="rounded"
+                      height={36.2}
+                    />
+                  )}
+                </Box>
+                <Box>
+                  <Typography variant="subtitle2">Manufacturer</Typography>
+                  {stateProductDetail?.manufacturer?.name ? (
+                    <Item>
+                      <Image
+                        alt={stateProductDetail?.manufacturer?.name}
+                        src={stateProductDetail.manufacturer?.logo}
+                        objectFit="cover"
+                        width="34"
+                        height="34"
+                      />
+                      {stateProductDetail?.manufacturer?.name}
+                    </Item>
+                  ) : (
+                    <Skeleton
+                      animation="wave"
+                      variant="rounded"
+                      height={36.2}
+                    />
+                  )}
+                </Box>
+                <Box>
+                  <Typography variant="subtitle2">Unit type</Typography>
+                  {stateProductDetail?.unit_types ? (
+                    <Item>{stateProductDetail?.unit_types}</Item>
+                  ) : (
+                    <Skeleton
+                      animation="wave"
+                      variant="rounded"
+                      height={36.2}
+                    />
+                  )}
+                </Box>
+                <Box>
+                  <Typography variant="subtitle2">Unit type</Typography>
+                  {stateProductDetail?.unit_types ? (
+                    <Item>{stateProductDetail?.unit_types}</Item>
+                  ) : (
+                    <Skeleton
+                      animation="wave"
+                      variant="rounded"
+                      height={36.2}
+                    />
+                  )}
+                </Box>
+              </Stack>
+            </TabPanel>
+            <TabPanel value={value} index={2}></TabPanel>
+          </Box>
+        </Grid>
+        <Grid xs>
+          <Box mb={2}>
+            <CardCustom>
+              <CardContent style={{ paddingBottom: '16px' }}>
                 <Stack
                   direction="row"
                   justifyContent="space-between"
                   alignItems="center"
                   spacing={2}
                 >
-                  <div>Stock</div>
-                  <div>{stateProductDetail?.inStock}</div>
+                  <div>Instock</div>
+                  <TypographyColor>
+                    {stateProductDetail?.inStock}
+                  </TypographyColor>
                 </Stack>
               </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <Typography variant="h5">Lizard</Typography>
-                <Typography variant="h5" component="div" sx={{ fontSize: 14 }}>
-                  Enter Number of [unit] you want to order
-                </Typography>
+            </CardCustom>
+          </Box>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <Box mb={2}>
-                    <Controller
-                      control={control}
-                      name="number"
-                      render={({ field }) => (
-                        <>
-                          <FormControl fullWidth>
-                            <TextFieldCustom
-                              id="number"
-                              error={!!errors.number}
-                              {...field}
-                            />
-                            <FormHelperText error={!!errors.number}>
-                              {errors.number && `${errors.number.message}`}
-                            </FormHelperText>
-                          </FormControl>
-                        </>
-                      )}
-                    />
-                  </Box>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    spacing={2}
-                    mb={2}
+          <CardCustom>
+            <CardContent>
+              <TypographyH2 mb={1}>Order This Product</TypographyH2>
+              <Typography component="div" sx={{ fontSize: 14 }} mb={2}>
+                Enter Number of [unit] you want to order
+              </Typography>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Box mb={2}>
+                  <Controller
+                    control={control}
+                    name="number"
+                    render={({ field }) => (
+                      <>
+                        <FormControl fullWidth>
+                          <TextFieldCustom
+                            id="number"
+                            placeholder="Ex:100"
+                            error={!!errors.number}
+                            {...field}
+                          />
+                        </FormControl>
+                      </>
+                    )}
+                  />
+                </Box>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={2}
+                  mb={1}
+                >
+                  <div>Total:</div>
+                  <TypographyColor sx={{ fontSize: 24 }}>$0.00</TypographyColor>
+                </Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <IconButton color="primary">
+                    <Heart />
+                  </IconButton>
+                  <ButtonCustom
+                    variant="contained"
+                    size="large"
+                    type="submit"
+                    fullWidth
+                    startIcon={<ShoppingCart />}
                   >
-                    <div>Total:</div>
-                    <div>$0.00</div>
-                  </Stack>
-                  <Grid container spacing={2}>
-                    <Grid xs="auto">
-                      <ButtonCustom
-                        variant="outlined"
-                        size="large"
-                        type="submit"
-                        startIcon={<Heart />}
-                      ></ButtonCustom>
-                    </Grid>
-                    <Grid xs>
-                      <ButtonCustom
-                        variant="contained"
-                        size="large"
-                        type="submit"
-                        fullWidth
-                        startIcon={<ShoppingCart />}
-                      >
-                        Add To Cart
-                      </ButtonCustom>
-                    </Grid>
-                  </Grid>
-                </form>
-              </CardContent>
-            </Card>
-          </Grid>
+                    Add To Cart
+                  </ButtonCustom>
+                </Stack>
+              </form>
+            </CardContent>
+          </CardCustom>
         </Grid>
+      </Grid>
+      <Box>
+        <TypographyH2 variant="h2" mb={2}>
+          Related Products
+        </TypographyH2>
+        <RelatedProduct />
       </Box>
-    </>
+    </div>
   )
 }
 

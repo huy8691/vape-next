@@ -13,6 +13,7 @@ const nextConfig = {
     // limit of 50 domains values
     domains: [
       'develop-bizbookly.s3.ap-southeast-1.amazonaws.com',
+      'vape-test.s3.ap-southeast-1.amazonaws.com',
       'images.pexels.com',
       // 'dev.vuarausach.vn',
       'via.placeholder.com',

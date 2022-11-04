@@ -14,12 +14,22 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import Collapse from '@mui/material/Collapse'
 import StarBorder from '@mui/icons-material/StarBorder'
+import IconButton from '@mui/material/IconButton'
+import Badge from '@mui/material/Badge'
+import Tooltip from '@mui/material/Tooltip'
 // mui
 
 // import classes from './styles.module.scss'
 
 // other
-import { House, Cube, Storefront } from 'phosphor-react'
+import {
+  House,
+  Cube,
+  Storefront,
+  ShoppingCart,
+  FileSearch,
+  Heart,
+} from 'phosphor-react'
 // other
 
 type Props = {
@@ -79,32 +89,59 @@ const SideBar = ({ open }: Props) => {
       <List>
         {Menu.map((item, index) => (
           <ListItem
-            key={`${item.text}${index}`}
             disablePadding
             sx={{ display: 'block' }}
+            key={`${item.text}${index}`}
           >
             <Link href={item.link}>
               <a>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.text}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
+                {open ? (
+                  <>
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? 'initial' : 'center',
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : 'auto',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.text}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </>
+                ) : (
+                  <Tooltip title={item.text} arrow placement="right">
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? 'initial' : 'center',
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : 'auto',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.text}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </Tooltip>
+                )}
               </a>
             </Link>
           </ListItem>
@@ -120,33 +157,47 @@ const SideBar = ({ open }: Props) => {
         </ListItem>
         <Collapse in={openCollapse} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <Link href="/">
+            <Link href="/products">
               <a>
-                <ListItemButton sx={{ pl: 6 }}>
-                  {/* <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon> */}
-                  <ListItemText primary="Browse products" />
+                <ListItemButton sx={{ pl: 3 }}>
+                  {open ? (
+                    <ListItemText primary="Browse products" />
+                  ) : (
+                    <ListItemIcon>
+                      <FileSearch />
+                    </ListItemIcon>
+                  )}
                 </ListItemButton>
               </a>
             </Link>
             <Link href="/">
               <a>
-                <ListItemButton sx={{ pl: 6 }}>
-                  {/* <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon> */}
-                  <ListItemText primary="Cart" />
+                <ListItemButton sx={{ pl: 3 }}>
+                  {open ? (
+                    <>
+                      <ListItemText primary="Cart" />
+                      <IconButton>
+                        <Badge badgeContent={10} color="primary"></Badge>
+                      </IconButton>
+                    </>
+                  ) : (
+                    <ListItemIcon>
+                      <ShoppingCart />
+                    </ListItemIcon>
+                  )}
                 </ListItemButton>
               </a>
             </Link>
             <Link href="/">
               <a>
-                <ListItemButton sx={{ pl: 6 }}>
-                  {/* <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon> */}
-                  <ListItemText primary="Wishlist" />
+                <ListItemButton sx={{ pl: 3 }}>
+                  {open ? (
+                    <ListItemText primary="Wishlist" />
+                  ) : (
+                    <ListItemIcon>
+                      <Heart />
+                    </ListItemIcon>
+                  )}
                 </ListItemButton>
               </a>
             </Link>

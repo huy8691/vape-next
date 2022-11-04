@@ -63,7 +63,10 @@ const ItemProduct: React.FC<Props> = (props: Props) => {
           {props.dataProduct.name}
         </Typography>
         <Box className={classes['item-product__price']}>
-          {formatMoney(props.dataProduct.price)}/{props.dataProduct.unit_types}
+          {formatMoney(props.dataProduct.price)}/
+          <span className={classes['item-product__price__unit']}>
+            {props.dataProduct.unit_types}
+          </span>
         </Box>
         <Box className={classes['item-product__code']}>
           {props.dataProduct.code}

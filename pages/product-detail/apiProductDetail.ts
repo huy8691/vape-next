@@ -7,7 +7,7 @@ import {
 } from './modelProductDetail'
 
 const getProductDetail = (
-  productId?: string | undefined
+  productId?: string | string[]
 ): Promise<AxiosResponse<ProductDetailResponseType>> => {
   console.log('6666', productId)
   return callAPIWithToken({
@@ -19,8 +19,9 @@ const getProductDetail = (
 const getRelatedProduct = (
   params: string | string[]
 ): Promise<AxiosResponse<ProductListDataResponseType>> => {
-  return callAPI({
-    url: `/products/customer/${params}/related?pageSize=6`,
+  console.log('7777', params)
+  return callAPIWithToken({
+    url: `api/customer/products/${params}/related/?limit=6`,
     method: 'get',
   })
 }

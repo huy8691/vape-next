@@ -88,14 +88,14 @@ const TagHr = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }))
 
-const Storage = () => {
-  // set(key, value) {
-  //   localStorage.setItem(key, value)
-  // }
-  // get(key) {
-  //   return localStorage.getItem(key)
-  // }
-}
+// const Storage = () => {
+//   // set(key, value) {
+//   //   localStorage.setItem(key, value)
+//   // }
+//   // get(key) {
+//   //   return localStorage.getItem(key)
+//   // }
+// }
 
 const Login: NextPageWithLayout = () => {
   const {
