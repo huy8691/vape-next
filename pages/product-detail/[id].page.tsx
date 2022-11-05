@@ -25,10 +25,10 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Stack from '@mui/material/Stack'
 import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
+// import FormHelperText from '@mui/material/FormHelperText'
 import Skeleton from '@mui/material/Skeleton'
 import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
+// import IconButton from '@mui/material/IconButton'
 
 // layout
 import type { ReactElement } from 'react'
@@ -44,7 +44,7 @@ import { schema } from './validations'
 import Slider from 'react-slick'
 
 // other
-import { ShoppingCart, Heart } from 'phosphor-react'
+import { ShoppingCart } from 'phosphor-react'
 
 // style
 const TypographyH1 = styled(Typography)(() => ({
@@ -54,7 +54,7 @@ const TypographyH1 = styled(Typography)(() => ({
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
   fontWeight: 'bold',
-  color: theme.palette.mode === 'dark' ? '#ddd' : '#888888',
+  color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
 }))
 const TypographyColor = styled('div')(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -83,6 +83,20 @@ const CardCustom = styled(Card)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
   boxShadow: 'none',
+  borderRadius: '10px',
+}))
+const StyledTabs = styled(Tabs)(() => ({
+  '& .MuiTabs-indicator': {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  '& .MuiTabs-indicatorSpan': {
+    maxWidth: 24,
+    width: '100%',
+    backgroundColor: '#34DC75',
+    background: 'linear-gradient(93.37deg, #1cb35b 0%, #20b598 116.99%)',
+  },
 }))
 
 // api
@@ -92,6 +106,7 @@ import { loadingActions } from 'src/store/loading/loadingSlice'
 
 // custom style
 import { ButtonCustom, TextFieldCustom } from 'src/components'
+import AddFavoriteButton from './parts/AddFavoriteButton'
 
 const ProductDetail: NextPageWithLayout = () => {
   const router = useRouter()
@@ -108,7 +123,7 @@ const ProductDetail: NextPageWithLayout = () => {
     dots: false,
   }
   const settings2 = {
-    dots: true,
+    dots: false,
     infinite:
       stateProductDetail?.images && stateProductDetail?.images?.length > 3
         ? true
@@ -153,7 +168,7 @@ const ProductDetail: NextPageWithLayout = () => {
     }
   }
 
-  // form add to card
+  // form add to cart
   const {
     handleSubmit,
     control,
@@ -180,6 +195,10 @@ const ProductDetail: NextPageWithLayout = () => {
         })
         .catch((error) => {
           const data = error.response?.data
+          console.log(
+            '🚀 ~ file: [id].page.tsx ~ line 183 ~ useEffect ~ data',
+            data
+          )
 
           dispatch(loadingActions.doLoadingFailure())
           // dispatch(
@@ -354,15 +373,18 @@ const ProductDetail: NextPageWithLayout = () => {
             />
           )}
           <Box>
-            <Tabs
+            <StyledTabs
               value={value}
               onChange={handleChangeTab}
               aria-label="basic tabs example"
+              TabIndicatorProps={{
+                children: <span className="MuiTabs-indicatorSpan" />,
+              }}
             >
               <Tab label="Overview" {...a11yProps(0)} />
               <Tab label="Specification" {...a11yProps(1)} />
               <Tab label="Reviews" {...a11yProps(2)} />
-            </Tabs>
+            </StyledTabs>
             <TabPanel value={value} index={0}>
               <div
                 dangerouslySetInnerHTML={{
@@ -515,9 +537,7 @@ const ProductDetail: NextPageWithLayout = () => {
                   alignItems="center"
                   spacing={2}
                 >
-                  <IconButton color="primary">
-                    <Heart />
-                  </IconButton>
+                  <AddFavoriteButton></AddFavoriteButton>
                   <ButtonCustom
                     variant="contained"
                     size="large"
