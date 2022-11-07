@@ -25,7 +25,6 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Stack from '@mui/material/Stack'
 import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
 import Skeleton from '@mui/material/Skeleton'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
@@ -84,11 +83,24 @@ const CardCustom = styled(Card)(({ theme }) => ({
     theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
   boxShadow: 'none',
 }))
+const TabCustom = styled(Tab)(({ theme }) => ({
+  '& .Mui-selected': {
+    position: 'relative',
+    // left: '50% !important',
+    '& :before': {
+      position: 'absolute',
+      width: '40px',
+      height: '3px',
+      content: '""',
+      backgroundColor: ' red',
+    },
+  },
+}))
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
-// import { notificationActions } from 'src/store/notification/notificationSlice'
+import { notificationActions } from 'src/store/notification/notificationSlice'
 
 // custom style
 import { ButtonCustom, TextFieldCustom } from 'src/components'
@@ -169,6 +181,7 @@ const ProductDetail: NextPageWithLayout = () => {
   // Call api "get product detail" and assign variables
   useEffect(() => {
     console.log('4444', router.query)
+    setStateProductDetail({})
     if (router.query.id) {
       dispatch(loadingActions.doLoading())
       getProductDetail(router?.query?.id)
@@ -182,23 +195,21 @@ const ProductDetail: NextPageWithLayout = () => {
           const data = error.response?.data
 
           dispatch(loadingActions.doLoadingFailure())
-          // dispatch(
-          //   notificationActions.doNotification({
-          //     message: data?.message ? data?.message : 'Error',
-          //     type: 'error',
-          //   })
-          // )
+          dispatch(
+            notificationActions.doNotification({
+              message: data?.message ? data?.message : 'Error',
+              type: 'error',
+            })
+          )
         })
     }
   }, [router, dispatch])
 
   const renderSlides1 = () => {
     if (!stateProductDetail?.images) {
-      return (
-        <Skeleton animation="wave" variant="rounded" height={460} width={296} />
-      )
+      return <Skeleton animation="wave" variant="rounded" height={460} />
     }
-    if (stateProductDetail?.images.length === 0) {
+    if (stateProductDetail?.images?.length === 0) {
       return (
         <div
           style={{
@@ -261,7 +272,7 @@ const ProductDetail: NextPageWithLayout = () => {
                     return (
                       <div key={idx}>
                         <Image
-                          alt={stateProductDetail.name}
+                          alt={stateProductDetail?.name}
                           src={item}
                           objectFit="contain"
                           width="130"
@@ -359,9 +370,9 @@ const ProductDetail: NextPageWithLayout = () => {
               onChange={handleChangeTab}
               aria-label="basic tabs example"
             >
-              <Tab label="Overview" {...a11yProps(0)} />
-              <Tab label="Specification" {...a11yProps(1)} />
-              <Tab label="Reviews" {...a11yProps(2)} />
+              <TabCustom label="Overview" {...a11yProps(0)} />
+              <TabCustom label="Specification" {...a11yProps(1)} />
+              <TabCustom label="Reviews" {...a11yProps(2)} />
             </Tabs>
             <TabPanel value={value} index={0}>
               <div
@@ -386,11 +397,11 @@ const ProductDetail: NextPageWithLayout = () => {
                 </Box>
                 <Box>
                   <Typography variant="subtitle2">Brand</Typography>
-                  {stateProductDetail?.brand.name ? (
+                  {stateProductDetail?.brand?.name ? (
                     <Item>
                       <Image
                         alt={stateProductDetail?.brand?.name}
-                        src={stateProductDetail.brand?.logo}
+                        src={stateProductDetail?.brand?.logo}
                         objectFit="cover"
                         width="34"
                         height="34"
@@ -411,7 +422,7 @@ const ProductDetail: NextPageWithLayout = () => {
                     <Item>
                       <Image
                         alt={stateProductDetail?.manufacturer?.name}
-                        src={stateProductDetail.manufacturer?.logo}
+                        src={stateProductDetail?.manufacturer?.logo}
                         objectFit="cover"
                         width="34"
                         height="34"
@@ -452,7 +463,9 @@ const ProductDetail: NextPageWithLayout = () => {
                 </Box>
               </Stack>
             </TabPanel>
-            <TabPanel value={value} index={2}></TabPanel>
+            <TabPanel value={value} index={2}>
+              Review
+            </TabPanel>
           </Box>
         </Grid>
         <Grid xs>

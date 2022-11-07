@@ -17,6 +17,7 @@ import StarBorder from '@mui/icons-material/StarBorder'
 import IconButton from '@mui/material/IconButton'
 import Badge from '@mui/material/Badge'
 import Tooltip from '@mui/material/Tooltip'
+import { useRouter } from 'next/router'
 // mui
 
 // import classes from './styles.module.scss'
@@ -49,6 +50,7 @@ const Menu = [
 ]
 
 const SideBar = ({ open }: Props) => {
+  const router = useRouter()
   const [openCollapse, setOpenCollapse] = React.useState(true)
 
   const handleClick = () => {
@@ -90,6 +92,7 @@ const SideBar = ({ open }: Props) => {
         {Menu.map((item, index) => (
           <ListItem
             disablePadding
+            selected={item.link === router.pathname}
             sx={{ display: 'block' }}
             key={`${item.text}${index}`}
           >
@@ -157,9 +160,12 @@ const SideBar = ({ open }: Props) => {
         </ListItem>
         <Collapse in={openCollapse} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <Link href="/products">
+            <Link href="/browse-products">
               <a>
-                <ListItemButton sx={{ pl: 3 }}>
+                <ListItemButton
+                  sx={{ pl: 3 }}
+                  selected={router.pathname === '/browse-products'}
+                >
                   {open ? (
                     <ListItemText primary="Browse products" />
                   ) : (

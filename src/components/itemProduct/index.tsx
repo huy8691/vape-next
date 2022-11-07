@@ -45,8 +45,8 @@ const ItemProduct: React.FC<Props> = (props: Props) => {
                 ? props.dataProduct.thumbnail
                 : 'https://via.placeholder.com/200x200?text=VAPE'
             }
-            width="210"
-            height="210"
+            width="260"
+            height="260"
             objectFit="contain"
           />
         </a>

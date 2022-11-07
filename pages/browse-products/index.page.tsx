@@ -138,7 +138,7 @@ const SelectCustomSort = styled(Select)({
   },
 })
 
-const Products: NextPageWithLayout = () => {
+const BrowseProducts: NextPageWithLayout = () => {
   const minDistance = 10
   const [dataProducts, setDataProducts] =
     useState<ProductListDataResponseType>()
@@ -286,32 +286,67 @@ const Products: NextPageWithLayout = () => {
   ) => {
     console.log('item', item)
     setStateDisableFilter(true)
-
     const newArrCategory = stateProductCategory?.data?.map((object) => {
+      // cap 2
       let newChildCategory = object.child_category
-      if (object.child_category?.length > 0) {
-        newChildCategory = object.child_category?.map((item) => {
-          if (event.target.name === item.id.toString()) {
-            return { ...item, checked: !item.checked }
+      if (item?.parent_category) {
+        if (object.child_category?.length > 0) {
+          newChildCategory = object.child_category?.map((item) => {
+            if (event.target.name === item.id.toString()) {
+              return { ...item, checked: !item.checked }
+            }
+            return item
+          })
+          // console.log('sweeterArray', a)
+          // kiem tra thang con bao nhieu cai da check
+          const lengthChecked = newChildCategory
+            .map((obj) => {
+              if (obj.checked === true) {
+                return obj
+              }
+            })
+            .filter((value) => {
+              return value !== undefined
+            })
+          console.log('sweeterArray', lengthChecked.length)
+          return {
+            ...object,
+            indeterminate:
+              lengthChecked.length > 0 &&
+              lengthChecked.length < object.child_category?.length
+                ? true
+                : false,
+            checked:
+              lengthChecked.length === object.child_category?.length
+                ? true
+                : false,
+            child_category: newChildCategory,
           }
-          return item
-        })
+        }
       }
+
+      // cap1
       if (event.target.name === object.id.toString()) {
+        if (object.child_category?.length > 0) {
+          newChildCategory = object.child_category?.map((item) => {
+            if (object.checked) {
+              return { ...item, checked: false }
+            }
+            return { ...item, checked: true }
+          })
+        }
         return {
           ...object,
           checked: !object.checked,
+          indeterminate: false,
           child_category: newChildCategory,
         }
       }
       return {
         ...object,
-        indeterminate: false,
         child_category: newChildCategory,
       }
     })
-    // const newCategory = fun(stateProductCategory?.data)
-    console.log('newArrCategory', newArrCategory)
     setStateProductCategory({
       ...stateProductCategory,
       data: newArrCategory,
@@ -322,11 +357,20 @@ const Products: NextPageWithLayout = () => {
     if (!category) {
       category = `${event.target.name}`
     } else {
-      category = ''
+      let arrayCategory = await category?.split(',')
+      const index = await arrayCategory.indexOf(event.target.name)
+      if (index > -1) {
+        await arrayCategory.splice(index, 1)
+        category = await arrayCategory.join(',')
+      } else {
+        await arrayCategory.push(event.target.name)
+        category = await arrayCategory.join(',')
+      }
     }
 
     let routerQuery = {
       ...router.query,
+      page: 1,
       category: category,
     }
     let search = objToStringParam(routerQuery)
@@ -617,7 +661,7 @@ const Products: NextPageWithLayout = () => {
           )
         })
     }
-    if (router.asPath === '/products') {
+    if (router.asPath === '/browse-products') {
       dispatch(loadingActions.doLoading())
       getProducts()
         .then((res) => {
@@ -845,7 +889,7 @@ const Products: NextPageWithLayout = () => {
                 </Grid>
               </form>
               <Divider />
-              <FormControl sx={{ mt: 2 }}>
+              <FormControl sx={{ mt: 2 }} disabled={stateDisableFilter}>
                 <FormLabelCustom>Category</FormLabelCustom>
                 <CategoryItem list={stateProductCategory?.data} />
                 {/* {stateProductCategory?.data?.map(
@@ -1055,7 +1099,7 @@ const Products: NextPageWithLayout = () => {
   )
 }
 
-Products.getLayout = function getLayout(page: ReactElement) {
+BrowseProducts.getLayout = function getLayout(page: ReactElement) {
   return <NestedLayout>{page}</NestedLayout>
 }
-export default Products
+export default BrowseProducts
