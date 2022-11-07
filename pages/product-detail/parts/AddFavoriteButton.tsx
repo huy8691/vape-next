@@ -7,12 +7,23 @@ import iconFavorited from '../parts/icon/icon-favorited.svg'
 
 import { styled } from '@mui/material/styles'
 const IconButtonFavorite = styled(IconButton)(() => ({
-  padding: '21px',
+  padding: '17px',
   border: `1px solid green`,
   borderRadius: '10px',
+  // position: 'relative',
+  // backgroundClip: 'padding-box',
+  // '&:before': {
+  //   content: '""',
+  //   position: 'absolute',
+  //   inset: '0',
+  //   zIndex: '-1',
+  //   margin: '-10px',
+  //   backgroundImage: 'linear-gradient(93.37deg, #1CB35B 0%, #20B598 116.99%)',
+  //   borderRadius: 'inherit',
+  // },
 }))
 const IconButtonFavorited = styled(IconButton)(() => ({
-  padding: '21px',
+  padding: '17px',
   border: '1px solid transparent',
   borderRadius: '10px',
 }))

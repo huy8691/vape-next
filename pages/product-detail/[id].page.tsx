@@ -86,6 +86,7 @@ const CardCustom = styled(Card)(({ theme }) => ({
   borderRadius: '10px',
 }))
 const StyledTabs = styled(Tabs)(() => ({
+  marginBottom: '15px',
   '& .MuiTabs-indicator': {
     display: 'flex',
     justifyContent: 'center',
