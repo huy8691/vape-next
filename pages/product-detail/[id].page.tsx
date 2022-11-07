@@ -53,8 +53,8 @@ const TypographyH1 = styled(Typography)(() => ({
 }))
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
-  fontWeight: 'bold',
-  color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
+  fontWeight: '600',
+  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
 }))
 const TypographyColor = styled('div')(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -85,6 +85,11 @@ const CardCustom = styled(Card)(({ theme }) => ({
   boxShadow: 'none',
   borderRadius: '10px',
 }))
+const StickyWrapper = styled('div')(() => ({
+  position: 'sticky',
+  top: '70px',
+}))
+
 const StyledTabs = styled(Tabs)(() => ({
   marginBottom: '15px',
   '& .MuiTabs-indicator': {
@@ -99,11 +104,14 @@ const StyledTabs = styled(Tabs)(() => ({
     background: 'linear-gradient(93.37deg, #1cb35b 0%, #20b598 116.99%)',
   },
 }))
+const ImageWrapper = styled('div')(() => ({
+  background: 'white',
+}))
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
-// import { notificationActions } from 'src/store/notification/notificationSlice'
+import { notificationActions } from 'src/store/notification/notificationSlice'
 
 // custom style
 import { ButtonCustom, TextFieldCustom } from 'src/components'
@@ -185,6 +193,7 @@ const ProductDetail: NextPageWithLayout = () => {
   // Call api "get product detail" and assign variables
   useEffect(() => {
     console.log('4444', router.query)
+    // setStateProductDetail({})
     if (router.query.id) {
       dispatch(loadingActions.doLoading())
       getProductDetail(router?.query?.id)
@@ -202,53 +211,67 @@ const ProductDetail: NextPageWithLayout = () => {
           )
 
           dispatch(loadingActions.doLoadingFailure())
-          // dispatch(
-          //   notificationActions.doNotification({
-          //     message: data?.message ? data?.message : 'Error',
-          //     type: 'error',
-          //   })
-          // )
+          dispatch(
+            notificationActions.doNotification({
+              message: data?.message ? data?.message : 'Error',
+              type: 'error',
+            })
+          )
         })
     }
   }, [router, dispatch])
 
   const renderSlides1 = () => {
     if (!stateProductDetail?.images) {
-      return (
-        <Skeleton animation="wave" variant="rounded" height={460} width={296} />
-      )
-    }
-    if (stateProductDetail?.images.length === 0) {
-      return (
-        <div
-          style={{
-            width: '296px',
-            height: '340px',
-            backgroundColor: '#F8F9FC',
-          }}
-        ></div>
-      )
+      return <Skeleton animation="wave" variant="rounded" height={340} />
     }
 
     return (
       <Slider {...settings1} asNavFor={nav1} ref={(c: any) => setNav2(c)}>
         {stateProductDetail?.images.map((item: any, idx: number) => {
           return (
-            <div key={idx}>
+            <ImageWrapper key={idx}>
               <Image
                 alt={stateProductDetail?.name}
                 src={item}
                 objectFit="contain"
-                width="296"
-                height="340"
+                width={500}
+                height={500}
               />
+            </ImageWrapper>
+          )
+        })}
+      </Slider>
+    )
+  }
+  const renderSlides2 = () => {
+    if (!stateProductDetail?.images) {
+      return <Skeleton animation="wave" variant="rounded" height={60} />
+    }
+
+    return (
+      <Slider {...settings2} asNavFor={nav2} ref={(c: any) => setNav1(c)}>
+        {stateProductDetail?.images?.map((item: any, idx: number) => {
+          return (
+            <div
+              key={idx}
+              className={classes['product-detail__slick-carousel__item']}
+            >
+              <ImageWrapper>
+                <Image
+                  alt={stateProductDetail?.name}
+                  src={item}
+                  objectFit="contain"
+                  width="130"
+                  height="130"
+                />
+              </ImageWrapper>
             </div>
           )
         })}
       </Slider>
     )
   }
-
   return (
     <div className={classes['product-detail']}>
       <Head>
@@ -268,32 +291,16 @@ const ProductDetail: NextPageWithLayout = () => {
 
       <Grid container spacing={3} mb={5}>
         <Grid xs>
-          <CardCustom>
-            <CardContent>
-              <Box mb={2}>{renderSlides1()}</Box>
-              <Box className={classes['product-detail__slick-carousel']}>
-                <Slider
-                  {...settings2}
-                  asNavFor={nav2}
-                  ref={(c: any) => setNav1(c)}
-                >
-                  {stateProductDetail?.images?.map((item: any, idx: number) => {
-                    return (
-                      <div key={idx}>
-                        <Image
-                          alt={stateProductDetail.name}
-                          src={item}
-                          objectFit="contain"
-                          width="130"
-                          height="130"
-                        />
-                      </div>
-                    )
-                  })}
-                </Slider>
-              </Box>
-            </CardContent>
-          </CardCustom>
+          <StickyWrapper>
+            <CardCustom>
+              <CardContent>
+                <Box mb={2}>{renderSlides1()}</Box>
+                <Box className={classes['product-detail__slick-carousel']}>
+                  {renderSlides2()}
+                </Box>
+              </CardContent>
+            </CardCustom>
+          </StickyWrapper>
         </Grid>
         <Grid xs={6}>
           <TypographyH2 variant="h2" mb={3}>
@@ -304,6 +311,29 @@ const ProductDetail: NextPageWithLayout = () => {
               <Link underline="hover" color="link" href="/">
                 Home
               </Link>
+              {stateProductDetail?.category?.parent_category?.name ? (
+                <Link
+                  underline="hover"
+                  color="link"
+                  href={`/browse-products?page=1&category=${stateProductDetail.category.parent_category.id}`}
+                >
+                  <a>{stateProductDetail?.category?.parent_category?.name}</a>
+                </Link>
+              ) : (
+                ''
+              )}
+              {stateProductDetail?.category?.parent_category?.name &&
+              stateProductDetail?.category?.name ? (
+                <Link
+                  underline="hover"
+                  color="link"
+                  href={`http://localhost:4000/browse-products?page=1&category=${stateProductDetail.category.parent_category.id},${stateProductDetail.category.id}`}
+                >
+                  {stateProductDetail?.category?.name}
+                </Link>
+              ) : (
+                ''
+              )}
               <Link
                 underline="hover"
                 color="text.primary"
@@ -387,11 +417,63 @@ const ProductDetail: NextPageWithLayout = () => {
               <Tab label="Reviews" {...a11yProps(2)} />
             </StyledTabs>
             <TabPanel value={value} index={0}>
-              <div
+              {/* <div
                 dangerouslySetInnerHTML={{
                   __html: stateProductDetail?.longDescription!,
                 }}
-              />
+              /> */}
+              <div>
+                But I must explain to you how all this mistaken idea of
+                denouncing pleasure and praising pain was born and I will give
+                you a complete account of the system, and expound the actual
+                teachings of the great explorer of the truth, the master-builder
+                of human happiness. No one rejects, dislikes, or avoids pleasure
+                itself, because it is pleasure, but because those who do not
+                know how to pursue pleasure rationally encounter consequences
+                that are extremely painful. Nor again is there anyone who loves
+                or pursues or desires to obtain pain of itself, because it is
+                pain, but because occasionally circumstances occur in which toil
+                and pain can procure him some great pleasure. To take a trivial
+                example, which of us ever undertakes laborious physical
+                exercise, except to obtain some advantage from it? But who has
+                any right to find fault with a man who chooses to enjoy a
+                pleasure that has no annoying consequences, or one who avoids a
+                pain that produces no resultant pleasure? But I must explain to
+                you how all this mistaken idea of denouncing pleasure and
+                praising pain was born and I will give you a complete account of
+                the system, and expound the actual teachings of the great
+                explorer of the truth, the master-builder of human happiness. No
+                one rejects, dislikes, or avoids pleasure itself, because it is
+                pleasure, but because those who do not know how to pursue
+                pleasure rationally encounter consequences that are extremely
+                painful. Nor again is there anyone who loves or pursues or
+                desires to obtain pain of itself, because it is pain, but
+                because occasionally circumstances occur in which toil and pain
+                can procure him some great pleasure. To take a trivial example,
+                which of us ever undertakes laborious physical exercise, except
+                to obtain some advantage from it? But who has any right to find
+                fault with a man who chooses to enjoy a pleasure that has no
+                annoying consequences, or one who avoids a pain that produces no
+                resultantBut I must explain to you how all this mistaken idea of
+                denouncing pleasure and praising pain was born and I will give
+                you a complete account of the system, and expound the actual
+                teachings of the great explorer of the truth, the master-builder
+                of human happiness. No one rejects, dislikes, or avoids pleasure
+                itself, because it is pleasure, but because those who do not
+                know how to pursue pleasure rationally encounter consequences
+                that are extremely painful. Nor again is there anyone who loves
+                or pursues or desires to obtain pain of itself, because it is
+                pain, but because occasionally circumstances occur in which toil
+                and pain can procure him some great pleasure. To take a trivial
+                example, which of us ever undertakes laborious physical
+                exercise, except to obtain some advantage from it? But who has
+                any right to find fault with a man who chooses to enjoy a
+                pleasure that has no annoying consequences, or one who avoids a
+                pain that produces no resultantBut I must explain to you how all
+                this mistaken idea of denouncing pleasure and praising pain was
+                born and I will give you a complete account of the system, and
+                expound the actual teachings of the great explorer of the truth,
+              </div>
             </TabPanel>
             <TabPanel value={value} index={1}>
               <Stack spacing={2}>
@@ -409,11 +491,11 @@ const ProductDetail: NextPageWithLayout = () => {
                 </Box>
                 <Box>
                   <Typography variant="subtitle2">Brand</Typography>
-                  {stateProductDetail?.brand.name ? (
+                  {stateProductDetail?.brand?.name ? (
                     <Item>
                       <Image
                         alt={stateProductDetail?.brand?.name}
-                        src={stateProductDetail.brand?.logo}
+                        src={stateProductDetail?.brand?.logo}
                         objectFit="cover"
                         width="34"
                         height="34"
@@ -434,7 +516,7 @@ const ProductDetail: NextPageWithLayout = () => {
                     <Item>
                       <Image
                         alt={stateProductDetail?.manufacturer?.name}
-                        src={stateProductDetail.manufacturer?.logo}
+                        src={stateProductDetail?.manufacturer?.logo}
                         objectFit="cover"
                         width="34"
                         height="34"
@@ -475,83 +557,89 @@ const ProductDetail: NextPageWithLayout = () => {
                 </Box>
               </Stack>
             </TabPanel>
-            <TabPanel value={value} index={2}></TabPanel>
+            <TabPanel value={value} index={2}>
+              Review
+            </TabPanel>
           </Box>
         </Grid>
         <Grid xs>
-          <Box mb={2}>
+          <StickyWrapper>
+            <Box mb={2}>
+              <CardCustom>
+                <CardContent style={{ paddingBottom: '16px' }}>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <div>Instock</div>
+                    <TypographyColor>
+                      {stateProductDetail?.inStock}
+                    </TypographyColor>
+                  </Stack>
+                </CardContent>
+              </CardCustom>
+            </Box>
             <CardCustom>
-              <CardContent style={{ paddingBottom: '16px' }}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <div>Instock</div>
-                  <TypographyColor>
-                    {stateProductDetail?.inStock}
-                  </TypographyColor>
-                </Stack>
+              <CardContent>
+                <TypographyH2 mb={1}>Order This Product</TypographyH2>
+                <Typography component="div" sx={{ fontSize: 14 }} mb={2}>
+                  Enter Number of [unit] you want to order
+                </Typography>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Box mb={2}>
+                    <Controller
+                      control={control}
+                      name="number"
+                      render={({ field }) => (
+                        <>
+                          <FormControl fullWidth>
+                            <TextFieldCustom
+                              id="number"
+                              placeholder="Ex:100"
+                              error={!!errors.number}
+                              {...field}
+                            />
+                          </FormControl>
+                        </>
+                      )}
+                    />
+                  </Box>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                    mb={1}
+                  >
+                    <div>Total:</div>
+                    <TypographyColor sx={{ fontSize: 24 }}>
+                      $0.00
+                    </TypographyColor>
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <AddFavoriteButton></AddFavoriteButton>
+                    <ButtonCustom
+                      style={{ padding: '15px' }}
+                      variant="contained"
+                      size="large"
+                      type="submit"
+                      fullWidth
+                      startIcon={<ShoppingCart />}
+                    >
+                      Add To Cart
+                    </ButtonCustom>
+                  </Stack>
+                </form>
               </CardContent>
             </CardCustom>
-          </Box>
-
-          <CardCustom>
-            <CardContent>
-              <TypographyH2 mb={1}>Order This Product</TypographyH2>
-              <Typography component="div" sx={{ fontSize: 14 }} mb={2}>
-                Enter Number of [unit] you want to order
-              </Typography>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Box mb={2}>
-                  <Controller
-                    control={control}
-                    name="number"
-                    render={({ field }) => (
-                      <>
-                        <FormControl fullWidth>
-                          <TextFieldCustom
-                            id="number"
-                            placeholder="Ex:100"
-                            error={!!errors.number}
-                            {...field}
-                          />
-                        </FormControl>
-                      </>
-                    )}
-                  />
-                </Box>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  spacing={2}
-                  mb={1}
-                >
-                  <div>Total:</div>
-                  <TypographyColor sx={{ fontSize: 24 }}>$0.00</TypographyColor>
-                </Stack>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <AddFavoriteButton></AddFavoriteButton>
-                  <ButtonCustom
-                    variant="contained"
-                    size="large"
-                    type="submit"
-                    fullWidth
-                    startIcon={<ShoppingCart />}
-                  >
-                    Add To Cart
-                  </ButtonCustom>
-                </Stack>
-              </form>
-            </CardContent>
-          </CardCustom>
+          </StickyWrapper>
         </Grid>
       </Grid>
       <Box>

@@ -129,15 +129,51 @@
   }
 
   &__slick-carousel {
+    border-top: 1px solid #e1e6ef;
+
+    margin-left: -5px;
+    margin-right: -5px;
+    &__item {
+      padding-left: 5px;
+      padding-right: 5px;
+      // > div {
+      //   border: 1px solid $primary;
+      // }
+    }
+
     :global {
-      .slick-slide {
-        padding: 5px;
-      }
       .slick-current {
-        > div {
+        // background-color: red;
+        > div > div > div {
           border: 1px solid $primary;
         }
       }
+    }
+
+    :global {
+      .slick-slider {
+        // max-height: 150px;
+      }
+      .slick-slide {
+        // padding-top: 15px;
+        // margin-left: 10px;
+        // margin-right: 10px;
+      }
+
+      // .slick-active {
+      //   &:nth-child(odd) {
+      //     padding-right: 10px;
+      //   }
+      //   &:nth-child(even) {
+      //     padding-left: 10px;
+      //   }
+      // }
+      // .slick-track {
+      //   &:nth-child(odd) {
+      //     padding-left: 5px;
+      //     padding-right: 5px;
+      //   }
+      // }
     }
   }
 }

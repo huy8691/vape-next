@@ -20,6 +20,7 @@ export interface ProductCategoryType {
   checked?: boolean
   indeterminate?: boolean
   child_category: ProductCategoryType[]
+  parent_category: ProductCategoryType[]
 }
 
 export interface ProductCategoryResponseType {

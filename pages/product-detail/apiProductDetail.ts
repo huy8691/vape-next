@@ -2,8 +2,9 @@ import { AxiosResponse } from 'axios'
 import { callAPI, callAPIWithToken } from 'src/services/jwt-axios'
 import {
   ProductDetailResponseType,
-  ProductListDataResponseType,
+  // ProductListDataResponseType,
   CommentListDataResponseType,
+  RelatedListDataResponseType,
 } from './modelProductDetail'
 
 const getProductDetail = (
@@ -18,7 +19,7 @@ const getProductDetail = (
 
 const getRelatedProduct = (
   params: string | string[]
-): Promise<AxiosResponse<ProductListDataResponseType>> => {
+): Promise<AxiosResponse<RelatedListDataResponseType>> => {
   console.log('7777', params)
   return callAPIWithToken({
     url: `api/customer/products/${params}/related/?limit=6`,
