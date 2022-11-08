@@ -80,3 +80,11 @@ export interface CommentListDataResponseType {
   total?: number
   errors?: any
 }
+
+export interface WishListDataType {
+  id: number
+}
+export interface WishListResponseType {
+  data?: WishListDataType
+  errors?: any
+}

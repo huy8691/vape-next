@@ -129,11 +129,12 @@
   }
 
   &__slick-carousel {
-    border-top: 1px solid #e1e6ef;
+    border-top: 1px solid #ffff;
 
     margin-left: -5px;
     margin-right: -5px;
     &__item {
+      overflow: hidden;
       padding-left: 5px;
       padding-right: 5px;
       // > div {
@@ -153,6 +154,7 @@
     :global {
       .slick-slider {
         // max-height: 150px;
+        padding-top: 15px;
       }
       .slick-slide {
         // padding-top: 15px;

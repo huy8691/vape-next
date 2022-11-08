@@ -89,8 +89,34 @@ const RelatedProduct: React.FC = () => {
     if (relatedProducts?.errors) {
       return <div> Somethings went wrong </div>
     }
-    if (relatedProducts?.data?.length === 0) {
-      return <div>Products not found</div>
+    if (!relatedProducts?.data) {
+      return (
+        <>
+          <Box>
+            <Grid container spacing={2}>
+              <Grid xs={2}>
+                <CardCustom variant="outlined">
+                  <Skeleton
+                    animation="wave"
+                    variant="rounded"
+                    height={340}
+                    width="100%"
+                  />
+                  <CardContent style={{ paddingBottom: '16px' }}>
+                    <Box>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </Box>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    <Box>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </Box>
+                  </CardContent>
+                </CardCustom>
+              </Grid>
+            </Grid>
+          </Box>
+        </>
+      )
     }
     return (
       <>

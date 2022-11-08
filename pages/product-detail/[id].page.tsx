@@ -5,18 +5,19 @@ import { useRouter } from 'next/router'
 import RelatedProduct from './parts/relatedProduct'
 
 // import CommentProduct from './parts/commentProduct'
-import { getProductDetail } from './apiProductDetail'
+import { getProductDetail, postWishList } from './apiProductDetail'
 
 import { ProductDetailType } from './modelProductDetail'
 // import { messageError } from 'src/constants/message.constant'
 import { formatMoney } from 'src/utils/money.utils'
 import classes from './styles.module.scss'
-
 // mui
 import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/material/Box'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Link from '@mui/material/Link'
+import { IconButton } from '@mui/material'
+// import Link from '@mui/material/Link'
+
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -39,11 +40,14 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './validations'
-
+// icon wishlist
+import iconFavorite from './parts/icon/icon-favorite.svg'
+import iconFavorited from './parts/icon/icon-favorited.svg'
 //slick
 import Slider from 'react-slick'
 
 // other
+import Link from 'next/link'
 import { ShoppingCart } from 'phosphor-react'
 
 // style
@@ -107,7 +111,16 @@ const StyledTabs = styled(Tabs)(() => ({
 const ImageWrapper = styled('div')(() => ({
   background: 'white',
 }))
-
+const IconButtonFavorite = styled(IconButton)(() => ({
+  padding: '17px',
+  border: `1px solid green`,
+  borderRadius: '10px',
+}))
+const IconButtonFavorited = styled(IconButton)(() => ({
+  padding: '17px',
+  border: '1px solid transparent',
+  borderRadius: '10px',
+}))
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
@@ -115,7 +128,6 @@ import { notificationActions } from 'src/store/notification/notificationSlice'
 
 // custom style
 import { ButtonCustom, TextFieldCustom } from 'src/components'
-import AddFavoriteButton from './parts/AddFavoriteButton'
 
 const ProductDetail: NextPageWithLayout = () => {
   const router = useRouter()
@@ -125,11 +137,13 @@ const ProductDetail: NextPageWithLayout = () => {
   const [value, setValue] = useState(0)
   const [stateProductDetail, setStateProductDetail] =
     useState<ProductDetailType>()
+  const [isAddWistList, setIsAddWishList] = useState(false)
+  const [total, setTotal] = useState(0)
 
   const settings1 = {
     slidesToShow: 1,
-    arrows: true,
     dots: false,
+    fade: true,
   }
   const settings2 = {
     dots: false,
@@ -201,6 +215,7 @@ const ProductDetail: NextPageWithLayout = () => {
           const { data } = res.data
           console.log('data', data)
           setStateProductDetail(data)
+
           dispatch(loadingActions.doLoadingSuccess())
         })
         .catch((error) => {
@@ -209,7 +224,6 @@ const ProductDetail: NextPageWithLayout = () => {
             '🚀 ~ file: [id].page.tsx ~ line 183 ~ useEffect ~ data',
             data
           )
-
           dispatch(loadingActions.doLoadingFailure())
           dispatch(
             notificationActions.doNotification({
@@ -220,7 +234,31 @@ const ProductDetail: NextPageWithLayout = () => {
         })
     }
   }, [router, dispatch])
-
+  const handleWishList = () => {
+    dispatch(loadingActions.doLoading())
+    postWishList({ product: router?.query?.id })
+      .then((res) => {
+        const { data } = res.data
+        console.log('🚀 ~ file: [id].page.tsx ~ line 241 ~ .then ~ data', data)
+        dispatch(loadingActions.doLoadingSuccess())
+        setIsAddWishList(!isAddWistList)
+      })
+      .catch((error) => {
+        const data = error.response?.data
+        dispatch(loadingActions.doLoadingFailure())
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : 'Error',
+            type: 'error',
+          })
+        )
+      })
+  }
+  const handleOnChange = (e: any) => {
+    if (stateProductDetail?.price) {
+      setTotal(e.target.value * stateProductDetail.price)
+    }
+  }
   const renderSlides1 = () => {
     if (!stateProductDetail?.images) {
       return <Skeleton animation="wave" variant="rounded" height={340} />
@@ -272,6 +310,7 @@ const ProductDetail: NextPageWithLayout = () => {
       </Slider>
     )
   }
+  //
   return (
     <div className={classes['product-detail']}>
       <Head>
@@ -307,42 +346,41 @@ const ProductDetail: NextPageWithLayout = () => {
             Product details
           </TypographyH2>
           <Box mb={3}>
-            <Breadcrumbs separator=">" aria-label="breadcrumb">
-              <Link underline="hover" color="link" href="/">
-                Home
-              </Link>
-              {stateProductDetail?.category?.parent_category?.name ? (
-                <Link
-                  underline="hover"
-                  color="link"
-                  href={`/browse-products?page=1&category=${stateProductDetail.category.parent_category.id}`}
-                >
-                  <a>{stateProductDetail?.category?.parent_category?.name}</a>
+            {stateProductDetail?.category ? (
+              <Breadcrumbs separator=">" aria-label="breadcrumb">
+                <Link href="/">
+                  <a style={{ color: '#2F6FED', fontSize: '14px' }}>Home</a>
                 </Link>
-              ) : (
-                ''
-              )}
-              {stateProductDetail?.category?.parent_category?.name &&
-              stateProductDetail?.category?.name ? (
+                {stateProductDetail?.category?.parent_category?.name && (
+                  <Link
+                    href={`/browse-products?page=1&category=${stateProductDetail.category.parent_category.id}`}
+                  >
+                    <a style={{ color: '#2F6FED', fontSize: '14px' }}>
+                      {stateProductDetail?.category?.parent_category?.name}
+                    </a>
+                  </Link>
+                )}
                 <Link
-                  underline="hover"
-                  color="link"
-                  href={`http://localhost:4000/browse-products?page=1&category=${stateProductDetail.category.parent_category.id},${stateProductDetail.category.id}`}
+                  href={`/browse-products?page=1&category=${stateProductDetail?.category?.id}`}
                 >
-                  {stateProductDetail?.category?.name}
+                  <a style={{ color: '#2F6FED', fontSize: '14px' }}>
+                    {stateProductDetail?.category?.name}
+                  </a>
                 </Link>
-              ) : (
-                ''
-              )}
-              <Link
-                underline="hover"
-                color="text.primary"
-                href="/material-ui/react-breadcrumbs/"
-                aria-current="page"
-              >
-                {stateProductDetail?.name}
-              </Link>
-            </Breadcrumbs>
+                <Link
+                  href={`/product-detail/${stateProductDetail?.id}`}
+                  style={{ fontSize: '14px' }}
+                >
+                  <>{stateProductDetail?.name}</>
+                </Link>
+              </Breadcrumbs>
+            ) : (
+              <Skeleton
+                animation="wave"
+                variant="text"
+                sx={{ fontSize: '14px' }}
+              />
+            )}
           </Box>
           <Box mb={3}>
             {stateProductDetail?.name ? (
@@ -416,65 +454,84 @@ const ProductDetail: NextPageWithLayout = () => {
               <Tab label="Specification" {...a11yProps(1)} />
               <Tab label="Reviews" {...a11yProps(2)} />
             </StyledTabs>
-            <TabPanel value={value} index={0}>
-              {/* <div
+
+            {/* <div
                 dangerouslySetInnerHTML={{
                   __html: stateProductDetail?.longDescription!,
                 }}
               /> */}
-              <div>
-                But I must explain to you how all this mistaken idea of
-                denouncing pleasure and praising pain was born and I will give
-                you a complete account of the system, and expound the actual
-                teachings of the great explorer of the truth, the master-builder
-                of human happiness. No one rejects, dislikes, or avoids pleasure
-                itself, because it is pleasure, but because those who do not
-                know how to pursue pleasure rationally encounter consequences
-                that are extremely painful. Nor again is there anyone who loves
-                or pursues or desires to obtain pain of itself, because it is
-                pain, but because occasionally circumstances occur in which toil
-                and pain can procure him some great pleasure. To take a trivial
-                example, which of us ever undertakes laborious physical
-                exercise, except to obtain some advantage from it? But who has
-                any right to find fault with a man who chooses to enjoy a
-                pleasure that has no annoying consequences, or one who avoids a
-                pain that produces no resultant pleasure? But I must explain to
-                you how all this mistaken idea of denouncing pleasure and
-                praising pain was born and I will give you a complete account of
-                the system, and expound the actual teachings of the great
-                explorer of the truth, the master-builder of human happiness. No
-                one rejects, dislikes, or avoids pleasure itself, because it is
-                pleasure, but because those who do not know how to pursue
-                pleasure rationally encounter consequences that are extremely
-                painful. Nor again is there anyone who loves or pursues or
-                desires to obtain pain of itself, because it is pain, but
-                because occasionally circumstances occur in which toil and pain
-                can procure him some great pleasure. To take a trivial example,
-                which of us ever undertakes laborious physical exercise, except
-                to obtain some advantage from it? But who has any right to find
-                fault with a man who chooses to enjoy a pleasure that has no
-                annoying consequences, or one who avoids a pain that produces no
-                resultantBut I must explain to you how all this mistaken idea of
-                denouncing pleasure and praising pain was born and I will give
-                you a complete account of the system, and expound the actual
-                teachings of the great explorer of the truth, the master-builder
-                of human happiness. No one rejects, dislikes, or avoids pleasure
-                itself, because it is pleasure, but because those who do not
-                know how to pursue pleasure rationally encounter consequences
-                that are extremely painful. Nor again is there anyone who loves
-                or pursues or desires to obtain pain of itself, because it is
-                pain, but because occasionally circumstances occur in which toil
-                and pain can procure him some great pleasure. To take a trivial
-                example, which of us ever undertakes laborious physical
-                exercise, except to obtain some advantage from it? But who has
-                any right to find fault with a man who chooses to enjoy a
-                pleasure that has no annoying consequences, or one who avoids a
-                pain that produces no resultantBut I must explain to you how all
-                this mistaken idea of denouncing pleasure and praising pain was
-                born and I will give you a complete account of the system, and
-                expound the actual teachings of the great explorer of the truth,
-              </div>
-            </TabPanel>
+            {stateProductDetail?.longDescription ? (
+              // <div>
+              //   But I must explain to you how all this mistaken idea of
+              //   denouncing pleasure and praising pain was born and I will give
+              //   you a complete account of the system, and expound the actual
+              //   teachings of the great explorer of the truth, the
+              //   master-builder of human happiness. No one rejects, dislikes,
+              //   or avoids pleasure itself, because it is pleasure, but because
+              //   those who do not know how to pursue pleasure rationally
+              //   encounter consequences that are extremely painful. Nor again
+              //   is there anyone who loves or pursues or desires to obtain pain
+              //   of itself, because it is pain, but because occasionally
+              //   circumstances occur in which toil and pain can procure him
+              //   some great pleasure. To take a trivial example, which of us
+              //   ever undertakes laborious physical exercise, except to obtain
+              //   some advantage from it? But who has any right to find fault
+              //   with a man who chooses to enjoy a pleasure that has no
+              //   annoying consequences, or one who avoids a pain that produces
+              //   no resultant pleasure? But I must explain to you how all this
+              //   mistaken idea of denouncing pleasure and praising pain was
+              //   born and I will give you a complete account of the system, and
+              //   expound the actual teachings of the great explorer of the
+              //   truth, the master-builder of human happiness. No one rejects,
+              //   dislikes, or avoids pleasure itself, because it is pleasure,
+              //   but because those who do not know how to pursue pleasure
+              //   rationally encounter consequences that are extremely painful.
+              //   Nor again is there anyone who loves or pursues or desires to
+              //   obtain pain of itself, because it is pain, but because
+              //   occasionally circumstances occur in which toil and pain can
+              //   procure him some great pleasure. To take a trivial example,
+              //   which of us ever undertakes laborious physical exercise,
+              //   except to obtain some advantage from it? But who has any right
+              //   to find fault with a man who chooses to enjoy a pleasure that
+              //   has no annoying consequences, or one who avoids a pain that
+              //   produces no resultantBut I must explain to you how all this
+              //   mistaken idea of denouncing pleasure and praising pain was
+              //   born and I will give you a complete account of the system, and
+              //   expound the actual teachings of the great explorer of the
+              //   truth, the master-builder of human happiness. No one rejects,
+              //   dislikes, or avoids pleasure itself, because it is pleasure,
+              //   but because those who do not know how to pursue pleasure
+              //   rationally encounter consequences that are extremely painful.
+              //   Nor again is there anyone who loves or pursues or desires to
+              //   obtain pain of itself, because it is pain, but because
+              //   occasionally circumstances occur in which toil and pain can
+              //   procure him some great pleasure. To take a trivial example,
+              //   which of us ever undertakes laborious physical exercise,
+              //   except to obtain some advantage from it? But who has any right
+              //   to find fault with a man who chooses to enjoy a pleasure that
+              //   has no annoying consequences, or one who avoids a pain that
+              //   produces no resultantBut I must explain to you how all this
+              //   mistaken idea of denouncing pleasure and praising pain was
+              //   born and I will give you a complete account of the system, and
+              //   expound the actual teachings of the great explorer of the
+              //   truth,
+              // </div>
+              <TabPanel value={value} index={0}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: stateProductDetail?.longDescription!,
+                  }}
+                />
+              </TabPanel>
+            ) : (
+              <Skeleton
+                variant="rectangular"
+                animation="wave"
+                width={650}
+                height={300}
+              />
+            )}
+
             <TabPanel value={value} index={1}>
               <Stack spacing={2}>
                 <Box>
@@ -600,6 +657,7 @@ const ProductDetail: NextPageWithLayout = () => {
                               placeholder="Ex:100"
                               error={!!errors.number}
                               {...field}
+                              onChange={handleOnChange}
                             />
                           </FormControl>
                         </>
@@ -613,9 +671,9 @@ const ProductDetail: NextPageWithLayout = () => {
                     spacing={2}
                     mb={1}
                   >
-                    <div>Total:</div>
+                    <div style={{ fontSize: '12px' }}>Total:</div>
                     <TypographyColor sx={{ fontSize: 24 }}>
-                      $0.00
+                      <span>{formatMoney(total)}</span>
                     </TypographyColor>
                   </Stack>
                   <Stack
@@ -624,7 +682,27 @@ const ProductDetail: NextPageWithLayout = () => {
                     alignItems="center"
                     spacing={2}
                   >
-                    <AddFavoriteButton></AddFavoriteButton>
+                    {isAddWistList ? (
+                      <IconButtonFavorited onClick={handleWishList}>
+                        <Image
+                          alt="icon-favorite"
+                          src={iconFavorited}
+                          objectFit="contain"
+                          width="20"
+                          height="20"
+                        />
+                      </IconButtonFavorited>
+                    ) : (
+                      <IconButtonFavorite onClick={handleWishList}>
+                        <Image
+                          alt="icon-favorited"
+                          src={iconFavorite}
+                          objectFit="contain"
+                          width="20"
+                          height="20"
+                        />
+                      </IconButtonFavorite>
+                    )}
                     <ButtonCustom
                       style={{ padding: '15px' }}
                       variant="contained"

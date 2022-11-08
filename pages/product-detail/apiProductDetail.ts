@@ -5,6 +5,8 @@ import {
   // ProductListDataResponseType,
   CommentListDataResponseType,
   RelatedListDataResponseType,
+  WishListResponseType,
+  // WishListDataType,
 } from './modelProductDetail'
 
 const getProductDetail = (
@@ -39,5 +41,14 @@ const getCommentProduct = (
     },
   })
 }
-
-export { getProductDetail, getRelatedProduct, getCommentProduct }
+const postWishList = (
+  data?: any
+): Promise<AxiosResponse<WishListResponseType>> => {
+  console.log('8888', data)
+  return callAPIWithToken({
+    url: `/api/customer/products/mark-favorite/`,
+    method: 'post',
+    data: data,
+  })
+}
+export { getProductDetail, getRelatedProduct, getCommentProduct, postWishList }
