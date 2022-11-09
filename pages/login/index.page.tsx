@@ -1,5 +1,6 @@
 // react
 import React, { useState } from 'react'
+
 import type { ReactElement } from 'react'
 // react
 
@@ -7,7 +8,7 @@ import type { ReactElement } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
-// import { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 // next
 
 // mui
@@ -35,6 +36,7 @@ import { useAppDispatch } from 'src/store/hooks'
 import { loginAPI } from './loginAPI'
 import { loadingActions } from 'src/store/loading/loadingSlice'
 import { notificationActions } from 'src/store/notification/notificationSlice'
+import { emailChangePasswordActions } from 'src/store/emailChangePassword/emailChangePasswordSlice'
 import { setAuthToken } from 'src/services/jwt-axios'
 // api
 
@@ -98,6 +100,8 @@ const TagHr = styled('div')(({ theme }) => ({
 // }
 
 const Login: NextPageWithLayout = () => {
+  const [stateMail, setStateMail] = useState<string>('')
+  const router = useRouter()
   const {
     handleSubmit,
     control,
@@ -139,6 +143,23 @@ const Login: NextPageWithLayout = () => {
       })
       .catch((error) => {
         const data = error.response?.data
+        if (data?.status === 400 && data?.message === 'FIRST_LOGIN') {
+          // setStateMail(values.email)
+          dispatch(
+            emailChangePasswordActions.doEmailChangePassword({
+              email: values.email,
+              old_password: values.password,
+            })
+          )
+          router.push('/change-password')
+          dispatch(loadingActions.doLoadingFailure())
+          dispatch(
+            notificationActions.doNotification({
+              message: 'First login',
+            })
+          )
+          return
+        }
         dispatch(loadingActions.doLoadingFailure())
         dispatch(
           notificationActions.doNotification({
