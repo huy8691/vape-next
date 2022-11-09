@@ -4,19 +4,23 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import RelatedProduct from './parts/relatedProduct'
 
-// import CommentProduct from './parts/commentProduct'
-import { getProductDetail, postWishList } from './apiProductDetail'
+import {
+  getProductDetail,
+  postWishList,
+  getRelatedProduct,
+} from './apiProductDetail'
 
-import { ProductDetailType } from './modelProductDetail'
-// import { messageError } from 'src/constants/message.constant'
+import {
+  ProductDetailType,
+  ProductListDataResponseType,
+} from './modelProductDetail'
 import { formatMoney } from 'src/utils/money.utils'
 import classes from './styles.module.scss'
 // mui
 import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/material/Box'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
-import { IconButton } from '@mui/material'
-// import Link from '@mui/material/Link'
+import Button from '@mui/material/Button'
 
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
@@ -26,10 +30,8 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Stack from '@mui/material/Stack'
 import FormControl from '@mui/material/FormControl'
-// import FormHelperText from '@mui/material/FormHelperText'
 import Skeleton from '@mui/material/Skeleton'
 import Paper from '@mui/material/Paper'
-// import IconButton from '@mui/material/IconButton'
 
 // layout
 import type { ReactElement } from 'react'
@@ -91,10 +93,10 @@ const CardCustom = styled(Card)(({ theme }) => ({
 }))
 const StickyWrapper = styled('div')(() => ({
   position: 'sticky',
-  top: '70px',
+  top: '80px',
 }))
 
-const StyledTabs = styled(Tabs)(() => ({
+const StyledTabs = styled(Tabs)(({ theme }) => ({
   marginBottom: '15px',
   '& .MuiTabs-indicator': {
     display: 'flex',
@@ -104,23 +106,19 @@ const StyledTabs = styled(Tabs)(() => ({
   '& .MuiTabs-indicatorSpan': {
     maxWidth: 24,
     width: '100%',
-    backgroundColor: '#34DC75',
-    background: 'linear-gradient(93.37deg, #1cb35b 0%, #20b598 116.99%)',
+    backgroundColor: theme.palette.primary.main,
+    // background: 'linear-gradient(93.37deg, #1cb35b 0%, #20b598 116.99%)',
   },
 }))
 const ImageWrapper = styled('div')(() => ({
   background: 'white',
 }))
-const IconButtonFavorite = styled(IconButton)(() => ({
-  padding: '17px',
-  border: `1px solid green`,
+const IconButtonFavorite = styled(Button)(() => ({
+  padding: '14px',
   borderRadius: '10px',
+  minWidth: '50px',
 }))
-const IconButtonFavorited = styled(IconButton)(() => ({
-  padding: '17px',
-  border: '1px solid transparent',
-  borderRadius: '10px',
-}))
+
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
@@ -137,6 +135,8 @@ const ProductDetail: NextPageWithLayout = () => {
   const [value, setValue] = useState(0)
   const [stateProductDetail, setStateProductDetail] =
     useState<ProductDetailType>()
+  const [relatedProducts, setRelatedProducts] =
+    useState<ProductListDataResponseType>()
   const [isAddWistList, setIsAddWishList] = useState(false)
   const [total, setTotal] = useState(0)
 
@@ -206,24 +206,36 @@ const ProductDetail: NextPageWithLayout = () => {
 
   // Call api "get product detail" and assign variables
   useEffect(() => {
-    console.log('4444', router.query)
-    // setStateProductDetail({})
     if (router.query.id) {
+      setStateProductDetail(undefined)
       dispatch(loadingActions.doLoading())
       getProductDetail(router?.query?.id)
         .then((res) => {
           const { data } = res.data
-          console.log('data', data)
           setStateProductDetail(data)
-
           dispatch(loadingActions.doLoadingSuccess())
         })
         .catch((error) => {
           const data = error.response?.data
-          console.log(
-            '🚀 ~ file: [id].page.tsx ~ line 183 ~ useEffect ~ data',
-            data
+          dispatch(loadingActions.doLoadingFailure())
+          dispatch(
+            notificationActions.doNotification({
+              message: data?.message ? data?.message : 'Error',
+              type: 'error',
+            })
           )
+        })
+
+      //
+      setRelatedProducts(undefined)
+      getRelatedProduct(router?.query?.id)
+        .then((res) => {
+          const data = res.data
+          setRelatedProducts(data)
+          dispatch(loadingActions.doLoadingSuccess())
+        })
+        .catch((error) => {
+          const data = error.response?.data
           dispatch(loadingActions.doLoadingFailure())
           dispatch(
             notificationActions.doNotification({
@@ -238,9 +250,14 @@ const ProductDetail: NextPageWithLayout = () => {
     dispatch(loadingActions.doLoading())
     postWishList({ product: router?.query?.id })
       .then((res) => {
-        const { data } = res.data
-        console.log('🚀 ~ file: [id].page.tsx ~ line 241 ~ .then ~ data', data)
+        const { data } = res
+        console.log('dd', data)
         dispatch(loadingActions.doLoadingSuccess())
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : 'Success',
+          })
+        )
         setIsAddWishList(!isAddWistList)
       })
       .catch((error) => {
@@ -284,9 +301,16 @@ const ProductDetail: NextPageWithLayout = () => {
   }
   const renderSlides2 = () => {
     if (!stateProductDetail?.images) {
-      return <Skeleton animation="wave" variant="rounded" height={60} />
+      return (
+        <Skeleton
+          animation="wave"
+          variant="rounded"
+          height={130}
+          width={`calc(100% - 10px)`}
+          style={{ marginLeft: '5px' }}
+        />
+      )
     }
-
     return (
       <Slider {...settings2} asNavFor={nav2} ref={(c: any) => setNav1(c)}>
         {stateProductDetail?.images?.map((item: any, idx: number) => {
@@ -327,7 +351,6 @@ const ProductDetail: NextPageWithLayout = () => {
           href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
         />
       </Head>
-
       <Grid container spacing={3} mb={5}>
         <Grid xs>
           <StickyWrapper>
@@ -342,18 +365,29 @@ const ProductDetail: NextPageWithLayout = () => {
           </StickyWrapper>
         </Grid>
         <Grid xs={6}>
-          <TypographyH2 variant="h2" mb={3}>
-            Product details
-          </TypographyH2>
+          {stateProductDetail ? (
+            <TypographyH2 variant="h2" mb={3}>
+              Product details
+            </TypographyH2>
+          ) : (
+            <Box mb={1}>
+              <Skeleton
+                animation="wave"
+                variant="text"
+                sx={{ fontSize: '3rem' }}
+                width={400}
+              />
+            </Box>
+          )}
           <Box mb={3}>
-            {stateProductDetail?.category ? (
+            {stateProductDetail ? (
               <Breadcrumbs separator=">" aria-label="breadcrumb">
-                <Link href="/">
+                <Link href="/browse-products">
                   <a style={{ color: '#2F6FED', fontSize: '14px' }}>Home</a>
                 </Link>
                 {stateProductDetail?.category?.parent_category?.name && (
                   <Link
-                    href={`/browse-products?page=1&category=${stateProductDetail.category.parent_category.id}`}
+                    href={`/browse-products?page=1&category=${stateProductDetail.category.parent_category.id}&`}
                   >
                     <a style={{ color: '#2F6FED', fontSize: '14px' }}>
                       {stateProductDetail?.category?.parent_category?.name}
@@ -361,7 +395,7 @@ const ProductDetail: NextPageWithLayout = () => {
                   </Link>
                 )}
                 <Link
-                  href={`/browse-products?page=1&category=${stateProductDetail?.category?.id}`}
+                  href={`/browse-products?page=1&category=${stateProductDetail?.category?.id}&`}
                 >
                   <a style={{ color: '#2F6FED', fontSize: '14px' }}>
                     {stateProductDetail?.category?.name}
@@ -383,7 +417,7 @@ const ProductDetail: NextPageWithLayout = () => {
             )}
           </Box>
           <Box mb={3}>
-            {stateProductDetail?.name ? (
+            {stateProductDetail ? (
               <TypographyH1 variant="h1">
                 {stateProductDetail?.name}
               </TypographyH1>
@@ -402,7 +436,7 @@ const ProductDetail: NextPageWithLayout = () => {
             spacing={2}
             mb={2}
           >
-            {stateProductDetail?.code ? (
+            {stateProductDetail ? (
               <Typography component="div" sx={{ fontWeight: 'bold' }}>
                 {stateProductDetail?.code}
               </Typography>
@@ -414,7 +448,7 @@ const ProductDetail: NextPageWithLayout = () => {
                 width="100%"
               />
             )}
-            {stateProductDetail?.price ? (
+            {stateProductDetail ? (
               <TypographyColor className={classes['product-detail__priceUnit']}>
                 <span>{formatMoney(stateProductDetail?.price)}</span>
                 <span className={classes['product-detail__priceUnit__unit']}>
@@ -430,7 +464,7 @@ const ProductDetail: NextPageWithLayout = () => {
               />
             )}
           </Stack>
-          {stateProductDetail?.description ? (
+          {stateProductDetail ? (
             <Typography variant="body2" mb={2}>
               Short description: {stateProductDetail?.description}
             </Typography>
@@ -442,289 +476,218 @@ const ProductDetail: NextPageWithLayout = () => {
             />
           )}
           <Box>
-            <StyledTabs
-              value={value}
-              onChange={handleChangeTab}
-              aria-label="basic tabs example"
-              TabIndicatorProps={{
-                children: <span className="MuiTabs-indicatorSpan" />,
-              }}
-            >
-              <Tab label="Overview" {...a11yProps(0)} />
-              <Tab label="Specification" {...a11yProps(1)} />
-              <Tab label="Reviews" {...a11yProps(2)} />
-            </StyledTabs>
-
-            {/* <div
-                dangerouslySetInnerHTML={{
-                  __html: stateProductDetail?.longDescription!,
+            {stateProductDetail ? (
+              <StyledTabs
+                value={value}
+                onChange={handleChangeTab}
+                aria-label="basic tabs example"
+                TabIndicatorProps={{
+                  children: <span className="MuiTabs-indicatorSpan" />,
                 }}
-              /> */}
-            {stateProductDetail?.longDescription ? (
-              // <div>
-              //   But I must explain to you how all this mistaken idea of
-              //   denouncing pleasure and praising pain was born and I will give
-              //   you a complete account of the system, and expound the actual
-              //   teachings of the great explorer of the truth, the
-              //   master-builder of human happiness. No one rejects, dislikes,
-              //   or avoids pleasure itself, because it is pleasure, but because
-              //   those who do not know how to pursue pleasure rationally
-              //   encounter consequences that are extremely painful. Nor again
-              //   is there anyone who loves or pursues or desires to obtain pain
-              //   of itself, because it is pain, but because occasionally
-              //   circumstances occur in which toil and pain can procure him
-              //   some great pleasure. To take a trivial example, which of us
-              //   ever undertakes laborious physical exercise, except to obtain
-              //   some advantage from it? But who has any right to find fault
-              //   with a man who chooses to enjoy a pleasure that has no
-              //   annoying consequences, or one who avoids a pain that produces
-              //   no resultant pleasure? But I must explain to you how all this
-              //   mistaken idea of denouncing pleasure and praising pain was
-              //   born and I will give you a complete account of the system, and
-              //   expound the actual teachings of the great explorer of the
-              //   truth, the master-builder of human happiness. No one rejects,
-              //   dislikes, or avoids pleasure itself, because it is pleasure,
-              //   but because those who do not know how to pursue pleasure
-              //   rationally encounter consequences that are extremely painful.
-              //   Nor again is there anyone who loves or pursues or desires to
-              //   obtain pain of itself, because it is pain, but because
-              //   occasionally circumstances occur in which toil and pain can
-              //   procure him some great pleasure. To take a trivial example,
-              //   which of us ever undertakes laborious physical exercise,
-              //   except to obtain some advantage from it? But who has any right
-              //   to find fault with a man who chooses to enjoy a pleasure that
-              //   has no annoying consequences, or one who avoids a pain that
-              //   produces no resultantBut I must explain to you how all this
-              //   mistaken idea of denouncing pleasure and praising pain was
-              //   born and I will give you a complete account of the system, and
-              //   expound the actual teachings of the great explorer of the
-              //   truth, the master-builder of human happiness. No one rejects,
-              //   dislikes, or avoids pleasure itself, because it is pleasure,
-              //   but because those who do not know how to pursue pleasure
-              //   rationally encounter consequences that are extremely painful.
-              //   Nor again is there anyone who loves or pursues or desires to
-              //   obtain pain of itself, because it is pain, but because
-              //   occasionally circumstances occur in which toil and pain can
-              //   procure him some great pleasure. To take a trivial example,
-              //   which of us ever undertakes laborious physical exercise,
-              //   except to obtain some advantage from it? But who has any right
-              //   to find fault with a man who chooses to enjoy a pleasure that
-              //   has no annoying consequences, or one who avoids a pain that
-              //   produces no resultantBut I must explain to you how all this
-              //   mistaken idea of denouncing pleasure and praising pain was
-              //   born and I will give you a complete account of the system, and
-              //   expound the actual teachings of the great explorer of the
-              //   truth,
-              // </div>
-              <TabPanel value={value} index={0}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: stateProductDetail?.longDescription!,
-                  }}
-                />
-              </TabPanel>
+              >
+                <Tab label="Overview" {...a11yProps(0)} />
+                <Tab label="Specification" {...a11yProps(1)} />
+                <Tab label="Reviews" {...a11yProps(2)} />
+              </StyledTabs>
             ) : (
-              <Skeleton
-                variant="rectangular"
-                animation="wave"
-                width={650}
-                height={300}
-              />
+              <Box mb={1}>
+                <Skeleton
+                  animation="wave"
+                  variant="text"
+                  sx={{ fontSize: '3rem' }}
+                  width={400}
+                />
+              </Box>
             )}
-
-            <TabPanel value={value} index={1}>
-              <Stack spacing={2}>
-                <Box>
-                  <Typography variant="subtitle2">Product name</Typography>
-                  {stateProductDetail?.name ? (
-                    <Item>{stateProductDetail?.name}</Item>
-                  ) : (
-                    <Skeleton
-                      animation="wave"
-                      variant="rounded"
-                      height={36.2}
-                    />
-                  )}
-                </Box>
-                <Box>
-                  <Typography variant="subtitle2">Brand</Typography>
-                  {stateProductDetail?.brand?.name ? (
-                    <Item>
-                      <Image
-                        alt={stateProductDetail?.brand?.name}
-                        src={stateProductDetail?.brand?.logo}
-                        objectFit="cover"
-                        width="34"
-                        height="34"
-                      />
-                      {stateProductDetail?.brand?.name}
-                    </Item>
-                  ) : (
-                    <Skeleton
-                      animation="wave"
-                      variant="rounded"
-                      height={36.2}
-                    />
-                  )}
-                </Box>
-                <Box>
-                  <Typography variant="subtitle2">Manufacturer</Typography>
-                  {stateProductDetail?.manufacturer?.name ? (
-                    <Item>
-                      <Image
-                        alt={stateProductDetail?.manufacturer?.name}
-                        src={stateProductDetail?.manufacturer?.logo}
-                        objectFit="cover"
-                        width="34"
-                        height="34"
-                      />
-                      {stateProductDetail?.manufacturer?.name}
-                    </Item>
-                  ) : (
-                    <Skeleton
-                      animation="wave"
-                      variant="rounded"
-                      height={36.2}
-                    />
-                  )}
-                </Box>
-                <Box>
-                  <Typography variant="subtitle2">Unit type</Typography>
-                  {stateProductDetail?.unit_types ? (
-                    <Item>{stateProductDetail?.unit_types}</Item>
-                  ) : (
-                    <Skeleton
-                      animation="wave"
-                      variant="rounded"
-                      height={36.2}
-                    />
-                  )}
-                </Box>
-                <Box>
-                  <Typography variant="subtitle2">Unit type</Typography>
-                  {stateProductDetail?.unit_types ? (
-                    <Item>{stateProductDetail?.unit_types}</Item>
-                  ) : (
-                    <Skeleton
-                      animation="wave"
-                      variant="rounded"
-                      height={36.2}
-                    />
-                  )}
-                </Box>
-              </Stack>
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-              Review
-            </TabPanel>
+            {stateProductDetail ? (
+              <>
+                <TabPanel value={value} index={0}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: stateProductDetail?.longDescription!,
+                    }}
+                  />
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                  <Stack spacing={2}>
+                    <Box>
+                      <Typography variant="subtitle2">Product name</Typography>
+                      <Item>{stateProductDetail?.name}</Item>
+                    </Box>
+                    <Box>
+                      <Typography variant="subtitle2">Brand</Typography>
+                      <Item>
+                        <Image
+                          alt={stateProductDetail?.brand?.name}
+                          src={stateProductDetail?.brand?.logo}
+                          objectFit="cover"
+                          width="34"
+                          height="34"
+                        />
+                        {stateProductDetail?.brand?.name}
+                      </Item>
+                    </Box>
+                    <Box>
+                      <Typography variant="subtitle2">Manufacturer</Typography>
+                      <Item>
+                        <Image
+                          alt={stateProductDetail?.manufacturer?.name}
+                          src={stateProductDetail?.manufacturer?.logo}
+                          objectFit="cover"
+                          width="34"
+                          height="34"
+                        />
+                        {stateProductDetail?.manufacturer?.name}
+                      </Item>
+                    </Box>
+                    <Box>
+                      <Typography variant="subtitle2">Unit type</Typography>
+                      <Item>{stateProductDetail?.unit_types}</Item>
+                    </Box>
+                    <Box>
+                      <Typography variant="subtitle2">Unit type</Typography>
+                      <Item>{stateProductDetail?.unit_types}</Item>
+                    </Box>
+                  </Stack>
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                  Review
+                </TabPanel>
+              </>
+            ) : (
+              <Skeleton variant="rectangular" animation="wave" height={300} />
+            )}
           </Box>
         </Grid>
         <Grid xs>
           <StickyWrapper>
             <Box mb={2}>
-              <CardCustom>
-                <CardContent style={{ paddingBottom: '16px' }}>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    spacing={2}
-                  >
-                    <div>Instock</div>
-                    <TypographyColor>
-                      {stateProductDetail?.inStock}
-                    </TypographyColor>
-                  </Stack>
-                </CardContent>
-              </CardCustom>
+              {stateProductDetail ? (
+                <CardCustom>
+                  <CardContent style={{ paddingBottom: '16px' }}>
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <div>Instock</div>
+                      <TypographyColor>
+                        {stateProductDetail?.inStock}
+                      </TypographyColor>
+                    </Stack>
+                  </CardContent>
+                </CardCustom>
+              ) : (
+                <Skeleton variant="rounded" animation="wave" height={56} />
+              )}
             </Box>
-            <CardCustom>
-              <CardContent>
-                <TypographyH2 mb={1}>Order This Product</TypographyH2>
-                <Typography component="div" sx={{ fontSize: 14 }} mb={2}>
-                  Enter Number of [unit] you want to order
-                </Typography>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <Box mb={2}>
-                    <Controller
-                      control={control}
-                      name="number"
-                      render={({ field }) => (
-                        <>
-                          <FormControl fullWidth>
-                            <TextFieldCustom
-                              id="number"
-                              placeholder="Ex:100"
-                              error={!!errors.number}
-                              {...field}
-                              onChange={handleOnChange}
-                            />
-                          </FormControl>
-                        </>
-                      )}
-                    />
-                  </Box>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    spacing={2}
-                    mb={1}
-                  >
-                    <div style={{ fontSize: '12px' }}>Total:</div>
-                    <TypographyColor sx={{ fontSize: 24 }}>
-                      <span>{formatMoney(total)}</span>
-                    </TypographyColor>
-                  </Stack>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    spacing={2}
-                  >
-                    {isAddWistList ? (
-                      <IconButtonFavorited onClick={handleWishList}>
+            {stateProductDetail ? (
+              <CardCustom>
+                <CardContent>
+                  <TypographyH2 mb={1}>Order This Product</TypographyH2>
+                  <Typography component="div" sx={{ fontSize: 14 }} mb={2}>
+                    Enter Number of [unit] you want to order
+                  </Typography>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box mb={2}>
+                      <Controller
+                        control={control}
+                        name="number"
+                        render={({ field }) => (
+                          <>
+                            <FormControl fullWidth>
+                              <TextFieldCustom
+                                type="number"
+                                id="number"
+                                placeholder="Ex:100"
+                                error={!!errors.number}
+                                {...field}
+                                onKeyPress={(event) => {
+                                  if (
+                                    event?.key === '-' ||
+                                    event?.key === '+' ||
+                                    event?.key === ',' ||
+                                    event?.key === '.' ||
+                                    event?.key === 'e'
+                                  ) {
+                                    event.preventDefault()
+                                  }
+                                }}
+                                onChange={handleOnChange}
+                              />
+                            </FormControl>
+                          </>
+                        )}
+                      />
+                    </Box>
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      spacing={2}
+                      mb={1}
+                    >
+                      <div style={{ fontSize: '12px' }}>Total:</div>
+                      <TypographyColor sx={{ fontSize: 24 }}>
+                        <span>{formatMoney(total)}</span>
+                      </TypographyColor>
+                    </Stack>
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <IconButtonFavorite
+                        onClick={handleWishList}
+                        variant={isAddWistList ? `text` : `outlined`}
+                      >
                         <Image
                           alt="icon-favorite"
-                          src={iconFavorited}
-                          objectFit="contain"
-                          width="20"
-                          height="20"
-                        />
-                      </IconButtonFavorited>
-                    ) : (
-                      <IconButtonFavorite onClick={handleWishList}>
-                        <Image
-                          alt="icon-favorited"
-                          src={iconFavorite}
+                          src={isAddWistList ? iconFavorited : iconFavorite}
                           objectFit="contain"
                           width="20"
                           height="20"
                         />
                       </IconButtonFavorite>
-                    )}
-                    <ButtonCustom
-                      style={{ padding: '15px' }}
-                      variant="contained"
-                      size="large"
-                      type="submit"
-                      fullWidth
-                      startIcon={<ShoppingCart />}
-                    >
-                      Add To Cart
-                    </ButtonCustom>
-                  </Stack>
-                </form>
-              </CardContent>
-            </CardCustom>
+                      <ButtonCustom
+                        style={{ paddingTop: '11px', paddingBottom: '11px' }}
+                        variant="contained"
+                        size="large"
+                        type="submit"
+                        fullWidth
+                        startIcon={<ShoppingCart />}
+                      >
+                        Add To Cart
+                      </ButtonCustom>
+                    </Stack>
+                  </form>
+                </CardContent>
+              </CardCustom>
+            ) : (
+              <Skeleton variant="rounded" animation="wave" height={265} />
+            )}
           </StickyWrapper>
         </Grid>
       </Grid>
       <Box>
-        <TypographyH2 variant="h2" mb={2}>
-          Related Products
-        </TypographyH2>
-        <RelatedProduct />
+        {stateProductDetail ? (
+          <TypographyH2 variant="h2" mb={2}>
+            Related Products
+          </TypographyH2>
+        ) : (
+          <Box mb={1}>
+            <Skeleton
+              animation="wave"
+              variant="text"
+              sx={{ fontSize: '2rem' }}
+              width={200}
+            />
+          </Box>
+        )}
+
+        <RelatedProduct relatedProducts={relatedProducts} />
       </Box>
     </div>
   )

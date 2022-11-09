@@ -1,0 +1,56 @@
+@import 'styles/colors.scss';
+.change-password-page {
+  background-image: url('/images/Background.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  &__container {
+    min-height: 100vh;
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    margin-top: 10vh;
+  }
+  &__resendOTP {
+    color: $primary;
+    font-weight: 600;
+    margin-left: 10px;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+    &.disable {
+      color: $border;
+      cursor: default;
+      text-decoration: none;
+    }
+  }
+  &__count {
+    color: $error;
+  }
+}
+.change-password-form {
+  width: 100%;
+  margin-bottom: 30px;
+}
+.link {
+  color: rgba($link, 0.7);
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+}
