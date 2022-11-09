@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import classes from './styles.module.scss'
 
 import { styled } from '@mui/material/styles'
@@ -243,9 +243,9 @@ const BrowseProducts: NextPageWithLayout = () => {
     }
 
     setStateDisableFilter(true)
-    setTimeout(function () {
-      setStateDisableFilter(false)
-    }, 10000)
+    // setTimeout(function () {
+    //   setStateDisableFilter(false)
+    // }, 10000)
 
     router.replace({
       search: `${objToStringParam({
@@ -272,9 +272,9 @@ const BrowseProducts: NextPageWithLayout = () => {
     item: ProductCategoryType
   ) => {
     setStateDisableFilter(true)
-    setTimeout(function () {
-      setStateDisableFilter(false)
-    }, 10000)
+    // setTimeout(function () {
+    //   setStateDisableFilter(false)
+    // }, 10000)
     const newArrCategory = stateProductCategory?.data?.map((object) => {
       // cap 2
       let newChildCategory = object.child_category
@@ -366,9 +366,9 @@ const BrowseProducts: NextPageWithLayout = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setStateDisableFilter(true)
-    setTimeout(function () {
-      setStateDisableFilter(false)
-    }, 10000)
+    // setTimeout(function () {
+    //   setStateDisableFilter(false)
+    // }, 10000)
     //
     const newArrBrand = stateProductBrand?.data?.map((object) => {
       if (event.target.name === object.id.toString()) {
@@ -410,9 +410,9 @@ const BrowseProducts: NextPageWithLayout = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setStateDisableFilter(true)
-    setTimeout(function () {
-      setStateDisableFilter(false)
-    }, 10000)
+    // setTimeout(function () {
+    //   setStateDisableFilter(false)
+    // }, 10000)
     //
     const newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
       if (event.target.name === object.id.toString()) {
@@ -745,6 +745,7 @@ const BrowseProducts: NextPageWithLayout = () => {
         ...stateProductManufacturer,
         data: newArrManufacturer,
       })
+      setStateProductCategory(stateProductCategoryConstant)
       setValue('key', '')
     }
   }, [router, dispatch])
@@ -1077,15 +1078,15 @@ const BrowseProducts: NextPageWithLayout = () => {
                     </SelectCustomSort>
                   </BoxCustom>
                 </Grid>
-                {/* <Grid item xs={2}>
-                  <ButtonCustom
-                    variant="contained"
-                    startIcon={<Eraser />}
-                    
-                  >
-                    Clear filter
-                  </ButtonCustom>
-                </Grid> */}
+                <Grid item xs={2}>
+                  <Link href="/browse-products">
+                    <a>
+                      <ButtonCustom variant="contained" startIcon={<Eraser />}>
+                        Clear filter
+                      </ButtonCustom>
+                    </a>
+                  </Link>
+                </Grid>
               </Grid>
               {renderResult()}
             </CardContent>

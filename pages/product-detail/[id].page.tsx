@@ -83,7 +83,7 @@ const CardCustom = styled(Card)(({ theme }) => ({
     theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
   boxShadow: 'none',
 }))
-const TabCustom = styled(Tab)(({ theme }) => ({
+const TabCustom = styled(Tab)(() => ({
   '& .Mui-selected': {
     position: 'relative',
     // left: '50% !important',
