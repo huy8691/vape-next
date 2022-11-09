@@ -100,7 +100,6 @@ const TagHr = styled('div')(({ theme }) => ({
 // }
 
 const Login: NextPageWithLayout = () => {
-  const [stateMail, setStateMail] = useState<string>('')
   const router = useRouter()
   const {
     handleSubmit,
