@@ -2,8 +2,11 @@ import { AxiosResponse } from 'axios'
 import { callAPI, callAPIWithToken } from 'src/services/jwt-axios'
 import {
   ProductDetailResponseType,
-  ProductListDataResponseType,
+  // ProductListDataResponseType,
   CommentListDataResponseType,
+  RelatedListDataResponseType,
+  WishListResponseType,
+  // WishListDataType,
 } from './modelProductDetail'
 
 const getProductDetail = (
@@ -18,7 +21,7 @@ const getProductDetail = (
 
 const getRelatedProduct = (
   params: string | string[]
-): Promise<AxiosResponse<ProductListDataResponseType>> => {
+): Promise<AxiosResponse<RelatedListDataResponseType>> => {
   console.log('7777', params)
   return callAPIWithToken({
     url: `api/customer/products/${params}/related/?limit=6`,
@@ -38,5 +41,14 @@ const getCommentProduct = (
     },
   })
 }
-
-export { getProductDetail, getRelatedProduct, getCommentProduct }
+const postWishList = (
+  data?: any
+): Promise<AxiosResponse<WishListResponseType>> => {
+  console.log('8888', data)
+  return callAPIWithToken({
+    url: `/api/customer/products/mark-favorite/`,
+    method: 'post',
+    data: data,
+  })
+}
+export { getProductDetail, getRelatedProduct, getCommentProduct, postWishList }
