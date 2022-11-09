@@ -16,16 +16,31 @@ export interface ProductDetailType {
   price?: number
   unit_types?: string
   inStock?: number
+  category?: {
+    id?: number
+    name?: string
+    parent_category?: {
+      id?: number
+      name?: string
+    }
+  }
 }
 
 export interface RelatedProducttype {
   id: number
   name: string
-  thumbnail?: Array<string>
+  // thumbnail?: Array<string>
+  thumbnail?: string
   code: string
   price?: number
   unit_types?: string
   inStock?: number
+}
+
+export interface RelatedListDataResponseType {
+  data?: RelatedProducttype[]
+  total?: number
+  errors?: any
 }
 
 export interface ProductDetailResponseType {
@@ -63,5 +78,13 @@ export interface CommentDataType {
 export interface CommentListDataResponseType {
   data?: CommentDataType[]
   total?: number
+  errors?: any
+}
+
+export interface WishListDataType {
+  id: number
+}
+export interface WishListResponseType {
+  data?: WishListDataType
   errors?: any
 }
