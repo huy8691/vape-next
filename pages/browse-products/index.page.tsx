@@ -1,19 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-// import Link from 'next/link'
-// import {
-//   Result,
-//   Row,
-//   Col,
-//   Typography,
-//   Tabs,
-//   Pagination,
-//   Space,
-//   Button,
-//   Alert,
-// } from 'antd'
-// import { FileSyncOutlined, ClearOutlined } from '@ant-design/icons'
+import Image from 'next/image'
+import Link from 'next/link'
 import classes from './styles.module.scss'
 
 import { styled } from '@mui/material/styles'
@@ -33,6 +22,8 @@ import MenuItem from '@mui/material/MenuItem'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import Select from '@mui/material/Select'
 import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import Skeleton from '@mui/material/Skeleton'
 
 import { ItemProduct } from 'src/components'
 import {
@@ -76,12 +67,9 @@ const CardCustom = styled(Card)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
   boxShadow: 'none',
+  height: '100%',
 }))
 
-const CardSideBarCustom = styled(CardCustom)(() => ({
-  // maxHeight: 'calc(100vh - 110px)',
-  // overflow: 'auto',
-}))
 const FormControlLabelCustom = styled(FormControlLabel)(() => ({
   fontSize: '1.4rem',
   '& .MuiTypography-root': {
@@ -101,7 +89,7 @@ const TextFieldSearchCustom = styled(TextFieldCustom)(({ theme }) => ({
       theme.palette.mode === 'light' ? '#ffffff' : theme.palette.action.hover,
   },
 }))
-const GirdProduct = styled(Grid)(() => ({
+const GridProduct = styled(Grid)(() => ({
   ['@media (min-width:1536px) and (max-width:1700px)']: {
     flexBasis: '20%',
     maxWidth: '20%',
@@ -144,11 +132,14 @@ const BrowseProducts: NextPageWithLayout = () => {
     useState<ProductListDataResponseType>()
   const [stateProductCategory, setStateProductCategory] =
     useState<ProductCategoryResponseType>()
+  const [stateProductCategoryConstant, setStateProductCategoryConstant] =
+    useState<ProductCategoryResponseType>()
   const [stateProductBrand, setStateProductBrand] =
     useState<ProductBrandResponseType>()
   const [stateProductManufacturer, setStateProductManufacturer] =
     useState<ProductManufacturerResponseType>()
   const [stateDisableFilter, setStateDisableFilter] = useState<boolean>(false)
+
   const router = useRouter()
   const dispatch = useAppDispatch()
 
@@ -232,16 +223,11 @@ const BrowseProducts: NextPageWithLayout = () => {
   })
 
   const onSubmitSearch = (values: any) => {
+    handleClearFilterPrice()
     handleClearFilterBrand()
     handleClearFilterManufacturer()
-    let routerQuery = {
-      // ...router.query,
-      key: values.key,
-      page: 1,
-    }
-    let search = objToStringParam(routerQuery)
     router.replace({
-      search: `${search}`,
+      search: `${objToStringParam({ key: values.key, page: 1 })}`,
     })
   }
 
@@ -256,27 +242,29 @@ const BrowseProducts: NextPageWithLayout = () => {
       )
       return
     }
+
     setStateDisableFilter(true)
-    let routerQuery = {
-      ...router.query,
-      price_gte: values.from,
-      price_lte: values.to,
-    }
-    let search = objToStringParam(routerQuery)
+    // setTimeout(function () {
+    //   setStateDisableFilter(false)
+    // }, 10000)
+
     router.replace({
-      search: `${search}`,
+      search: `${objToStringParam({
+        ...router.query,
+        price_gte: values.from,
+        price_lte: values.to,
+      })}`,
     })
   }
 
   // handleChangePagination
   const handleChangePagination = (e: any, page: number) => {
-    let routerQuery = {
-      ...router.query,
-      page: page,
-    }
-    let search = objToStringParam(routerQuery)
+    console.log('e', e)
     router.replace({
-      search: `${search}`,
+      search: `${objToStringParam({
+        ...router.query,
+        page: page,
+      })}`,
     })
   }
 
@@ -284,8 +272,10 @@ const BrowseProducts: NextPageWithLayout = () => {
     event: React.ChangeEvent<HTMLInputElement>,
     item: ProductCategoryType
   ) => {
-    console.log('item', item)
     setStateDisableFilter(true)
+    // setTimeout(function () {
+    //   setStateDisableFilter(false)
+    // }, 10000)
     const newArrCategory = stateProductCategory?.data?.map((object) => {
       // cap 2
       let newChildCategory = object.child_category
@@ -297,9 +287,8 @@ const BrowseProducts: NextPageWithLayout = () => {
             }
             return item
           })
-          // console.log('sweeterArray', a)
           // kiem tra thang con bao nhieu cai da check
-          const lengthChecked = newChildCategory
+          let lengthChecked = newChildCategory
             .map((obj) => {
               if (obj.checked === true) {
                 return obj
@@ -308,7 +297,6 @@ const BrowseProducts: NextPageWithLayout = () => {
             .filter((value) => {
               return value !== undefined
             })
-          console.log('sweeterArray', lengthChecked.length)
           return {
             ...object,
             indeterminate:
@@ -325,7 +313,7 @@ const BrowseProducts: NextPageWithLayout = () => {
         }
       }
 
-      // cap1
+      //   // cap1
       if (event.target.name === object.id.toString()) {
         if (object.child_category?.length > 0) {
           newChildCategory = object.child_category?.map((item) => {
@@ -353,25 +341,20 @@ const BrowseProducts: NextPageWithLayout = () => {
     })
 
     //
-    let category = await router.query.category
-    if (!category) {
-      category = `${event.target.name}`
-    } else {
-      let arrayCategory = await category?.split(',')
-      const index = await arrayCategory.indexOf(event.target.name)
-      if (index > -1) {
-        await arrayCategory.splice(index, 1)
-        category = await arrayCategory.join(',')
-      } else {
-        await arrayCategory.push(event.target.name)
-        category = await arrayCategory.join(',')
+    let category: string[] = []
+    const flatten = function (arr: ProductCategoryType[]) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].child_category?.length > 0) {
+          flatten(arr[i].child_category)
+        }
+        if (arr[i].checked === true) category?.push(arr[i].id.toString())
       }
+      return category
     }
-
     let routerQuery = {
       ...router.query,
       page: 1,
-      category: category,
+      category: newArrCategory ? flatten(newArrCategory).toString() : null,
     }
     let search = objToStringParam(routerQuery)
     router.replace({
@@ -384,7 +367,9 @@ const BrowseProducts: NextPageWithLayout = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setStateDisableFilter(true)
-    console.log('eee3', event.target.name)
+    // setTimeout(function () {
+    //   setStateDisableFilter(false)
+    // }, 10000)
     //
     const newArrBrand = stateProductBrand?.data?.map((object) => {
       if (event.target.name === object.id.toString()) {
@@ -412,14 +397,12 @@ const BrowseProducts: NextPageWithLayout = () => {
         brand = await arrayBrand.join(',')
       }
     }
-    let routerQuery = {
-      ...router.query,
-      page: 1,
-      brand: brand,
-    }
-    let search = await objToStringParam(routerQuery)
     await router.replace({
-      search: `${search}`,
+      search: `${objToStringParam({
+        ...router.query,
+        page: 1,
+        brand: brand,
+      })}`,
     })
   }
 
@@ -428,6 +411,9 @@ const BrowseProducts: NextPageWithLayout = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setStateDisableFilter(true)
+    // setTimeout(function () {
+    //   setStateDisableFilter(false)
+    // }, 10000)
     //
     const newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
       if (event.target.name === object.id.toString()) {
@@ -455,84 +441,147 @@ const BrowseProducts: NextPageWithLayout = () => {
         manufacturer = await arrayManufacturer.join(',')
       }
     }
-    let routerQuery = {
-      ...router.query,
-      page: 1,
-      manufacturer: manufacturer,
-    }
-    let search = await objToStringParam(routerQuery)
     await router.replace({
-      search: `${search}`,
+      search: `${objToStringParam({
+        ...router.query,
+        page: 1,
+        manufacturer: manufacturer,
+      })}`,
     })
   }
 
+  // handle clear price
+  const handleClearFilterPrice = () => {
+    if (router.query.price_lte || router.query.price_gte) {
+      router.replace({
+        search: `${objToStringParam({
+          ...router.query,
+          page: 1,
+          price_lte: null,
+          price_gte: null,
+        })}`,
+      })
+    }
+  }
+  // handle clear category
+  const handleClearFilterCategory = () => {
+    if (router.query.category) {
+      router.replace({
+        search: `${objToStringParam({
+          ...router.query,
+          page: 1,
+          category: null,
+        })}`,
+      })
+      setStateProductCategory(stateProductCategoryConstant)
+    }
+  }
   // handle clear brand
   const handleClearFilterBrand = () => {
     if (router.query.brand) {
-      let routerQuery = {
-        ...router.query,
-        page: 1,
-        brand: null,
-      }
-      let search = objToStringParam(routerQuery)
       router.replace({
-        search: `${search}`,
+        search: `${objToStringParam({
+          ...router.query,
+          page: 1,
+          brand: null,
+        })}`,
+      })
+      let newArrBrand = stateProductBrand?.data?.map((object) => {
+        return { ...object, checked: false }
+      })
+      setStateProductBrand({
+        ...stateProductBrand,
+        data: newArrBrand,
       })
     }
-    let newArrBrand = stateProductBrand?.data?.map((object) => {
-      return { ...object, checked: false }
-    })
-    setStateProductBrand({
-      ...stateProductBrand,
-      data: newArrBrand,
-    })
   }
   // handle clear manufacturer
   const handleClearFilterManufacturer = () => {
     if (router.query.manufacturer) {
-      let routerQuery = {
-        ...router.query,
-        page: 1,
-        manufacturer: null,
-      }
-      let search = objToStringParam(routerQuery)
       router.replace({
-        search: `${search}`,
+        search: `${objToStringParam({
+          ...router.query,
+          page: 1,
+          manufacturer: null,
+        })}`,
+      })
+      let newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
+        return { ...object, checked: false }
+      })
+      setStateProductManufacturer({
+        ...stateProductManufacturer,
+        data: newArrManufacturer,
       })
     }
-    let newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
-      return { ...object, checked: false }
-    })
-    setStateProductManufacturer({
-      ...stateProductManufacturer,
-      data: newArrManufacturer,
-    })
   }
-  // handle clear manufacturer and brand
-  // const handleClearFilterManufacturerBrand = () => {
-  //   let newArrBrand = stateProductBrand?.data?.map((object) => {
-  //     return { ...object, checked: false }
-  //   })
-  //   console.log('33333', newArrBrand)
-  //   let newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
-  //     return { ...object, checked: false }
-  //   })
-  //   setStateProductBrand({
-  //     ...stateProductBrand,
-  //     data: newArrBrand,
-  //   })
-  //   setStateProductManufacturer({
-  //     ...stateProductManufacturer,
-  //     data: newArrManufacturer,
-  //   })
-  // }
 
   useEffect(() => {
     let asPath = router.asPath
+    // category
     getProductCategory()
       .then((res) => {
         const data = res.data
-        setStateProductCategory(data)
+        // find category
+        if (asPath.indexOf('category=') !== -1) {
+          let sliceAsPathCategory = asPath.slice(
+            asPath.indexOf('category=') + 9, //position start
+            asPath.indexOf('&', asPath.indexOf('category=')) // position end
+          )
+          let arrayCategory = sliceAsPathCategory?.split(',')
+          const newArrCategory = data?.data?.map((object) => {
+            // cap 2
+            let newChildCategory = object.child_category
+            if (object.child_category?.length > 0) {
+              newChildCategory = object.child_category?.map((item) => {
+                for (let i = 0; i < arrayCategory.length; i++) {
+                  if (arrayCategory[i] === item.id.toString()) {
+                    return { ...item, checked: true }
+                  }
+                }
+                return item
+              })
+              // kiem tra thang con bao nhieu cai da check
+              let lengthChecked = newChildCategory
+                .map((obj) => {
+                  if (obj.checked === true) {
+                    return obj
+                  }
+                })
+                .filter((value) => {
+                  return value !== undefined
+                })
+              return {
+                ...object,
+                indeterminate:
+                  lengthChecked.length > 0 &&
+                  lengthChecked.length < object.child_category?.length
+                    ? true
+                    : false,
+                checked:
+                  lengthChecked.length === object.child_category?.length
+                    ? true
+                    : false,
+                child_category: newChildCategory,
+              }
+            }
+            for (let i = 0; i < arrayCategory.length; i++) {
+              if (arrayCategory[i] === object.id.toString()) {
+                return { ...object, checked: true }
+              }
+            }
+            return {
+              ...object,
+              child_category: newChildCategory,
+            }
+          })
+          setStateProductCategory({
+            ...data,
+            data: newArrCategory,
+          })
+        } else {
+          setStateProductCategory(data)
+        }
+        setStateProductCategoryConstant(data)
       })
       .catch((error) => {
         const data = error.response?.data
@@ -543,10 +592,11 @@ const BrowseProducts: NextPageWithLayout = () => {
           })
         )
       })
+
+    // category
     getProductBrand()
       .then((res) => {
         const data = res.data
-        // setStateProductBrand(data)
 
         // find brand
         if (asPath.indexOf('brand=') !== -1) {
@@ -581,6 +631,7 @@ const BrowseProducts: NextPageWithLayout = () => {
         )
       })
 
+    // category
     getProductManufacturer()
       .then((res) => {
         const data = res.data
@@ -680,51 +731,79 @@ const BrowseProducts: NextPageWithLayout = () => {
             })
           )
         })
-      // handleClearFilterManufacturerBrand()
-      handleClearFilterBrand()
-      handleClearFilterManufacturer()
+
+      let newArrBrand = stateProductBrand?.data?.map((object) => {
+        return { ...object, checked: false }
+      })
+      let newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
+        return { ...object, checked: false }
+      })
+      setStateProductBrand({
+        ...stateProductBrand,
+        data: newArrBrand,
+      })
+      setStateProductManufacturer({
+        ...stateProductManufacturer,
+        data: newArrManufacturer,
+      })
+      setStateProductCategory(stateProductCategoryConstant)
       setValue('key', '')
     }
   }, [router, dispatch])
 
   const renderResult = () => {
-    // if (!dataProducts?.data) {
-    //   let arrSkeleton = []
-    //   for (var i = 0; i < 18; i++) {
-    //     arrSkeleton.push(i)
-    //   }
-    //   return (
-    //     <Box mb={4}>
-    //       <Grid container spacing={2}>
-    //         {arrSkeleton.map((item: any, index: number) => (
-    //           <Grid item xs={2} key={index}>
-    //             <Skeleton
-    //               animation="wave"
-    //               variant="rectangular"
-    //               width={206.16}
-    //               height={333.16}
-    //             />
-    //           </Grid>
-    //         ))}
-    //       </Grid>
-    //     </Box>
-    //   )
-    // }
+    if (!dataProducts?.data) {
+      return (
+        <Box mb={4}>
+          <Grid container spacing={2}>
+            {Array.from(Array(18).keys()).map((index: number) => (
+              <GridProduct item lg={3} xl={2} key={index}>
+                <CardCustom variant="outlined">
+                  <Box mb={1}>
+                    <Skeleton animation="wave" variant="rounded" height={204} />
+                  </Box>
+                  <CardContent style={{ paddingBottom: '16px' }}>
+                    <Skeleton variant="text" sx={{ fontSize: '1.4rem' }} />
+                    <Skeleton variant="text" sx={{ fontSize: '1.6rem' }} />
+                    <Skeleton variant="text" sx={{ fontSize: '1.6rem' }} />
+                    <Skeleton variant="text" sx={{ fontSize: '1.2rem' }} />
+                  </CardContent>
+                </CardCustom>
+              </GridProduct>
+            ))}
+          </Grid>
+        </Box>
+      )
+    }
     if (dataProducts?.data?.length === 0) {
-      return <div>Not found</div>
+      return (
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item>
+            <Image
+              src="/images/not-found.svg"
+              alt="Logo"
+              width="300"
+              height="300"
+            />
+            <Typography variant="h6" style={{ textAlign: 'center' }}>
+              No products found
+            </Typography>
+          </Grid>
+        </Grid>
+      )
     }
     return (
       <>
         <Box mb={4}>
           <Grid container spacing={2}>
             {dataProducts?.data?.map((item: ProductDataType, index: number) => (
-              <GirdProduct item lg={3} xl={2} key={index}>
+              <GridProduct item lg={3} xl={2} key={index}>
                 <ItemProduct dataProduct={item} />
-              </GirdProduct>
+              </GridProduct>
             ))}
           </Grid>
         </Box>
-        {dataProducts?.totalPages > 1 && (
+        {Number(dataProducts?.totalPages) > 1 && (
           <Pagination
             color="primary"
             count={dataProducts?.totalPages}
@@ -743,29 +822,21 @@ const BrowseProducts: NextPageWithLayout = () => {
       <Head>
         <title>Products | VAPE</title>
       </Head>
-      {/* <Row gutter={30}>
-        <Col span={6}>
-          <SideBarProducts />
-        </Col>
-        <Col span={18}>
-          <Tabs
-            defaultActiveKey={defaultActiveTabs}
-            activeKey={defaultActiveTabs}
-            onChange={handleChangeTabs}
-          >
-            {tabsData.map((item) => {
-              return <TabPane tab={item.label} key={item.key}></TabPane>
-            })}
-          </Tabs>
-          {renderResult()}
-        </Col>
-      </Row> */}
       <Grid container spacing={2}>
         <Grid item xs={2} style={{ minWidth: '270px' }}>
-          <CardSideBarCustom>
+          <CardCustom>
             <CardContent>
               <FormControl component="fieldset" variant="standard" fullWidth>
-                <FormLabelCustom>Price</FormLabelCustom>
+                <FormLabelCustom>
+                  Price{' '}
+                  <IconButton
+                    aria-label="delete"
+                    size="small"
+                    onClick={() => handleClearFilterPrice()}
+                  >
+                    <Eraser size={20} />
+                  </IconButton>
+                </FormLabelCustom>
                 <Slider
                   // getAriaLabel={() => 'Minimum distance shift'}
                   value={valueRangePrice}
@@ -890,75 +961,17 @@ const BrowseProducts: NextPageWithLayout = () => {
               </form>
               <Divider />
               <FormControl sx={{ mt: 2 }} disabled={stateDisableFilter}>
-                <FormLabelCustom>Category</FormLabelCustom>
+                <FormLabelCustom>
+                  Category{' '}
+                  <IconButton
+                    aria-label="delete"
+                    size="small"
+                    onClick={() => handleClearFilterCategory()}
+                  >
+                    <Eraser size={20} />
+                  </IconButton>
+                </FormLabelCustom>
                 <CategoryItem list={stateProductCategory?.data} />
-                {/* {stateProductCategory?.data?.map(
-                  (item: ProductCategoryType, index: number) => {
-                    return (
-                      <Box key={index}>
-                        <FormControlLabel
-                          label={item.name}
-                          control={
-                            <Checkbox
-                              checked={checked[0] && checked[1]}
-                              indeterminate={checked[0] !== checked[1]}
-                              onChange={handleChange1}
-                            />
-                          }
-                        />
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            ml: 3,
-                          }}
-                        >
-                          {item?.child_category?.map(
-                            (item: ProductCategoryType, index: number) => {
-                              return (
-                                <FormControlLabel
-                                  control={
-                                    <Checkbox
-                                      name={item.id?.toString()}
-                                      // checked={checked[1]}
-                                      // onChange={handleChange3}
-                                    />
-                                  }
-                                  label={item.name}
-                                  key={index}
-                                />
-                              )
-                            }
-                          )}
-                        </Box>
-                      </Box>
-                    )
-                  }
-                )} */}
-                {/* <FormControlLabel
-                  label="Category"
-                  control={
-                    <Checkbox
-                      checked={checked[0] && checked[1]}
-                      indeterminate={checked[0] !== checked[1]}
-                      onChange={handleChange1}
-                    />
-                  }
-                />
-                <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-                  <FormControlLabel
-                    label="Category1"
-                    control={
-                      <Checkbox checked={checked[0]} onChange={handleChange2} />
-                    }
-                  />
-                  <FormControlLabel
-                    label="Category2"
-                    control={
-                      <Checkbox checked={checked[1]} onChange={handleChange3} />
-                    }
-                  />
-                </Box> */}
               </FormControl>
               <Divider />
               <FormControl sx={{ mt: 2 }} disabled={stateDisableFilter}>
@@ -1025,7 +1038,7 @@ const BrowseProducts: NextPageWithLayout = () => {
                 </FormGroup>
               </FormControl>
             </CardContent>
-          </CardSideBarCustom>
+          </CardCustom>
         </Grid>
         <Grid item xs>
           <CardCustom>
@@ -1088,6 +1101,15 @@ const BrowseProducts: NextPageWithLayout = () => {
                       <MenuItem value="1">Oldest</MenuItem>
                     </SelectCustomSort>
                   </BoxCustom>
+                </Grid>
+                <Grid item xs={2}>
+                  <Link href="/browse-products">
+                    <a>
+                      <ButtonCustom variant="contained" startIcon={<Eraser />}>
+                        Clear filter
+                      </ButtonCustom>
+                    </a>
+                  </Link>
                 </Grid>
               </Grid>
               {renderResult()}

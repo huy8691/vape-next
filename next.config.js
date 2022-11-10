@@ -35,6 +35,15 @@ const nextConfig = {
     // the following are experimental features, and may cause breaking changes
   },
   pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
+  async redirects() {
+    return [
+      {
+        source: '/products',
+        destination: '/404',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 module.exports = withPlugins(
