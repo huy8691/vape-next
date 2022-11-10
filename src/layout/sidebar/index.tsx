@@ -24,7 +24,7 @@ import { useAppDispatch } from 'src/store/hooks'
 import { useAppSelector } from 'src/store/hooks'
 import { cartActions } from 'src/store/cart/cartSlice'
 
-// import classes from './styles.module.scss'
+import classes from './styles.module.scss'
 
 // other
 import {
@@ -63,6 +63,7 @@ const SideBar = ({ open }: Props) => {
   const handleClick = () => {
     setOpenCollapse(!openCollapse)
   }
+
   useEffect(() => {
     dispatch(cartActions.doCart())
   }, [])
@@ -199,14 +200,12 @@ const SideBar = ({ open }: Props) => {
                   {open ? (
                     <>
                       <ListItemText primary="Cart" />
-                      <span id="cart">
-                        <IconButton>
-                          <Badge
-                            badgeContent={stateItemCart}
-                            color="primary"
-                          ></Badge>
-                        </IconButton>
-                      </span>
+                      <IconButton>
+                        <Badge
+                          badgeContent={stateItemCart}
+                          color="primary"
+                        ></Badge>
+                      </IconButton>
                     </>
                   ) : (
                     <ListItemIcon>

@@ -714,9 +714,9 @@ const ProductDetail: NextPageWithLayout = () => {
                                     }
                                   }}
                                   {...field}
-                                  inputProps={{ min: 1, max: 100000 }}
+                                  inputProps={{ min: 1, max: 10000000 }}
                                   onChange={(event: any) => {
-                                    if (event.target.value < 100001) {
+                                    if (event.target.value < 1000001) {
                                       setValue('quantity', event.target.value)
                                       trigger('quantity')
                                       handleChangeQuantityAddToCart(
@@ -728,7 +728,7 @@ const ProductDetail: NextPageWithLayout = () => {
                                 <ButtonIncreaseDecrease
                                   onClick={() => {
                                     if (
-                                      Number(getValues('quantity')) < 100000
+                                      Number(getValues('quantity')) < 1000000
                                     ) {
                                       handleChangeQuantityAddToCart(
                                         Number(getValues('quantity')) + 1
