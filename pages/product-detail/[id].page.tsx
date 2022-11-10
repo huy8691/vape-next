@@ -21,7 +21,6 @@ import Grid from '@mui/material/Unstable_Grid2'
 import Box from '@mui/material/Box'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Button from '@mui/material/Button'
-
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -32,6 +31,7 @@ import Stack from '@mui/material/Stack'
 import FormControl from '@mui/material/FormControl'
 import Skeleton from '@mui/material/Skeleton'
 import Paper from '@mui/material/Paper'
+import ButtonGroup from '@mui/material/ButtonGroup'
 
 // layout
 import type { ReactElement } from 'react'
@@ -42,6 +42,7 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './validations'
+
 // icon wishlist
 import iconFavorite from './parts/icon/icon-favorite.svg'
 import iconFavorited from './parts/icon/icon-favorited.svg'
@@ -51,6 +52,14 @@ import Slider from 'react-slick'
 // other
 import Link from 'next/link'
 import { ShoppingCart } from 'phosphor-react'
+
+// api
+import { useAppDispatch } from 'src/store/hooks'
+import { loadingActions } from 'src/store/loading/loadingSlice'
+import { notificationActions } from 'src/store/notification/notificationSlice'
+
+// custom style
+import { ButtonCustom, TextFieldCustom } from 'src/components'
 
 // style
 const TypographyH1 = styled(Typography)(() => ({
@@ -65,6 +74,9 @@ const TypographyH2 = styled(Typography)(({ theme }) => ({
 const TypographyColor = styled('div')(({ theme }) => ({
   color: theme.palette.primary.main,
   fontWeight: 'bold',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+  maxWidth: '100%',
 }))
 
 const TabPanelCustom = styled('div')(({ theme }) => ({
@@ -95,6 +107,12 @@ const StickyWrapper = styled('div')(() => ({
   position: 'sticky',
   top: '80px',
 }))
+const ButtonIncreaseDecrease = styled(Button)(({ theme }) => ({
+  borderColor:
+    theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.23)'
+      : 'rgba(0, 0, 0, 0.23)',
+}))
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   marginBottom: '15px',
@@ -118,21 +136,18 @@ const IconButtonFavorite = styled(Button)(() => ({
   borderRadius: '10px',
   minWidth: '50px',
 }))
-
-// api
-import { useAppDispatch } from 'src/store/hooks'
-import { loadingActions } from 'src/store/loading/loadingSlice'
-import { notificationActions } from 'src/store/notification/notificationSlice'
-
-// custom style
-import { ButtonCustom, TextFieldCustom } from 'src/components'
+const TextFieldAddToCart = styled(TextFieldCustom)(() => ({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '0px',
+  },
+}))
 
 const ProductDetail: NextPageWithLayout = () => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const [nav1, setNav1] = useState()
   const [nav2, setNav2] = useState()
-  const [value, setValue] = useState(0)
+  const [valueTab, setValueTab] = useState(0)
   const [stateProductDetail, setStateProductDetail] =
     useState<ProductDetailType>()
   const [relatedProducts, setRelatedProducts] =
@@ -161,7 +176,7 @@ const ProductDetail: NextPageWithLayout = () => {
 
   // tabs
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue)
+    setValueTab(newValue)
   }
   interface TabPanelProps {
     children?: React.ReactNode
@@ -193,15 +208,28 @@ const ProductDetail: NextPageWithLayout = () => {
 
   // form add to cart
   const {
+    setValue,
+    getValues,
+    trigger,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    mode: 'all',
   })
 
   const onSubmit = (values: any) => {
     console.log('4444', values)
+    if (values.quantity > Number(stateProductDetail?.inStock)) {
+      dispatch(
+        notificationActions.doNotification({
+          message: `Only ${stateProductDetail?.inStock} products left in stock`,
+          type: 'error',
+        })
+      )
+      return
+    }
   }
 
   // Call api "get product detail" and assign variables
@@ -271,9 +299,19 @@ const ProductDetail: NextPageWithLayout = () => {
         )
       })
   }
-  const handleOnChange = (e: any) => {
+  const handleChangeQuantityAddToCart = (e: any) => {
     if (stateProductDetail?.price) {
-      setTotal(e.target.value * stateProductDetail.price)
+      setTotal(e * stateProductDetail.price)
+    }
+    if (Number(e) > Number(stateProductDetail?.inStock)) {
+      dispatch(
+        notificationActions.doNotification({
+          message: `Only ${stateProductDetail?.inStock} products left in stock`,
+          type: 'error',
+        })
+      )
+      // setValue('number', stateProductDetail?.inStock)
+      return
     }
   }
   const renderSlides1 = () => {
@@ -478,7 +516,7 @@ const ProductDetail: NextPageWithLayout = () => {
           <Box>
             {stateProductDetail ? (
               <StyledTabs
-                value={value}
+                value={valueTab}
                 onChange={handleChangeTab}
                 aria-label="basic tabs example"
                 TabIndicatorProps={{
@@ -501,14 +539,14 @@ const ProductDetail: NextPageWithLayout = () => {
             )}
             {stateProductDetail ? (
               <>
-                <TabPanel value={value} index={0}>
+                <TabPanel value={valueTab} index={0}>
                   <div
                     dangerouslySetInnerHTML={{
                       __html: stateProductDetail?.longDescription!,
                     }}
                   />
                 </TabPanel>
-                <TabPanel value={value} index={1}>
+                <TabPanel value={valueTab} index={1}>
                   <Stack spacing={2}>
                     <Box>
                       <Typography variant="subtitle2">Product name</Typography>
@@ -550,7 +588,7 @@ const ProductDetail: NextPageWithLayout = () => {
                     </Box>
                   </Stack>
                 </TabPanel>
-                <TabPanel value={value} index={2}>
+                <TabPanel value={valueTab} index={2}>
                   Review
                 </TabPanel>
               </>
@@ -593,29 +631,82 @@ const ProductDetail: NextPageWithLayout = () => {
                     <Box mb={2}>
                       <Controller
                         control={control}
-                        name="number"
+                        name="quantity"
                         render={({ field }) => (
                           <>
                             <FormControl fullWidth>
-                              <TextFieldCustom
-                                type="number"
-                                id="number"
-                                placeholder="Ex:100"
-                                error={!!errors.number}
-                                {...field}
-                                onKeyPress={(event) => {
-                                  if (
-                                    event?.key === '-' ||
-                                    event?.key === '+' ||
-                                    event?.key === ',' ||
-                                    event?.key === '.' ||
-                                    event?.key === 'e'
-                                  ) {
-                                    event.preventDefault()
+                              <ButtonGroup
+                                variant="outlined"
+                                aria-label="outlined button group"
+                              >
+                                <ButtonIncreaseDecrease
+                                  disabled={
+                                    getValues('quantity') < 2 ? true : false
                                   }
-                                }}
-                                onChange={handleOnChange}
-                              />
+                                  onClick={() => {
+                                    if (getValues('quantity') > 1) {
+                                      handleChangeQuantityAddToCart(
+                                        Number(getValues('quantity')) - 1
+                                      )
+                                      setValue(
+                                        'quantity',
+                                        Number(getValues('quantity')) - 1
+                                      )
+                                      trigger('quantity')
+                                    }
+                                  }}
+                                >
+                                  -
+                                </ButtonIncreaseDecrease>
+                                <TextFieldAddToCart
+                                  className={classes['text-field-add-to-cart']}
+                                  type="quantity"
+                                  id="quantity"
+                                  placeholder="Ex:100"
+                                  error={!!errors.quantity}
+                                  fullWidth
+                                  onKeyPress={(event) => {
+                                    if (
+                                      event?.key === '-' ||
+                                      event?.key === '+' ||
+                                      event?.key === ',' ||
+                                      event?.key === '.' ||
+                                      event?.key === 'e'
+                                    ) {
+                                      event.preventDefault()
+                                    }
+                                  }}
+                                  {...field}
+                                  inputProps={{ min: 1, max: 100000 }}
+                                  onChange={(event: any) => {
+                                    if (event.target.value < 100001) {
+                                      setValue('quantity', event.target.value)
+                                      trigger('quantity')
+                                      handleChangeQuantityAddToCart(
+                                        event.target.value
+                                      )
+                                    }
+                                  }}
+                                />
+                                <ButtonIncreaseDecrease
+                                  onClick={() => {
+                                    if (
+                                      Number(getValues('quantity')) < 100000
+                                    ) {
+                                      handleChangeQuantityAddToCart(
+                                        Number(getValues('quantity')) + 1
+                                      )
+                                      setValue(
+                                        'quantity',
+                                        Number(getValues('quantity')) + 1
+                                      )
+                                      trigger('quantity')
+                                    }
+                                  }}
+                                >
+                                  +
+                                </ButtonIncreaseDecrease>
+                              </ButtonGroup>
                             </FormControl>
                           </>
                         )}
@@ -657,6 +748,7 @@ const ProductDetail: NextPageWithLayout = () => {
                         size="large"
                         type="submit"
                         fullWidth
+                        disabled={errors.number ? true : false}
                         startIcon={<ShoppingCart />}
                       >
                         Add To Cart

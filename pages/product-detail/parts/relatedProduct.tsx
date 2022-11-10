@@ -38,7 +38,7 @@ const TypographyH6 = styled(Typography)(() => ({
 }))
 
 type Props = {
-  relatedProducts: ProductListDataResponseType
+  relatedProducts: ProductListDataResponseType | undefined
 }
 
 const RelatedProduct: React.FC<Props> = (props: Props) => {

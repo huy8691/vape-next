@@ -1,8 +1,7 @@
-import * as yup from 'yup'
+import * as Yup from 'yup'
 
-const schema = yup.object().shape({
-  number: yup.string().required(),
-  // .password('Password invalid'),
+const schema = Yup.object().shape({
+  quantity: Yup.number().required().min(1).max(10000),
 })
 
 export { schema }
