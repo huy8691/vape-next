@@ -83,7 +83,7 @@ const CardCustom = styled(Card)(({ theme }) => ({
     theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
   boxShadow: 'none',
 }))
-const TabCustom = styled(Tab)(({ theme }) => ({
+const TabCustom = styled(Tab)(() => ({
   '& .Mui-selected': {
     position: 'relative',
     // left: '50% !important',
@@ -181,7 +181,7 @@ const ProductDetail: NextPageWithLayout = () => {
   // Call api "get product detail" and assign variables
   useEffect(() => {
     console.log('4444', router.query)
-    setStateProductDetail({})
+    // setStateProductDetail({})
     if (router.query.id) {
       dispatch(loadingActions.doLoading())
       getProductDetail(router?.query?.id)
