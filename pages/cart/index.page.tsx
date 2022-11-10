@@ -25,7 +25,10 @@ import { formatMoney } from 'src/utils/money.utils'
 import edit from './parts/edit.svg'
 import { CurrencyCircleDollar, X } from 'phosphor-react'
 import { ButtonCustom, TextFieldCustom } from 'src/components'
-import classes from './styles.module.scss'
+
+// api
+import { useAppSelector } from 'src/store/hooks'
+// import classes from './styles.module.scss'
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
@@ -111,47 +114,7 @@ const Cart: NextPageWithLayout = () => {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  let total = 0
-  function createData(
-    id: number,
-    name: string,
-    image: string,
-    price: number,
-    quantity: number
-  ) {
-    return { id, name, image, price, quantity }
-  }
-
-  const rows = [
-    createData(
-      1,
-      'Coastal Clouds Salt TFN 3000...',
-      '/images/vapeProduct.png',
-      350,
-      1
-    ),
-    createData(
-      2,
-      'Coastal Clouds Salt TFN 3000...',
-      '/images/vapeProduct.png',
-      350,
-      1
-    ),
-    createData(
-      3,
-      'Coastal Clouds Salt TFN 3000...',
-      '/images/vapeProduct.png',
-      350,
-      1
-    ),
-    createData(
-      4,
-      'Coastal Clouds Salt TFN 3000...',
-      '/images/vapeProduct.png',
-      350,
-      1
-    ),
-  ]
+  const cart = useAppSelector((state) => state.cart)
 
   return (
     <>
@@ -180,7 +143,7 @@ const Cart: NextPageWithLayout = () => {
         </Grid>
         <Grid xs={1}></Grid>
       </Grid>
-      {rows.map((row) => (
+      {cart?.data?.items.map((row) => (
         <CustomGrid
           spacing={2}
           key={row.id}
@@ -194,13 +157,18 @@ const Cart: NextPageWithLayout = () => {
           </Grid>
           <Grid xs={4}>
             <Stack direction="row" spacing={2} alignItems="center">
-              <Image src={row.image} alt="product" width={80} height={80} />
-              <Typography component="div">{row.name}</Typography>
+              <Image
+                src={row.productThumbnail}
+                alt="product"
+                width={80}
+                height={80}
+              />
+              <Typography component="div">{row.productName}</Typography>
             </Stack>
           </Grid>
           <Grid xs={2}>
             <Typography component="div">
-              {formatMoney(row.price)}/unit
+              {formatMoney(row.unitPrice)}/{row.unitType}
             </Typography>
           </Grid>
           <Grid xs={2}>
@@ -213,7 +181,7 @@ const Cart: NextPageWithLayout = () => {
                   paddingLeft: '40px',
                 }}
               >
-                {row.quantity}/unit
+                {row.quantity}/{row.unitType}
                 <CustomIconButton onClick={handleOpen}>
                   <Image
                     alt="icon edit"
@@ -226,7 +194,7 @@ const Cart: NextPageWithLayout = () => {
               </Box>
             </Paper>
           </Grid>
-          <Grid xs={2}>{formatMoney(row.quantity * row.price)}</Grid>
+          <Grid xs={2}>{formatMoney(row.quantity * row.unitPrice)}</Grid>
           <Grid xs={1}>
             <Button variant="text">Remove</Button>
           </Grid>
@@ -256,7 +224,9 @@ const Cart: NextPageWithLayout = () => {
             <Stack direction="row" spacing={2} alignItems="center">
               <CurrencyCircleDollar size={18} />
               <Typography>Total</Typography>
-              <CustomTotal>{formatMoney(total)}</CustomTotal>
+              <CustomTotal>
+                {formatMoney(cart?.data?.totalPrice | 0)}
+              </CustomTotal>
               <ButtonCustom variant="contained" size="large">
                 Checkout
               </ButtonCustom>
@@ -323,7 +293,7 @@ const Cart: NextPageWithLayout = () => {
                 mb={2}
               >
                 <span>Sub Total: </span>
-                <CustomModalSubTotal>{formatMoney(0)}</CustomModalSubTotal>
+                <CustomModalSubTotal>0</CustomModalSubTotal>
               </Stack>
 
               <Stack direction="row" justifyContent="center" mb={2}>

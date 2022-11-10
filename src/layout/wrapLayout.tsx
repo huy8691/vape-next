@@ -117,6 +117,7 @@ const InnerLayout = ({ children }: Props) => {
     </div>
   )
 }
+
 const WrapLayout = ({ children }: Props) => {
   const router = useRouter()
   const token = Boolean(Cookies.get('token'))
@@ -125,6 +126,7 @@ const WrapLayout = ({ children }: Props) => {
     if (
       (router.asPath === '/login' ||
         router.asPath === '/register' ||
+        router.asPath === '/change-password' ||
         router.asPath === '/forgot-password') &&
       token
     ) {
