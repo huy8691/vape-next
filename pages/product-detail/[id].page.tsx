@@ -8,6 +8,7 @@ import {
   getProductDetail,
   postWishList,
   getRelatedProduct,
+  addToCard,
 } from './apiProductDetail'
 
 import {
@@ -57,9 +58,10 @@ import { ShoppingCart } from 'phosphor-react'
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
 import { notificationActions } from 'src/store/notification/notificationSlice'
+import { cartActions } from 'src/store/cart/cartSlice'
 
 // custom style
-import { ButtonCustom, TextFieldCustom } from 'src/components'
+import { TextFieldCustom, LoadingButtonCustom } from 'src/components'
 
 // style
 const TypographyH1 = styled(Typography)(() => ({
@@ -106,6 +108,12 @@ const CardCustom = styled(Card)(({ theme }) => ({
 const StickyWrapper = styled('div')(() => ({
   position: 'sticky',
   top: '80px',
+}))
+const BoxSlick = styled(Box)(({ theme }) => ({
+  borderTop:
+    theme.palette.mode === 'dark'
+      ? '1px solid rgba(0, 0, 0, 0.23)'
+      : '1px solid #E1E6EF',
 }))
 const ButtonIncreaseDecrease = styled(Button)(({ theme }) => ({
   borderColor:
@@ -154,6 +162,7 @@ const ProductDetail: NextPageWithLayout = () => {
     useState<ProductListDataResponseType>()
   const [isAddWistList, setIsAddWishList] = useState(false)
   const [total, setTotal] = useState(0)
+  const [stateLoadingAddToCart, setStateLoadingAddToCart] = useState(false)
 
   const settings1 = {
     slidesToShow: 1,
@@ -220,7 +229,6 @@ const ProductDetail: NextPageWithLayout = () => {
   })
 
   const onSubmit = (values: any) => {
-    console.log('4444', values)
     if (values.quantity > Number(stateProductDetail?.inStock)) {
       dispatch(
         notificationActions.doNotification({
@@ -230,17 +238,43 @@ const ProductDetail: NextPageWithLayout = () => {
       )
       return
     }
+    setStateLoadingAddToCart(true)
+    addToCard({
+      quantity: Number(values.quantity),
+      product: Number(router.query.id),
+    })
+      .then(() => {
+        setStateLoadingAddToCart(false)
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Add to cart successfully',
+          })
+        )
+        dispatch(cartActions.doCart())
+      })
+      .catch((error) => {
+        const { data } = error?.response ? error.response.data : undefined
+        setStateLoadingAddToCart(false)
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.detail ? data?.detail : 'Error',
+            type: 'error',
+          })
+        )
+      })
   }
 
   // Call api "get product detail" and assign variables
   useEffect(() => {
     if (router.query.id) {
       setStateProductDetail(undefined)
+      setValue('quantity', 1)
       dispatch(loadingActions.doLoading())
       getProductDetail(router?.query?.id)
         .then((res) => {
           const { data } = res.data
           setStateProductDetail(data)
+          setIsAddWishList(data?.is_favorite ? data?.is_favorite : false)
           dispatch(loadingActions.doLoadingSuccess())
         })
         .catch((error) => {
@@ -274,6 +308,8 @@ const ProductDetail: NextPageWithLayout = () => {
         })
     }
   }, [router, dispatch])
+
+  // wishlist
   const handleWishList = () => {
     dispatch(loadingActions.doLoading())
     postWishList({ product: router?.query?.id })
@@ -395,6 +431,7 @@ const ProductDetail: NextPageWithLayout = () => {
             <CardCustom>
               <CardContent>
                 <Box mb={2}>{renderSlides1()}</Box>
+                <BoxSlick />
                 <Box className={classes['product-detail__slick-carousel']}>
                   {renderSlides2()}
                 </Box>
@@ -404,7 +441,7 @@ const ProductDetail: NextPageWithLayout = () => {
         </Grid>
         <Grid xs={6}>
           {stateProductDetail ? (
-            <TypographyH2 variant="h2" mb={3}>
+            <TypographyH2 variant="h2" mb={1}>
               Product details
             </TypographyH2>
           ) : (
@@ -742,17 +779,19 @@ const ProductDetail: NextPageWithLayout = () => {
                           height="20"
                         />
                       </IconButtonFavorite>
-                      <ButtonCustom
+                      <LoadingButtonCustom
                         style={{ paddingTop: '11px', paddingBottom: '11px' }}
                         variant="contained"
                         size="large"
                         type="submit"
+                        loading={stateLoadingAddToCart}
+                        loadingPosition="start"
                         fullWidth
                         disabled={errors.number ? true : false}
                         startIcon={<ShoppingCart />}
                       >
                         Add To Cart
-                      </ButtonCustom>
+                      </LoadingButtonCustom>
                     </Stack>
                   </form>
                 </CardContent>

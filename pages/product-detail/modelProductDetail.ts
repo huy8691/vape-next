@@ -16,6 +16,7 @@ export interface ProductDetailType {
   price?: number
   unit_types?: string
   inStock?: number
+  is_favorite?: boolean
   category?: {
     id?: number
     name?: string
