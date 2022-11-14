@@ -15,7 +15,9 @@ const nextConfig = {
       'develop-bizbookly.s3.ap-southeast-1.amazonaws.com',
       'vape-test.s3.ap-southeast-1.amazonaws.com',
       'images.pexels.com',
+      'www.vapesuperstore.co.uk',
       // 'dev.vuarausach.vn',
+      'cdn.shopify.com',
       'via.placeholder.com',
     ],
     // path prefix for Image Optimization API, useful with `loader`

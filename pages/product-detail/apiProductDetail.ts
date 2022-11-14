@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { callAPIWithToken } from 'src/services/jwt-axios'
 import {
+  // InstockProductDataResponseType,
   ProductDetailResponseType,
   ProductListDataResponseType,
   WishListResponseType,
@@ -45,4 +46,20 @@ const addToCard = (data: {
     data: data,
   })
 }
-export { getProductDetail, getRelatedProduct, postWishList, addToCard }
+
+// const getInstockApi = (
+//   params: number
+// ): Promise<AxiosResponse<InstockProductDataResponseType>> => {
+//   return callAPIWithToken({
+//     url: `api/customer/stock-items/${params}`,
+//     method: 'get',
+//   })
+// }
+
+export {
+  getProductDetail,
+  getRelatedProduct,
+  postWishList,
+  addToCard,
+  // getInstockApi,
+}

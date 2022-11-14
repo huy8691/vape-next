@@ -56,3 +56,11 @@ export interface WishListResponseType {
   message?: string
   errors?: any
 }
+
+// export interface InstockProductType {
+//   inStock?: number
+// }
+
+// export interface InstockProductDataResponseType {
+//   data?: InstockProductType[]
+// }
