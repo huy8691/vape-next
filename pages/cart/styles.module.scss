@@ -6,7 +6,7 @@
   }
 }
 
-.custom-checkout-bar {
+.checkout-bar {
   position: fixed;
   bottom: 0;
   right: 0;
@@ -25,30 +25,20 @@
   -webkit-text-fill-color: transparent;
 }
 
-.custom-container {
+.popup-quantity {
   padding: 16px 25px;
+  &__current-instock {
+    font-size: 14px;
+    font-weight: 600;
+    background: linear-gradient(93.37deg, #1cb35b 0%, #20b598 116.99%);
+    border-radius: 4px;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
 }
-
-.current-instock {
-  font-weight: 400;
-  font-size: 14px;
-  color: #20b598;
-}
-
-.custom-current-instock-wrapper {
-  background: linear-gradient(93.37deg, #1cb35b 0%, #20b598 116.99%);
-  border-radius: 4px;
-  padding: 4px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.custom-number-current-instock {
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-}
-
 .image-wrapper {
   border: 1px solid #f8f9fc;
   border-radius: 6px;

@@ -1,5 +1,7 @@
 import React, {
-  // useEffect,
+  ChangeEvent,
+  // ChangeEvent,
+  useEffect,
   useState,
 } from 'react'
 
@@ -10,13 +12,14 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 //mui
 import {
   Box,
-  // Button,
-  // Checkbox,
-  // Divider,
+  Button,
+  Checkbox,
+  Divider,
   Fade,
+  FormHelperText,
   IconButton,
   Modal,
-  // Paper,
+  Paper,
   Typography,
 } from '@mui/material'
 import { styled } from '@mui/system'
@@ -24,53 +27,49 @@ import Grid from '@mui/material/Unstable_Grid2'
 import Stack from '@mui/material/Stack'
 
 //other
-// import Image from 'next/image'
-// import { formatMoney } from 'src/utils/money.utils'
-// import edit from './parts/edit.svg'
+import Image from 'next/image'
+import { formatMoney } from 'src/utils/money.utils'
+import edit from './parts/edit.svg'
 import { CurrencyCircleDollar, X } from 'phosphor-react'
 import { ButtonCustom, TextFieldCustom } from 'src/components'
 
 // api
-// import { useAppSelector } from 'src/store/hooks'
+import { useAppDispatch, useAppSelector } from 'src/store/hooks'
 
 import classes from './styles.module.scss'
 
 // react-hook-form
 import { useForm } from 'react-hook-form'
-// import { CartType } from 'src/store/cart/cartModels'
+import { CartType, CartItem } from 'src/store/cart/cartModels'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+//api
+import { getInstockAPI, updateQuantityProduct } from './CartAPI'
+import { cartActions } from 'src/store/cart/cartSlice'
+import { notificationActions } from 'src/store/notification/notificationSlice'
+import { loadingActions } from 'src/store/loading/loadingSlice'
 
-const schema = yup
-  .object({
-    quantity: yup
-      .number()
-      .positive('Input must be positive')
-      .integer('Input must be an integer')
-      .required('This field is required '),
-  })
-  .required()
-
+//style
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
   fontWeight: 'bold',
   color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
 }))
 
-// const CustomIconButton = styled(IconButton)(() => ({
-//   border: '1px solid #E1E6EF',
-//   borderRadius: '10px',
-//   padding: '5px',
-//   background: 'white',
-//   marginLeft: '10px',
-// }))
+const IconButtonCustom = styled(IconButton)(() => ({
+  border: '1px solid #E1E6EF',
+  borderRadius: '10px',
+  padding: '5px',
+  background: 'white',
+  marginLeft: '10px',
+}))
 
-// const CustomGrid = styled(Grid)(() => ({
-//   border: '1px solid #E1E6EF',
-//   borderRadius: '10px',
-// }))
+const GridCustom = styled(Grid)(() => ({
+  border: '1px solid #E1E6EF',
+  borderRadius: '10px',
+}))
 
-const CustomBoxModal = styled(Box)(() => ({
+const BoxModalCustom = styled(Box)(() => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -84,218 +83,332 @@ const TypographyH6 = styled(Typography)(() => ({
   fontWeight: '400',
   fontSize: '16px',
 }))
-const CustomTotal = styled(Box)(() => ({
-  color: '#1CB25B',
-  fontWeight: '700',
-  fontSize: '20px',
-}))
-const CustomTypography = styled(Typography)(() => ({
+// const TotalCustom = styled(Box)(() => ({
+//   color: '#1CB25B',
+//   fontWeight: '700',
+//   fontSize: '20px',
+// }))
+const TypographyCustom = styled(Typography)(() => ({
   color: '#BABABA',
   fontWeight: '400',
   fontSize: '14px',
 }))
+
+const TypographyCurrentInstock = styled(Typography)(() => ({
+  fontWeight: '400',
+  fontSize: '14px',
+}))
+
+// dispatch
+
+// validation quantity
+const schema = yup
+  .object({
+    quantity: yup
+      .number()
+      .positive('Input must be positive')
+      .integer('Input must be an integer')
+      .required('This field is required '),
+  })
+  .required()
+
 interface QuantityFormInput {
   quantity: number
 }
 //State use for select all checkbox
 
 const Cart: NextPageWithLayout = () => {
+  //dispatch
+  const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
-  // const cart = useAppSelector((state) => state.cart)
-
+  const cart = useAppSelector((state) => state.cart)
   //state for instock
-
+  const [instock, setInstock] = useState<number>()
   // state use for checkbox
-  // const [isCheckAll, setIsCheckAll] = useState(false)
-  // const [isCheck, setIsCheck] = useState([])
-  // const [list, setList] = useState([])
+  const [isCheckAll, setIsCheckAll] = useState(false)
+  const [stateCartCheck, setStateCartCheck] = useState<CartType['items']>()
   //state use for modal
-  // const [currentProductQuantity, setCurrentProductQuantity] =
-  //   useState<CartType['items']>()
+  const [currentProductQuantity, setCurrentProductQuantity] =
+    useState<CartItem>()
+  //state use for total
+  // const [total, setTotal] = useState<number>(0)
+  const [subTotal, setSubtotal] = useState<number>(0)
   // assign list product in cart array then set it to state (list)
 
-  // useEffect(() => {
-  //   setList(cart?.data?.items)
-  // }, [cart])
+  useEffect(() => {
+    if (cart.data.items.length === 0) return
+    let newArr = cart?.data?.items?.map((item) => {
+      return {
+        ...item,
+        isCheck: false,
+      }
+    })
+    setStateCartCheck(newArr)
+  }, [cart?.data?.items])
 
   // CheckBoxClickHandler
-  // const handleClickCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { id, checked } = event.target
-  //   console.log(id)
-  //   setIsCheck([...isCheck, parseInt(id)])
-  //   if (!checked) {
-  //     setIsCheck(isCheck.filter((item) => item !== parseInt(id)))
-  //   }
-  // }
-  // const handleSelectAllCheckBox = () => {
-  //   setIsCheckAll(!isCheckAll)
-  //   setIsCheck(list.map((item) => item.cartItemId))
-  //   if (isCheckAll) {
-  //     setIsCheck([])
-  //   }
-  // }
+  const handleClickCheckbox = (value: CartItem) => {
+    if (value.isCheck === false) {
+      setIsCheckAll(false)
+    }
+    const newState = stateCartCheck?.map((item) => {
+      if (item.cartItemId === value.cartItemId) {
+        return { ...item, isCheck: !item.isCheck }
+      }
+      return { ...item }
+    })
+    setStateCartCheck(newState)
+  }
+  const handleSelectAllCheckBox = () => {
+    setIsCheckAll(!isCheckAll)
+    if (!isCheckAll) {
+      const condition = (arr: CartItem) => arr.isCheck === true
+      if (stateCartCheck?.some(condition)) {
+        const newState = stateCartCheck?.map((item) => {
+          if (item.isCheck === true) {
+            return { ...item }
+          } else {
+            return { ...item, isCheck: true }
+          }
+        })
+        setStateCartCheck(newState)
+      } else {
+        const newState = stateCartCheck?.map((item) => {
+          return { ...item, isCheck: true }
+        })
+        setStateCartCheck(newState)
+      }
+    } else {
+      const newState = stateCartCheck?.map((item) => {
+        return { ...item, isCheck: false }
+      })
+      setStateCartCheck(newState)
+    }
+  }
+
+  //close modal handler
   const handleClose = () => {
     setOpen(false)
   }
 
   const {
     register,
-    // setValue,
-    // getValues,
+    setValue,
+    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<QuantityFormInput>({
     resolver: yupResolver(schema),
   })
-  const onSubmit = (data: QuantityFormInput) => console.log(data)
+
+  // event submit
+  const onSubmit = (data: QuantityFormInput) => {
+    console.log(data)
+    if (getValues('quantity') > Number(instock)) {
+      console.log('not enough')
+      dispatch(
+        notificationActions.doNotification({
+          message: `Only ${instock} products left in stock`,
+          type: 'error',
+        })
+      )
+    } else {
+      console.log(getValues('quantity'))
+
+      updateQuantityProduct({
+        quantity: getValues('quantity'),
+        cartItemId: currentProductQuantity?.cartItemId,
+      })
+        .then(() => {
+          dispatch(loadingActions.doLoadingSuccess())
+          dispatch(cartActions.doCart())
+          dispatch(
+            notificationActions.doNotification({
+              message: 'Update successfully',
+            })
+          )
+        })
+        .catch((error) => {
+          const data = error.response?.data
+          dispatch(loadingActions.doLoadingFailure())
+          dispatch(
+            notificationActions.doNotification({
+              message: data?.message ? data?.message : 'Error',
+              type: 'error',
+            })
+          )
+        })
+    }
+  }
 
   // handle open / close modal
+  const handleClickButton = (values: CartItem) => {
+    setValue('quantity', values?.quantity || 0)
+    setOpen(true)
+    setCurrentProductQuantity(values)
 
-  // const handleClickButton = (values: CartType['items']) => {
-  //   setValue('quantity', values?.quantity || 0)
-  //   setOpen(true)
-  //   setCurrentProductQuantity(values)
-
-  // }
+    getInstockAPI(values?.productId)
+      .then((res) => {
+        const { data } = res.data
+        setInstock(data?.inStock)
+        console.log(instock)
+      })
+      .catch((error) => {
+        const data = error.response?.data
+        console.log(
+          '🚀 ~ file: index.page.tsx ~ line 161 ~ getInstockAPI ~ data',
+          data
+        )
+      })
+  }
+  // handle change quantity value
+  const handleOnChangeQuantity = (e: any) => {
+    if (Number(e.target.value)) {
+      setSubtotal(Number(e.target.value))
+    } else setSubtotal(0)
+  }
 
   return (
     <>
       <TypographyH2 variant="h2" mb={3}>
         Cart
       </TypographyH2>
-      <Grid container spacing={2} mb={2} justifyContent="center">
-        {/* <Grid xs="auto"></Grid> */}
+      <Grid container spacing={2} mb={2}>
+        <Grid xs="auto"></Grid>
         <Grid xs={4}>
-          <CustomTypography>Product</CustomTypography>
+          <TypographyCustom>Product</TypographyCustom>
         </Grid>
         <Grid xs={2}>
-          <CustomTypography align="center">Price</CustomTypography>
+          <TypographyCustom align="center">Price</TypographyCustom>
         </Grid>
         <Grid xs={2}>
-          <CustomTypography align="center">Quantity</CustomTypography>
+          <TypographyCustom align="center">Quantity</TypographyCustom>
         </Grid>
         <Grid xs={2}>
-          <CustomTypography align="center">Subtotal</CustomTypography>
+          <TypographyCustom align="center">Subtotal</TypographyCustom>
         </Grid>
         <Grid xs={1}></Grid>
       </Grid>
-      {/* {cart?.data?.items.map((row: CartType['items']) => (
-        <CustomGrid
-          spacing={2}
-          key={row?.cartItemId}
-          mb={3}
-          container
-          direction="row"
-          alignItems="center"
-        >
-          <Grid xs="auto">
-            <Checkbox
-              id={row?.cartItemId?.toString()}
-              onChange={handleClickCheckbox}
-              checked={isCheck.includes(row?.cartItemId)}
-            />
-          </Grid>
-          <Grid xs={4}>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <div className={classes['image-wrapper']}>
-                <Image
-                  src={row.productThumbnail}
-                  alt="product"
-                  width={80}
-                  height={80}
-                />
-              </div>
-              <Typography component="div">{row.productName}</Typography>
-            </Stack>
-          </Grid>
-          <Grid xs={2}>
-            <Typography component="div" style={{ textAlign: 'center' }}>
-              {formatMoney(row?.unitPrice)}/{row?.unitType}
-            </Typography>
-          </Grid>
-          <Grid xs={2}>
-            <Paper
-              elevation={0}
-              style={{
-                background: '#F8F9FC',
-                maxWidth: '170px',
-                display: 'flex',
-                justifyContent: 'flex-end',
-              }}
-            >
-              <Box
+      {stateCartCheck?.map((item) => {
+        return (
+          <GridCustom
+            spacing={2}
+            key={item?.cartItemId}
+            mb={3}
+            container
+            direction="row"
+            alignItems="center"
+          >
+            <Grid xs="auto">
+              <Checkbox
+                id={item?.cartItemId?.toString()}
+                onChange={() => handleClickCheckbox(item)}
+                checked={item?.isCheck}
+              />
+            </Grid>
+            <Grid xs={4}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <div className={classes['image-wrapper']}>
+                  <Image
+                    src={item.productThumbnail}
+                    alt="product"
+                    width={80}
+                    height={80}
+                  />
+                  {/* {item.productThumbnail} */}
+                </div>
+                <Typography component="div">{item?.productName}</Typography>
+              </Stack>
+            </Grid>
+            <Grid xs={2}>
+              <Typography component="div" style={{ textAlign: 'center' }}>
+                {formatMoney(item?.unitPrice)}/{item?.unitType}
+              </Typography>
+            </Grid>
+            <Grid xs={2}>
+              <Paper
+                elevation={0}
                 style={{
-                  padding: '5px 10px',
-                  borderRadius: '10px',
+                  background: '#F8F9FC',
+                  maxWidth: '170px',
+                  display: 'flex',
+                  justifyContent: 'flex-end',
                 }}
               >
-                <Stack direction="row" alignItems="center">
-                  {row?.quantity}
-                  <Divider
-                    orientation="vertical"
-                    style={{
-                      height: '14px',
-                      background: '#1CB25B',
-                      marginLeft: '10px',
-                      marginRight: '10px',
-                    }}
-                    variant="middle"
-                    flexItem
-                  />
-                  <Typography
-                    component={'div'}
-                    style={{
-                      fontWeight: '400',
-                      fontSize: '12px',
-                      textTransform: 'lowercase',
-                    }}
-                  >
-                    {row?.unitType}
-                  </Typography>
-
-                  <CustomIconButton onClick={() => handleClickButton(row)}>
-                    <Image
-                      alt="icon edit"
-                      src={edit}
-                      objectFit="contain"
-                      width={18}
-                      height={18}
+                <Box
+                  style={{
+                    padding: '5px 10px',
+                    borderRadius: '10px',
+                  }}
+                >
+                  <Stack direction="row" alignItems="center">
+                    {item?.quantity}
+                    <Divider
+                      orientation="vertical"
+                      style={{
+                        height: '14px',
+                        background: '#1CB25B',
+                        marginLeft: '10px',
+                        marginRight: '10px',
+                      }}
+                      variant="middle"
+                      flexItem
                     />
-                  </CustomIconButton>
-                </Stack>
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid xs={2}>
-            <Typography
-              component={'div'}
-              style={{
-                color: '#1CB25B',
-                fontWeight: '700',
-                textAlign: 'center',
-              }}
-            >
-              {formatMoney(row?.quantity * row?.unitPrice)}
-            </Typography>
-          </Grid>
-          <Grid xs={1}>
-            <Button
-              variant="text"
-              style={{
-                color: '#E02D3C',
-                textTransform: 'capitalize',
-                textDecoration: 'underline',
-              }}
-            >
-              Remove
-            </Button>
-          </Grid>
-        </CustomGrid>
-      ))} */}
+                    <Typography
+                      component={'div'}
+                      style={{
+                        fontWeight: '400',
+                        fontSize: '12px',
+                        textTransform: 'lowercase',
+                      }}
+                    >
+                      {item?.unitType}
+                    </Typography>
+
+                    <IconButtonCustom onClick={() => handleClickButton(item)}>
+                      <Image
+                        alt="icon edit"
+                        src={edit}
+                        objectFit="contain"
+                        width={18}
+                        height={18}
+                      />
+                    </IconButtonCustom>
+                  </Stack>
+                </Box>
+              </Paper>
+            </Grid>
+            <Grid xs={2}>
+              <Typography
+                component={'div'}
+                style={{
+                  color: '#1CB25B',
+                  fontWeight: '700',
+                  textAlign: 'center',
+                }}
+              >
+                {formatMoney(Number(item?.quantity) * Number(item?.unitPrice))}
+              </Typography>
+            </Grid>
+            <Grid xs={1}>
+              <Button
+                variant="text"
+                style={{
+                  color: '#E02D3C',
+                  textTransform: 'capitalize',
+                  textDecoration: 'underline',
+                }}
+              >
+                Remove
+              </Button>
+            </Grid>
+          </GridCustom>
+        )
+      })}
       <TypographyH2 variant="h2" mb={3}>
         Viewed Product
       </TypographyH2>
-      <div className={classes['custom-checkout-bar']}>
+      <div className={classes['checkout-bar']}>
         <Grid
           container
           spacing={3}
@@ -304,10 +417,10 @@ const Cart: NextPageWithLayout = () => {
         >
           <Grid xs="auto">
             <Stack direction="row" spacing={2} alignItems="center">
-              {/* <Checkbox
+              <Checkbox
                 checked={isCheckAll}
                 onChange={handleSelectAllCheckBox}
-              /> */}
+              />
               <Box sx={{ marginLeft: '10px', marginRight: '10px' }}>
                 Select all product on cart
               </Box>
@@ -317,9 +430,7 @@ const Cart: NextPageWithLayout = () => {
             <Stack direction="row" spacing={2} alignItems="center">
               <CurrencyCircleDollar size={18} />
               <Typography>Total</Typography>
-              <CustomTotal>
-                {/* {formatMoney(cart?.data?.totalPrice | 0)} */}
-              </CustomTotal>
+              {/* <TotalCustom>{formatMoney()}</TotalCustom> */}
               <ButtonCustom variant="contained" size="large">
                 Checkout
               </ButtonCustom>
@@ -335,8 +446,8 @@ const Cart: NextPageWithLayout = () => {
         closeAfterTransition
       >
         <Fade in={open}>
-          <CustomBoxModal>
-            <div className={classes['custom-container']}>
+          <BoxModalCustom>
+            <div className={classes['popup-quantity']}>
               <Stack
                 direction="row"
                 spacing={2}
@@ -347,7 +458,6 @@ const Cart: NextPageWithLayout = () => {
                 <TypographyH6 id="modal-modal-title" variant="h6">
                   Adjust quantity
                 </TypographyH6>
-
                 <IconButton onClick={handleClose}>
                   <X size={24} />
                 </IconButton>
@@ -364,29 +474,31 @@ const Cart: NextPageWithLayout = () => {
                     padding: '5px 10px',
                     borderRadius: '8px',
                     marginBottom: '10px',
+                    color: '#1CB25B',
                   }}
                 >
-                  <div className={classes['current-instock ']}>
+                  <TypographyCurrentInstock>
                     Current in stock
-                  </div>
-                  <div className={classes['custom-current-instock-wrapper']}>
-                    <div className={classes['custom-number-current-instock']}>
-                      4
-                    </div>
+                  </TypographyCurrentInstock>
+                  <div className={classes['popup-quantity__current-instock']}>
+                    {instock}
                   </div>
                 </Stack>
-                <Typography mb={3}>Quantity</Typography>
-
+                <Typography mb={1}>Quantity</Typography>
                 <TextFieldCustom
                   type="number"
                   placeholder="Ex: 1000"
                   fullWidth
-                  className={classes['input-number']}
                   {...register('quantity')}
-                ></TextFieldCustom>
-                <Typography style={{ color: 'red' }}>
+                  onChange={(e: ChangeEvent) => {
+                    handleOnChangeQuantity(e)
+                  }}
+                  className={classes['input-number']}
+                />
+                <FormHelperText error>
                   {errors.quantity?.message}
-                </Typography>
+                </FormHelperText>
+
                 <Stack
                   direction="row"
                   spacing={2}
@@ -396,9 +508,9 @@ const Cart: NextPageWithLayout = () => {
                 >
                   <span>Sub Total: </span>
                   <div className={classes['modal-subtotal']}>
-                    {/* {formatMoney(
-                      currentProductQuantity?.unitPrice * getValues('quantity')
-                    )} */}
+                    {formatMoney(
+                      subTotal * Number(currentProductQuantity?.unitPrice)
+                    )}
                   </div>
                 </Stack>
 
@@ -409,7 +521,7 @@ const Cart: NextPageWithLayout = () => {
                 </Stack>
               </form>
             </div>
-          </CustomBoxModal>
+          </BoxModalCustom>
         </Fade>
       </Modal>
     </>

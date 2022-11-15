@@ -47,19 +47,4 @@ const addToCard = (data: {
   })
 }
 
-// const getInstockApi = (
-//   params: number
-// ): Promise<AxiosResponse<InstockProductDataResponseType>> => {
-//   return callAPIWithToken({
-//     url: `api/customer/stock-items/${params}`,
-//     method: 'get',
-//   })
-// }
-
-export {
-  getProductDetail,
-  getRelatedProduct,
-  postWishList,
-  addToCard,
-  // getInstockApi,
-}
+export { getProductDetail, getRelatedProduct, postWishList, addToCard }

@@ -66,11 +66,11 @@ const SideBar = ({ open }: Props) => {
 
   useEffect(() => {
     dispatch(cartActions.doCart())
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
-    if (cart?.data?.amountItems) {
-      setStateItemCart(cart?.data?.amountItems)
+    if (cart.data.amountItems) {
+      setStateItemCart(cart.data.amountItems)
     }
   }, [cart])
 

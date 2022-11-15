@@ -19,6 +19,7 @@ const nextConfig = {
       // 'dev.vuarausach.vn',
       'cdn.shopify.com',
       'via.placeholder.com',
+      'product.hstatic.net',
     ],
     // path prefix for Image Optimization API, useful with `loader`
     path: '/_next/image',
