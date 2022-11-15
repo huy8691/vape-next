@@ -12,12 +12,13 @@ const getInstockAPI = (
 }
 
 const updateQuantityProduct = (
-  value: UpdateQuantityType
+  value: UpdateQuantityType,
+  params: number
 ): Promise<AxiosResponse> => {
   return callAPIWithToken({
-    url: `/api/cart/update-quantity/${value.cartItemId}/`,
+    url: `/api/cart/update-quantity/${params}/`,
     method: 'put',
-    data: value.quantity,
+    data: value,
   })
 }
 

@@ -83,11 +83,11 @@ const TypographyH6 = styled(Typography)(() => ({
   fontWeight: '400',
   fontSize: '16px',
 }))
-// const TotalCustom = styled(Box)(() => ({
-//   color: '#1CB25B',
-//   fontWeight: '700',
-//   fontSize: '20px',
-// }))
+const TotalCustom = styled(Box)(() => ({
+  color: '#1CB25B',
+  fontWeight: '700',
+  fontSize: '20px',
+}))
 const TypographyCustom = styled(Typography)(() => ({
   color: '#BABABA',
   fontWeight: '400',
@@ -128,10 +128,9 @@ const Cart: NextPageWithLayout = () => {
   const [isCheckAll, setIsCheckAll] = useState(false)
   const [stateCartCheck, setStateCartCheck] = useState<CartType['items']>()
   //state use for modal
-  const [currentProductQuantity, setCurrentProductQuantity] =
-    useState<CartItem>()
+  const [currentProduct, setCurrentProduct] = useState<CartItem>()
   //state use for total
-  // const [total, setTotal] = useState<number>(0)
+  const [total, setTotal] = useState<number>(0)
   const [subTotal, setSubtotal] = useState<number>(0)
   // assign list product in cart array then set it to state (list)
 
@@ -152,50 +151,38 @@ const Cart: NextPageWithLayout = () => {
 
     const newState = stateCartCheck?.map((item) => {
       if (item.cartItemId === value.cartItemId) {
-        return { ...item, isCheck: !item.isCheck }
+        return { ...item, isCheck: e.target.checked }
       }
       return { ...item }
     })
-
-    if (e.target.checked === false) {
-      setIsCheckAll(false)
+    if (e.target.checked === true) {
+      setTotal(total + value.subTotal)
     } else {
-      setIsCheckAll(true)
+      setTotal(total - value.subTotal)
     }
-    // value.isCheck === false &&
-    // newState?.every((item) => item.isCheck === true)
 
-    // if (newState?.some(condition)) {
-    //   setIsCheckAll(false)
-    // } else {
-    //   setIsCheckAll(true)
-    // }
+    if (newState?.every((arr) => arr.isCheck === true)) {
+      setIsCheckAll(true)
+    } else {
+      setIsCheckAll(false)
+    }
     setStateCartCheck(newState)
   }
-  const handleSelectAllCheckBox = () => {
-    setIsCheckAll(!isCheckAll)
-    if (!isCheckAll) {
-      const condition = (arr: CartItem) => arr.isCheck === true
-      if (stateCartCheck?.some(condition)) {
-        const newState = stateCartCheck?.map((item) => {
-          if (item.isCheck === true) {
-            return { ...item }
-          } else {
-            return { ...item, isCheck: true }
-          }
-        })
-        setStateCartCheck(newState)
-      } else {
-        const newState = stateCartCheck?.map((item) => {
-          return { ...item, isCheck: true }
-        })
-        setStateCartCheck(newState)
-      }
+  const handleSelectAllCheckBox = (e: any) => {
+    if (e.target.checked) {
+      let newArr = stateCartCheck?.map((item) => {
+        return { ...item, isCheck: true }
+      })
+      setTotal(Number(cart.data.totalPrice))
+      setStateCartCheck(newArr)
+      setIsCheckAll(!isCheckAll)
     } else {
-      const newState = stateCartCheck?.map((item) => {
+      let newArr = stateCartCheck?.map((item) => {
         return { ...item, isCheck: false }
       })
-      setStateCartCheck(newState)
+      setStateCartCheck(newArr)
+      setTotal(0)
+      setIsCheckAll(!isCheckAll)
     }
   }
 
@@ -227,11 +214,13 @@ const Cart: NextPageWithLayout = () => {
       )
     } else {
       console.log(getValues('quantity'))
-
-      updateQuantityProduct({
-        quantity: getValues('quantity'),
-        cartItemId: currentProductQuantity?.cartItemId,
-      })
+      console.log(currentProduct?.cartItemId)
+      updateQuantityProduct(
+        {
+          quantity: getValues('quantity'),
+        },
+        Number(currentProduct?.cartItemId)
+      )
         .then(() => {
           dispatch(loadingActions.doLoadingSuccess())
           dispatch(cartActions.doCart())
@@ -240,6 +229,7 @@ const Cart: NextPageWithLayout = () => {
               message: 'Update successfully',
             })
           )
+          handleClose()
         })
         .catch((error) => {
           const data = error.response?.data
@@ -258,7 +248,7 @@ const Cart: NextPageWithLayout = () => {
   const handleClickButton = (values: CartItem) => {
     setValue('quantity', values?.quantity || 0)
     setOpen(true)
-    setCurrentProductQuantity(values)
+    setCurrentProduct(values)
 
     getInstockAPI(values?.productId)
       .then((res) => {
@@ -431,8 +421,8 @@ const Cart: NextPageWithLayout = () => {
           <Grid xs="auto">
             <Stack direction="row" spacing={2} alignItems="center">
               <Checkbox
+                onChange={(e) => handleSelectAllCheckBox(e)}
                 checked={isCheckAll}
-                onChange={handleSelectAllCheckBox}
               />
               <Box sx={{ marginLeft: '10px', marginRight: '10px' }}>
                 Select all product on cart
@@ -443,7 +433,7 @@ const Cart: NextPageWithLayout = () => {
             <Stack direction="row" spacing={2} alignItems="center">
               <CurrencyCircleDollar size={18} />
               <Typography>Total</Typography>
-              {/* <TotalCustom>{formatMoney()}</TotalCustom> */}
+              <TotalCustom>{formatMoney(total)}</TotalCustom>
               <ButtonCustom variant="contained" size="large">
                 Checkout
               </ButtonCustom>
@@ -521,9 +511,7 @@ const Cart: NextPageWithLayout = () => {
                 >
                   <span>Sub Total: </span>
                   <div className={classes['modal-subtotal']}>
-                    {formatMoney(
-                      subTotal * Number(currentProductQuantity?.unitPrice)
-                    )}
+                    {formatMoney(subTotal * Number(currentProduct?.unitPrice))}
                   </div>
                 </Stack>
 

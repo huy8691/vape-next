@@ -9,5 +9,4 @@ export interface InstockResponseType {
 
 export interface UpdateQuantityType {
   quantity?: number
-  cartItemId?: number
 }
