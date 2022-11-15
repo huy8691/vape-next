@@ -147,16 +147,29 @@ const Cart: NextPageWithLayout = () => {
   }, [cart?.data?.items])
 
   // CheckBoxClickHandler
-  const handleClickCheckbox = (value: CartItem) => {
-    if (value.isCheck === false) {
-      setIsCheckAll(false)
-    }
+  const handleClickCheckbox = (value: CartItem, e: any) => {
+    // const condition = (arr: CartItem) => arr.isCheck === true
+
     const newState = stateCartCheck?.map((item) => {
       if (item.cartItemId === value.cartItemId) {
         return { ...item, isCheck: !item.isCheck }
       }
       return { ...item }
     })
+
+    if (e.target.checked === false) {
+      setIsCheckAll(false)
+    } else {
+      setIsCheckAll(true)
+    }
+    // value.isCheck === false &&
+    // newState?.every((item) => item.isCheck === true)
+
+    // if (newState?.some(condition)) {
+    //   setIsCheckAll(false)
+    // } else {
+    //   setIsCheckAll(true)
+    // }
     setStateCartCheck(newState)
   }
   const handleSelectAllCheckBox = () => {
@@ -302,7 +315,7 @@ const Cart: NextPageWithLayout = () => {
             <Grid xs="auto">
               <Checkbox
                 id={item?.cartItemId?.toString()}
-                onChange={() => handleClickCheckbox(item)}
+                onChange={(value) => handleClickCheckbox(item, value)}
                 checked={item?.isCheck}
               />
             </Grid>
