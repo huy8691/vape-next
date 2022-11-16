@@ -23,6 +23,7 @@ type SnackbarType = {
   message: string
   type: 'error' | 'warning' | 'info' | 'success'
 }
+
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref
@@ -30,10 +31,10 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 // Snackbar
-
 type Props = {
   children: ReactElement
 }
+
 const theme = createTheme({
   palette: {
     // mode: 'dark',

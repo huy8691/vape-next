@@ -110,6 +110,7 @@ const SelectCustomSort = styled(Select)({
   '& .MuiOutlinedInput-notchedOutline': {
     borderRadius: '8px',
     fontSize: '1.4rem',
+    borderWidth: '1px !important',
   },
   '& .MuiOutlinedInput-input': {
     padding: '8.5px 15px 8.5px 40px',
@@ -387,7 +388,7 @@ const BrowseProducts: NextPageWithLayout = () => {
     if (!brand) {
       brand = `${event.target.name}`
     } else {
-      let arrayBrand = await brand?.split(',')
+      let arrayBrand = await `${brand}`?.split(',')
       const index = await arrayBrand.indexOf(event.target.name)
       if (index > -1) {
         await arrayBrand.splice(index, 1)
@@ -431,7 +432,7 @@ const BrowseProducts: NextPageWithLayout = () => {
     if (!manufacturer) {
       manufacturer = `${event.target.name}`
     } else {
-      let arrayManufacturer = await manufacturer?.split(',')
+      let arrayManufacturer = await `${manufacturer}`?.split(',')
       const index = await arrayManufacturer.indexOf(event.target.name)
       if (index > -1) {
         await arrayManufacturer.splice(index, 1)
@@ -532,6 +533,20 @@ const BrowseProducts: NextPageWithLayout = () => {
             // cap 2
             let newChildCategory = object.child_category
             if (object.child_category?.length > 0) {
+              //
+              for (let i = 0; i < arrayCategory.length; i++) {
+                if (arrayCategory[i] === object.id.toString()) {
+                  return {
+                    ...object,
+                    checked: true,
+                    child_category: object.child_category?.map((item) => {
+                      return { ...item, checked: true }
+                    }),
+                  }
+                }
+              }
+
+              //
               newChildCategory = object.child_category?.map((item) => {
                 for (let i = 0; i < arrayCategory.length; i++) {
                   if (arrayCategory[i] === item.id.toString()) {
@@ -550,6 +565,7 @@ const BrowseProducts: NextPageWithLayout = () => {
                 .filter((value) => {
                   return value !== undefined
                 })
+
               return {
                 ...object,
                 indeterminate:
@@ -676,6 +692,7 @@ const BrowseProducts: NextPageWithLayout = () => {
       )
       setValue('key', sliceAsPathKeySearch)
     }
+    //
   }, [])
 
   // show err key search
