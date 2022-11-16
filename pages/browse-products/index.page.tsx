@@ -66,7 +66,7 @@ import { FunnelSimple, Eraser, MagnifyingGlass } from 'phosphor-react'
 const CardCustom = styled(Card)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
-  boxShadow: 'none',
+  // boxShadow: 'none',
   height: '100%',
 }))
 

@@ -90,6 +90,10 @@ const TagHr = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }))
 
+const ButtonLoginCustom = styled(ButtonCustom)(() => ({
+  boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
+}))
+
 // const Storage = () => {
 //   // set(key, value) {
 //   //   localStorage.setItem(key, value)
@@ -282,9 +286,9 @@ const Login: NextPageWithLayout = () => {
             </Box>
 
             <Stack alignItems="center">
-              <ButtonCustom variant="contained" size="large" type="submit">
+              <ButtonLoginCustom variant="contained" size="large" type="submit">
                 Sign In
-              </ButtonCustom>
+              </ButtonLoginCustom>
             </Stack>
           </form>
           <div className={classes['login-page__sign-in-width']}>

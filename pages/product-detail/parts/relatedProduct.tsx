@@ -18,6 +18,7 @@ import { Skeleton, Typography } from '@mui/material'
 
 const CardCustom = styled(Card)(({ theme }) => ({
   borderRadius: '15px',
+  height: '100%',
   border:
     theme.palette.mode === 'light'
       ? '1px solid #E1E6EF'

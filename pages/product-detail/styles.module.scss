@@ -25,6 +25,9 @@
           border: 1px solid $primary;
         }
       }
+      .slick-dots {
+        bottom: -20px;
+      }
     }
   }
 }

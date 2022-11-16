@@ -10,6 +10,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import Cookies from 'js-cookie'
+// import { Shadows } from '@mui/material/styles/shadows'
 // import vi_VN from 'antd/lib/locale/vi_VN'
 // import 'moment/locale/vi'
 
@@ -45,6 +46,7 @@ const theme = createTheme({
       main: '#BA2532',
     },
   },
+  // shadows: Array(25).fill('none') as Shadows,
   typography: {
     fontFamily: 'Poppins',
     htmlFontSize: 10,

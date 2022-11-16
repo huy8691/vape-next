@@ -19,6 +19,10 @@ const CardCustom = styled(Card)(({ theme }) => ({
       : '1px solid rgba(255, 255, 255, 0.12)',
 }))
 
+const TypographyCategory = styled(Typography)(({ theme }) => ({
+  color: theme.palette.primary.main,
+}))
+
 type Props = {
   dataProduct: {
     id: number
@@ -52,13 +56,13 @@ const ItemProduct: React.FC<Props> = (props: Props) => {
         </a>
       </Link>
       <CardContent style={{ paddingBottom: '16px' }}>
-        <Typography
+        <TypographyCategory
           variant="body1"
           component="div"
           className={classes['item-product__category']}
         >
           {props.dataProduct.category?.name}
-        </Typography>
+        </TypographyCategory>
         <Typography variant="h6" className={classes['item-product__name']}>
           {props.dataProduct.name}
         </Typography>

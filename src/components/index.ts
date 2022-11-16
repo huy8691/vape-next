@@ -15,7 +15,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 const ButtonCustom = styled(Button)({
   color: '#ffffff',
   backgroundColor: 'linear-gradient(93.37deg, #1CB35B 0%, #20B598 116.99%)',
-  boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
+  // boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
   borderRadius: '12px',
   textTransform: 'none',
   padding: '7px 25px',
@@ -24,7 +24,7 @@ const ButtonCustom = styled(Button)({
 const LoadingButtonCustom = styled(LoadingButton)({
   color: '#ffffff',
   backgroundColor: 'linear-gradient(93.37deg, #1CB35B 0%, #20B598 116.99%)',
-  boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
+  // boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
   borderRadius: '12px',
   textTransform: 'none',
   padding: '7px 25px',

@@ -23,6 +23,7 @@ import {
   ThemeProvider as ThemeProviderMui,
   createTheme,
 } from '@mui/material/styles'
+import { Shadows } from '@mui/material/styles/shadows'
 import {
   ThemeProvider as ThemeProviderNext,
   useTheme as useThemeNext,
@@ -52,6 +53,7 @@ const ThemeMui = ({ children }: Props) => {
             main: '#BA2532',
           },
         },
+        shadows: Array(25).fill('none') as Shadows,
         typography: {
           fontFamily: 'Poppins',
           fontSize: 14,
