@@ -27,7 +27,7 @@ const getRelatedProduct = (
 }
 
 const postWishList = (
-  data?: any
+  data: any
 ): Promise<AxiosResponse<WishListResponseType>> => {
   return callAPIWithToken({
     url: `/api/customer/products/mark-favorite/`,
@@ -35,4 +35,14 @@ const postWishList = (
     data: data,
   })
 }
-export { getProductDetail, getRelatedProduct, postWishList }
+const addToCard = (data: {
+  product: number
+  quantity: number
+}): Promise<AxiosResponse> => {
+  return callAPIWithToken({
+    url: `/api/cart/add/`,
+    method: 'post',
+    data: data,
+  })
+}
+export { getProductDetail, getRelatedProduct, postWishList, addToCard }

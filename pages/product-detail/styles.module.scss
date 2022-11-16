@@ -10,8 +10,7 @@
   }
 
   &__slick-carousel {
-    border-top: 1px solid #ffff;
-
+    padding-top: 15px;
     margin-left: -5px;
     margin-right: -5px;
     &__item {
@@ -25,12 +24,6 @@
         > div > div > div {
           border: 1px solid $primary;
         }
-      }
-    }
-
-    :global {
-      .slick-slider {
-        padding-top: 15px;
       }
     }
   }

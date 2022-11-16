@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 // mui
 import ListItem from '@mui/material/ListItem'
@@ -13,14 +13,18 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import Collapse from '@mui/material/Collapse'
-import StarBorder from '@mui/icons-material/StarBorder'
 import IconButton from '@mui/material/IconButton'
 import Badge from '@mui/material/Badge'
 import Tooltip from '@mui/material/Tooltip'
 import { useRouter } from 'next/router'
 // mui
 
-// import classes from './styles.module.scss'
+// api
+import { useAppDispatch } from 'src/store/hooks'
+import { useAppSelector } from 'src/store/hooks'
+import { cartActions } from 'src/store/cart/cartSlice'
+
+import classes from './styles.module.scss'
 
 // other
 import {
@@ -51,11 +55,25 @@ const Menu = [
 
 const SideBar = ({ open }: Props) => {
   const router = useRouter()
-  const [openCollapse, setOpenCollapse] = React.useState(true)
+  const dispatch = useAppDispatch()
+  const cart = useAppSelector((state) => state.cart)
+  const [openCollapse, setOpenCollapse] = useState<boolean>(true)
+  const [stateItemCart, setStateItemCart] = useState<number>(0)
 
   const handleClick = () => {
     setOpenCollapse(!openCollapse)
   }
+
+  useEffect(() => {
+    dispatch(cartActions.doCart())
+  }, [])
+
+  useEffect(() => {
+    if (cart?.data?.amountItems) {
+      setStateItemCart(cart?.data?.amountItems)
+    }
+  }, [cart])
+
   return (
     <>
       {/* <List>
@@ -183,7 +201,10 @@ const SideBar = ({ open }: Props) => {
                     <>
                       <ListItemText primary="Cart" />
                       <IconButton>
-                        <Badge badgeContent={10} color="primary"></Badge>
+                        <Badge
+                          badgeContent={stateItemCart}
+                          color="primary"
+                        ></Badge>
                       </IconButton>
                     </>
                   ) : (
