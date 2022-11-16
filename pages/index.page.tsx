@@ -38,13 +38,13 @@ import { Folder } from 'phosphor-react'
 const CardCustom = styled(Card)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'light' ? '#fff' : theme.palette.action.disabled,
-  boxShadow: 'none',
+  // boxShadow: 'none',
 }))
 
 const CardSection = styled(Card)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'light' ? '#F1F3F9' : theme.palette.action.hover,
-  boxShadow: 'none',
+  // boxShadow: 'none',
 }))
 
 const Home: NextPageWithLayout = () => {

@@ -72,6 +72,9 @@ const TypographyBodyCustom = styled(Typography)({
   marginLeft: 'auto',
   marginRight: 'auto',
 })
+const ButtonSubmitCustom = styled(ButtonCustom)(() => ({
+  boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
+}))
 
 const ChangePassword: NextPageWithLayout = () => {
   const router = useRouter()
@@ -269,9 +272,13 @@ const ChangePassword: NextPageWithLayout = () => {
                 />
               </Box>
               <Stack alignItems="center">
-                <ButtonCustom variant="contained" size="large" type="submit">
+                <ButtonSubmitCustom
+                  variant="contained"
+                  size="large"
+                  type="submit"
+                >
                   Reset Password
-                </ButtonCustom>
+                </ButtonSubmitCustom>
               </Stack>
             </form>
           </Box>

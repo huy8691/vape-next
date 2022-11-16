@@ -95,7 +95,7 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(2),
   color: theme.palette.text.secondary,
-  boxShadow: 'none',
+  // boxShadow: 'none',
   display: 'flex',
   alignItems: 'center',
   gap: '16px',
@@ -104,8 +104,9 @@ const Item = styled(Paper)(({ theme }) => ({
 const CardCustom = styled(Card)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
-  boxShadow: 'none',
+  // boxShadow: 'none',
   borderRadius: '10px',
+  paddingBottom: theme.spacing(0),
 }))
 const StickyWrapper = styled('div')(() => ({
   position: 'sticky',
@@ -170,9 +171,10 @@ const ProductDetail: NextPageWithLayout = () => {
     slidesToShow: 1,
     dots: false,
     fade: true,
+    arrows: false,
   }
   const settings2 = {
-    dots: false,
+    dots: true,
     infinite:
       stateProductDetail?.images && stateProductDetail?.images?.length > 3
         ? true
@@ -270,7 +272,7 @@ const ProductDetail: NextPageWithLayout = () => {
   useEffect(() => {
     if (router.query.id) {
       setStateProductDetail(undefined)
-      setValue('quantity', 1)
+      setValue('quantity', 0)
       dispatch(loadingActions.doLoading())
       getProductDetail(router?.query?.id)
         .then((res) => {
@@ -705,7 +707,7 @@ const ProductDetail: NextPageWithLayout = () => {
                                     }
                                   }}
                                   {...field}
-                                  inputProps={{ min: 1, max: 1000000 }}
+                                  inputProps={{ min: 0, max: 1000000 }}
                                   onChange={(event: any) => {
                                     if (event.target.value < 1000001) {
                                       setValue('quantity', event.target.value)

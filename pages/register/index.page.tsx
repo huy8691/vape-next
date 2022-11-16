@@ -102,6 +102,9 @@ const TextFieldCheckMailCustom = styled(FormControl)({
     padding: '10px 15px',
   },
 })
+const ButtonRegisterCustom = styled(ButtonCustom)(() => ({
+  boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
+}))
 
 type CheckMail = {
   status: string
@@ -428,13 +431,13 @@ const Register: NextPageWithLayout = () => {
                         />
                       </Grid>
                       <Grid xs>
-                        <ButtonCustom
+                        <ButtonRegisterCustom
                           variant="contained"
                           size="large"
                           type="submit"
                         >
                           Check
-                        </ButtonCustom>
+                        </ButtonRegisterCustom>
                       </Grid>
                     </Grid>
                     <FormHelperText error={!!errorsCheckMail.email}>
@@ -1335,14 +1338,14 @@ const Register: NextPageWithLayout = () => {
             </Grid>
             <Stack direction="row" spacing={2}></Stack>
             <Stack alignItems="center">
-              <ButtonCustom
+              <ButtonRegisterCustom
                 variant="contained"
                 size="large"
                 type="submit"
                 disabled={stateCheckMail.valueEmail === '' ? true : false}
               >
                 Submit sign up request
-              </ButtonCustom>
+              </ButtonRegisterCustom>
             </Stack>
           </form>
         </div>

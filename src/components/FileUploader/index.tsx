@@ -21,7 +21,6 @@ type Props = {
 }
 
 const ButtonGroupCustom = styled(ButtonGroup)({
-  boxShadow: 'none',
   position: 'relative',
 })
 
@@ -34,9 +33,9 @@ const ButtonCustom = styled(Button)({
   background: '#F1F3F9',
   top: '1px',
   left: '2px',
-  boxShadow: 'none',
   textTransform: 'none',
   fontWeight: '400',
+  boxShadow: 'none',
 })
 const ChipCustom = styled(Chip)({
   position: 'absolute',

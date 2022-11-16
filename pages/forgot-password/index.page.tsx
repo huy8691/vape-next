@@ -76,6 +76,9 @@ const TypographyBodyCustom = styled(Typography)({
   maxWidth: '300px',
   margin: '0px auto',
 })
+const ButtonSubmitCustom = styled(ButtonCustom)(() => ({
+  boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
+}))
 
 const ForgotPassword: NextPageWithLayout = () => {
   const router = useRouter()
@@ -357,13 +360,13 @@ const ForgotPassword: NextPageWithLayout = () => {
                     />
                   </Box>
                   <Stack alignItems="center">
-                    <ButtonCustom
+                    <ButtonSubmitCustom
                       variant="contained"
                       size="large"
                       type="submit"
                     >
                       Next
-                    </ButtonCustom>
+                    </ButtonSubmitCustom>
                   </Stack>
                 </form>
               </TabPanel>
@@ -408,7 +411,7 @@ const ForgotPassword: NextPageWithLayout = () => {
                     </Typography>
                   )}
 
-                  <ButtonCustom
+                  <ButtonSubmitCustom
                     variant="contained"
                     size="large"
                     type="submit"
@@ -416,7 +419,7 @@ const ForgotPassword: NextPageWithLayout = () => {
                     disabled={pinCode.length < 6 ? true : false}
                   >
                     Next
-                  </ButtonCustom>
+                  </ButtonSubmitCustom>
                 </Box>
               </TabPanel>
               <TabPanel value="3">
@@ -515,13 +518,13 @@ const ForgotPassword: NextPageWithLayout = () => {
                     />
                   </Box>
                   <Stack alignItems="center">
-                    <ButtonCustom
+                    <ButtonSubmitCustom
                       variant="contained"
                       size="large"
                       type="submit"
                     >
                       Reset Password
-                    </ButtonCustom>
+                    </ButtonSubmitCustom>
                   </Stack>
                 </form>
               </TabPanel>
