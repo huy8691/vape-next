@@ -1,5 +1,4 @@
 import React, {
-  ChangeEvent,
   // ChangeEvent,
   useEffect,
   useState,
@@ -125,41 +124,59 @@ const Cart: NextPageWithLayout = () => {
   //state for instock
   const [instock, setInstock] = useState<number>()
   // state use for checkbox
+  const [isCheckedListItem, setIsCheckedListItem] = useState<{
+    [key: number]: boolean
+  }>({})
   const [isCheckAll, setIsCheckAll] = useState(false)
   const [stateCartCheck, setStateCartCheck] = useState<CartType['items']>()
+  const [flagUpdate, setFlagUpdate] = useState(false)
   //state use for modal
   const [currentProduct, setCurrentProduct] = useState<CartItem>()
   //state use for total
   const [total, setTotal] = useState<number>(0)
-  const [subTotal, setSubtotal] = useState<number>(0)
+  // state use for temporary quantity
+  const [tempQuantity, setTempQuantity] = useState<number>(0)
   // assign list product in cart array then set it to state (list)
 
   useEffect(() => {
     if (cart.data.items.length === 0) return
-    let newArr = cart?.data?.items?.map((item) => {
-      return {
-        ...item,
-        isCheck: false,
-      }
-    })
-    setStateCartCheck(newArr)
-  }, [cart?.data?.items])
+
+    if (flagUpdate) {
+      // return
+      let newArr = cart?.data?.items?.map((item) => {
+        return {
+          ...item,
+          isCheck: isCheckedListItem[item.cartItemId],
+        }
+      })
+      setStateCartCheck(newArr)
+      calculateTotal(newArr)
+    } else {
+      let newArr = cart?.data?.items?.map((item) => {
+        return {
+          ...item,
+          isCheck: false,
+        }
+      })
+      setStateCartCheck(newArr)
+    }
+    console.log(stateCartCheck)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cart, flagUpdate])
 
   // CheckBoxClickHandler
   const handleClickCheckbox = (value: CartItem, e: any) => {
-    // const condition = (arr: CartItem) => arr.isCheck === true
-
     const newState = stateCartCheck?.map((item) => {
       if (item.cartItemId === value.cartItemId) {
-        return { ...item, isCheck: e.target.checked }
+        return {
+          ...item,
+          isCheck: e.target.checked,
+        }
       }
-      return { ...item }
+      return {
+        ...item,
+      }
     })
-    if (e.target.checked === true) {
-      setTotal(total + value.subTotal)
-    } else {
-      setTotal(total - value.subTotal)
-    }
 
     if (newState?.every((arr) => arr.isCheck === true)) {
       setIsCheckAll(true)
@@ -167,12 +184,33 @@ const Cart: NextPageWithLayout = () => {
       setIsCheckAll(false)
     }
     setStateCartCheck(newState)
+
+    setIsCheckedListItem({
+      ...isCheckedListItem,
+      [value.cartItemId]: e.target.checked,
+    })
+    if (newState) {
+      calculateTotal(newState)
+    }
   }
+
+  // CheckallClickHandler
   const handleSelectAllCheckBox = (e: any) => {
     if (e.target.checked) {
       let newArr = stateCartCheck?.map((item) => {
         return { ...item, isCheck: true }
       })
+      if (newArr) {
+        let itemNew: any = {}
+        newArr.forEach((item) => {
+          itemNew = { ...itemNew, [item.cartItemId]: true }
+        })
+        console.log('item', itemNew)
+        setIsCheckedListItem({
+          ...isCheckedListItem,
+          ...itemNew,
+        })
+      }
       setTotal(Number(cart.data.totalPrice))
       setStateCartCheck(newArr)
       setIsCheckAll(!isCheckAll)
@@ -180,10 +218,31 @@ const Cart: NextPageWithLayout = () => {
       let newArr = stateCartCheck?.map((item) => {
         return { ...item, isCheck: false }
       })
+      if (newArr) {
+        let itemNew: any = {}
+        newArr.forEach((item) => {
+          itemNew = { ...itemNew, [item.cartItemId]: false }
+        })
+        console.log('item', itemNew)
+        setIsCheckedListItem({
+          ...isCheckedListItem,
+          ...itemNew,
+        })
+      }
       setStateCartCheck(newArr)
       setTotal(0)
       setIsCheckAll(!isCheckAll)
     }
+  }
+  // calculate total
+  const calculateTotal = (newArr: CartType['items']) => {
+    let tempTotal = 0
+    newArr?.forEach((item: CartItem) => {
+      if (item.isCheck) {
+        tempTotal += item.subTotal
+      }
+    })
+    setTotal(tempTotal)
   }
 
   //close modal handler
@@ -205,7 +264,6 @@ const Cart: NextPageWithLayout = () => {
   const onSubmit = (data: QuantityFormInput) => {
     console.log(data)
     if (getValues('quantity') > Number(instock)) {
-      console.log('not enough')
       dispatch(
         notificationActions.doNotification({
           message: `Only ${instock} products left in stock`,
@@ -215,6 +273,7 @@ const Cart: NextPageWithLayout = () => {
     } else {
       console.log(getValues('quantity'))
       console.log(currentProduct?.cartItemId)
+      console.log(currentProduct?.quantity)
       updateQuantityProduct(
         {
           quantity: getValues('quantity'),
@@ -229,6 +288,10 @@ const Cart: NextPageWithLayout = () => {
               message: 'Update successfully',
             })
           )
+          setFlagUpdate(true)
+          console.log('old array', stateCartCheck)
+          console.log('new array', cart.data.items)
+
           handleClose()
         })
         .catch((error) => {
@@ -249,7 +312,7 @@ const Cart: NextPageWithLayout = () => {
     setValue('quantity', values?.quantity || 0)
     setOpen(true)
     setCurrentProduct(values)
-
+    setTempQuantity(values?.quantity)
     getInstockAPI(values?.productId)
       .then((res) => {
         const { data } = res.data
@@ -267,8 +330,8 @@ const Cart: NextPageWithLayout = () => {
   // handle change quantity value
   const handleOnChangeQuantity = (e: any) => {
     if (Number(e.target.value)) {
-      setSubtotal(Number(e.target.value))
-    } else setSubtotal(0)
+      setTempQuantity(Number(e.target.value))
+    } else setTempQuantity(0)
   }
 
   return (
@@ -313,7 +376,7 @@ const Cart: NextPageWithLayout = () => {
               <Stack direction="row" spacing={2} alignItems="center">
                 <div className={classes['image-wrapper']}>
                   <Image
-                    src={item.productThumbnail}
+                    src={item.productThumbnail || ''}
                     alt="product"
                     width={80}
                     height={80}
@@ -493,9 +556,26 @@ const Cart: NextPageWithLayout = () => {
                   placeholder="Ex: 1000"
                   fullWidth
                   {...register('quantity')}
-                  onChange={(e: ChangeEvent) => {
-                    handleOnChangeQuantity(e)
+                  error={!!errors.quantity}
+                  onChange={(e: any) => {
+                    if (e.target.value < 1000001) {
+                      handleOnChangeQuantity(e)
+                    }
                   }}
+                  inputProps={{ min: 1, max: 10000000 }}
+                  onKeyPress={(event) => {
+                    if (
+                      event?.key === '-' ||
+                      event?.key === '+' ||
+                      event?.key === ',' ||
+                      event?.key === '.' ||
+                      event?.key === 'e'
+                    ) {
+                      event.preventDefault()
+                    }
+                  }}
+                  // error={!!errors.quantity}
+
                   className={classes['input-number']}
                 />
                 <FormHelperText error>
@@ -511,7 +591,9 @@ const Cart: NextPageWithLayout = () => {
                 >
                   <span>Sub Total: </span>
                   <div className={classes['modal-subtotal']}>
-                    {formatMoney(subTotal * Number(currentProduct?.unitPrice))}
+                    {formatMoney(
+                      tempQuantity * Number(currentProduct?.unitPrice)
+                    )}
                   </div>
                 </Stack>
 
