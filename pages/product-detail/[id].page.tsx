@@ -53,6 +53,8 @@ import Slider from 'react-slick'
 // other
 import Link from 'next/link'
 import { ShoppingCart } from 'phosphor-react'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
@@ -339,16 +341,16 @@ const ProductDetail: NextPageWithLayout = () => {
     if (stateProductDetail?.price) {
       setTotal(e * stateProductDetail.price)
     }
-    if (Number(e) > Number(stateProductDetail?.inStock)) {
-      dispatch(
-        notificationActions.doNotification({
-          message: `Only ${stateProductDetail?.inStock} products left in stock`,
-          type: 'error',
-        })
-      )
-      // setValue('number', stateProductDetail?.inStock)
-      return
-    }
+    // if (Number(e) > Number(stateProductDetail?.inStock)) {
+    //   dispatch(
+    //     notificationActions.doNotification({
+    //       message: `Only ${stateProductDetail?.inStock} products left in stock`,
+    //       type: 'error',
+    //     })
+    //   )
+    //   // setValue('number', stateProductDetail?.inStock)
+    //   return
+    // }
   }
   const renderSlides1 = () => {
     if (!stateProductDetail?.images) {
@@ -412,18 +414,7 @@ const ProductDetail: NextPageWithLayout = () => {
   return (
     <div className={classes['product-detail']}>
       <Head>
-        {/* <title>{dataProductDetail.data?.name} | VAPE</title> */}
-        <link
-          rel="stylesheet"
-          type="text/css"
-          charSet="UTF-8"
-          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
-        />
-        <link
-          rel="stylesheet"
-          type="text/css"
-          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-        />
+        <title>{stateProductDetail?.name} | VAPE</title>
       </Head>
       <Grid container spacing={3} mb={5}>
         <Grid xs>
@@ -619,10 +610,10 @@ const ProductDetail: NextPageWithLayout = () => {
                       <Typography variant="subtitle2">Unit type</Typography>
                       <Item>{stateProductDetail?.unit_types}</Item>
                     </Box>
-                    <Box>
+                    {/* <Box>
                       <Typography variant="subtitle2">Unit type</Typography>
                       <Item>{stateProductDetail?.unit_types}</Item>
-                    </Box>
+                    </Box> */}
                   </Stack>
                 </TabPanel>
                 <TabPanel value={valueTab} index={2}>
@@ -714,7 +705,7 @@ const ProductDetail: NextPageWithLayout = () => {
                                     }
                                   }}
                                   {...field}
-                                  inputProps={{ min: 1, max: 10000000 }}
+                                  inputProps={{ min: 1, max: 1000000 }}
                                   onChange={(event: any) => {
                                     if (event.target.value < 1000001) {
                                       setValue('quantity', event.target.value)

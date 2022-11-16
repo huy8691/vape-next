@@ -36,6 +36,9 @@ const TextFieldCustom = styled(TextField)({
     fontSize: '1.4rem',
     overflow: 'hidden',
   },
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderWidth: '1px !important',
+  },
   '& .MuiInputBase-multiline': {
     padding: '0px',
   },
@@ -52,12 +55,16 @@ const TextFieldPasswordCustom = styled(FormControl)({
   '& .MuiInputBase-input': {
     padding: '10px 15px',
   },
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderWidth: '1px !important',
+  },
 })
 
 const SelectCustom = styled(Select)({
   '& .MuiOutlinedInput-notchedOutline': {
     borderRadius: '8px',
     fontSize: '1.4rem',
+    borderWidth: '1px !important',
   },
   '& .MuiOutlinedInput-input': {
     padding: '10px 15px',

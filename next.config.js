@@ -7,18 +7,16 @@ const nextConfig = {
   swcMinify: true,
   images: {
     // limit of 25 deviceSizes values
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    // deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     // limit of 25 imageSizes values
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     // limit of 50 domains values
     domains: [
       'develop-bizbookly.s3.ap-southeast-1.amazonaws.com',
       'vape-test.s3.ap-southeast-1.amazonaws.com',
       'images.pexels.com',
-      'www.vapesuperstore.co.uk',
-      // 'dev.vuarausach.vn',
-      'cdn.shopify.com',
       'via.placeholder.com',
+      'cdn.shopify.com',
       'product.hstatic.net',
     ],
     // path prefix for Image Optimization API, useful with `loader`
