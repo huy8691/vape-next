@@ -1,6 +1,11 @@
 import { AxiosResponse } from 'axios'
 import { callAPIWithToken } from 'src/services/jwt-axios'
-import { InstockResponseType, UpdateQuantityType } from './CartModel'
+import {
+  DeletedArrayCartItem,
+  // DeletedCartItemType,
+  InstockResponseType,
+  UpdateQuantityType,
+} from './CartModel'
 
 const getInstockAPI = (
   params: number
@@ -21,5 +26,16 @@ const updateQuantityProduct = (
     data: value,
   })
 }
+const deleteCartItem = (
+  value: DeletedArrayCartItem
+): Promise<AxiosResponse> => {
+  return callAPIWithToken({
+    url: `/api/cart/remove-items/`,
+    method: 'delete',
+    data: {
+      cart_items: value,
+    },
+  })
+}
 
-export { getInstockAPI, updateQuantityProduct }
+export { getInstockAPI, updateQuantityProduct, deleteCartItem }

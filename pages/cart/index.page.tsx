@@ -19,6 +19,8 @@ import {
   IconButton,
   Modal,
   Paper,
+  Popover,
+  Skeleton,
   Typography,
 } from '@mui/material'
 import { styled } from '@mui/system'
@@ -43,10 +45,11 @@ import { CartType, CartItem } from 'src/store/cart/cartModels'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 //api
-import { getInstockAPI, updateQuantityProduct } from './CartAPI'
+import { deleteCartItem, getInstockAPI, updateQuantityProduct } from './CartAPI'
 import { cartActions } from 'src/store/cart/cartSlice'
 import { notificationActions } from 'src/store/notification/notificationSlice'
 import { loadingActions } from 'src/store/loading/loadingSlice'
+import Link from 'next/link'
 
 //style
 const TypographyH2 = styled(Typography)(({ theme }) => ({
@@ -134,12 +137,15 @@ const Cart: NextPageWithLayout = () => {
   const [currentProduct, setCurrentProduct] = useState<CartItem>()
   //state use for total
   const [total, setTotal] = useState<number>(0)
+  // state use for popper
+  // const [openPopper, setOpenPopper] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null)
+
   // state use for temporary quantity
   const [tempQuantity, setTempQuantity] = useState<number>(0)
   // assign list product in cart array then set it to state (list)
-
   useEffect(() => {
-    if (cart.data.items.length === 0) return
+    // if (cart.data.items.length === 0) return
 
     if (flagUpdate) {
       // return
@@ -160,7 +166,7 @@ const Cart: NextPageWithLayout = () => {
       })
       setStateCartCheck(newArr)
     }
-    console.log(stateCartCheck)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart, flagUpdate])
 
@@ -177,14 +183,12 @@ const Cart: NextPageWithLayout = () => {
         ...item,
       }
     })
-
     if (newState?.every((arr) => arr.isCheck === true)) {
       setIsCheckAll(true)
     } else {
       setIsCheckAll(false)
     }
     setStateCartCheck(newState)
-
     setIsCheckedListItem({
       ...isCheckedListItem,
       [value.cartItemId]: e.target.checked,
@@ -192,6 +196,54 @@ const Cart: NextPageWithLayout = () => {
     if (newState) {
       calculateTotal(newState)
     }
+  }
+
+  // handle remove from cart
+  //popper
+  const handleClickRemoveButton = (event: any, values: CartItem) => {
+    setCurrentProduct(values)
+    setAnchorEl(event.currentTarget)
+    // setOpenPopper((previousOpen) => !previousOpen)
+  }
+  //popover
+  const openPopover = Boolean(anchorEl)
+  const id = openPopover ? 'simple-popover' : undefined
+  const handleClosePopover = () => {
+    setAnchorEl(null)
+  }
+
+  const handleClickRemoveFromCart = () => {
+    let deleteCartItemId = currentProduct?.cartItemId
+    let arrNumber = [deleteCartItemId]
+    dispatch(loadingActions.doLoading())
+
+    deleteCartItem(arrNumber)
+      .then(() => {
+        handleClosePopover()
+        setFlagUpdate(true)
+        dispatch(cartActions.doCart())
+        dispatch(
+          notificationActions.doNotification({
+            message: `Delete ${currentProduct?.productName} successfully`,
+          })
+        )
+        dispatch(loadingActions.doLoadingSuccess())
+      })
+      .catch(() => {
+        handleClosePopover()
+        dispatch(loadingActions.doLoadingFailure())
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Somethings went wrong',
+            type: 'error',
+          })
+        )
+      })
+    console.log('cart item id', currentProduct?.cartItemId)
+    console.log(
+      '🚀 ~ file: index.page.tsx ~ line 210 ~ handleClickRemoveFromCart ~ arrNumber',
+      arrNumber
+    )
   }
 
   // CheckallClickHandler
@@ -223,7 +275,6 @@ const Cart: NextPageWithLayout = () => {
         newArr.forEach((item) => {
           itemNew = { ...itemNew, [item.cartItemId]: false }
         })
-        console.log('item', itemNew)
         setIsCheckedListItem({
           ...isCheckedListItem,
           ...itemNew,
@@ -246,7 +297,7 @@ const Cart: NextPageWithLayout = () => {
   }
 
   //close modal handler
-  const handleClose = () => {
+  const handleCloseModal = () => {
     setOpen(false)
   }
 
@@ -259,7 +310,6 @@ const Cart: NextPageWithLayout = () => {
   } = useForm<QuantityFormInput>({
     resolver: yupResolver(schema),
   })
-
   // event submit
   const onSubmit = (data: QuantityFormInput) => {
     console.log(data)
@@ -271,9 +321,7 @@ const Cart: NextPageWithLayout = () => {
         })
       )
     } else {
-      console.log(getValues('quantity'))
-      console.log(currentProduct?.cartItemId)
-      console.log(currentProduct?.quantity)
+      dispatch(loadingActions.doLoading())
       updateQuantityProduct(
         {
           quantity: getValues('quantity'),
@@ -292,7 +340,7 @@ const Cart: NextPageWithLayout = () => {
           console.log('old array', stateCartCheck)
           console.log('new array', cart.data.items)
 
-          handleClose()
+          handleCloseModal()
         })
         .catch((error) => {
           const data = error.response?.data
@@ -306,21 +354,23 @@ const Cart: NextPageWithLayout = () => {
         })
     }
   }
-
   // handle open / close modal
-  const handleClickButton = (values: CartItem) => {
+  const handleClickModalButton = (values: CartItem) => {
     setValue('quantity', values?.quantity || 0)
     setOpen(true)
     setCurrentProduct(values)
     setTempQuantity(values?.quantity)
+    dispatch(loadingActions.doLoading())
+    setInstock(0)
     getInstockAPI(values?.productId)
       .then((res) => {
         const { data } = res.data
         setInstock(data?.inStock)
-        console.log(instock)
+        dispatch(loadingActions.doLoadingSuccess())
       })
       .catch((error) => {
         const data = error.response?.data
+        dispatch(loadingActions.doLoadingFailure())
         console.log(
           '🚀 ~ file: index.page.tsx ~ line 161 ~ getInstockAPI ~ data',
           data
@@ -333,14 +383,49 @@ const Cart: NextPageWithLayout = () => {
       setTempQuantity(Number(e.target.value))
     } else setTempQuantity(0)
   }
-
+  if (stateCartCheck?.length === 0) {
+    return (
+      <>
+        <Skeleton height={140} />
+      </>
+    )
+  }
+  if (cart.data.items.length === 0) {
+    return (
+      <Grid container spacing={2} justifyContent="center">
+        <Grid>
+          <Stack p={5} spacing={2}>
+            <Image
+              src="/images/not-found.svg"
+              alt="Logo"
+              width="200"
+              height="300"
+            />
+            <Typography variant="h6">
+              You don’t have any products in yours Cart
+            </Typography>
+            <Link href="/browse-products">
+              <ButtonCustom
+                variant="contained"
+                style={{ color: 'white', padding: '15px' }}
+              >
+                <Typography style={{ fontWeight: '600' }}>
+                  Search More
+                </Typography>
+              </ButtonCustom>
+            </Link>
+          </Stack>
+        </Grid>
+      </Grid>
+    )
+  }
   return (
     <>
       <TypographyH2 variant="h2" mb={3}>
         Cart
       </TypographyH2>
       <Grid container spacing={2} mb={2}>
-        <Grid xs="auto"></Grid>
+        <Grid xs="auto" style={{ minWidth: '58px' }}></Grid>
         <Grid xs={4}>
           <TypographyCustom>Product</TypographyCustom>
         </Grid>
@@ -381,29 +466,48 @@ const Cart: NextPageWithLayout = () => {
                     width={80}
                     height={80}
                   />
-                  {/* {item.productThumbnail} */}
                 </div>
                 <Typography component="div">{item?.productName}</Typography>
               </Stack>
             </Grid>
-            <Grid xs={2}>
-              <Typography component="div" style={{ textAlign: 'center' }}>
-                {formatMoney(item?.unitPrice)}/{item?.unitType}
-              </Typography>
+            <Grid xs={2} justifyContent="center">
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Typography style={{ fontWeight: '600', marginRight: '5px' }}>
+                  {formatMoney(item?.unitPrice)}
+                </Typography>
+                /
+                <Typography
+                  style={{
+                    fontWeight: '400',
+                    marginLeft: '5px',
+                    textTransform: 'lowercase',
+                    fontSize: '14px',
+                  }}
+                >
+                  {item?.unitType}
+                </Typography>
+              </Stack>
             </Grid>
             <Grid xs={2}>
               <Paper
                 elevation={0}
                 style={{
-                  background: '#F8F9FC',
-                  maxWidth: '170px',
+                  // maxWidth: '170px',
                   display: 'flex',
-                  justifyContent: 'flex-end',
+                  justifyContent: 'center',
                 }}
               >
                 <Box
                   style={{
-                    padding: '5px 10px',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    background: '#F8F9FC',
+                    padding: '5px',
+                    paddingLeft: '50px',
                     borderRadius: '10px',
                   }}
                 >
@@ -431,7 +535,9 @@ const Cart: NextPageWithLayout = () => {
                       {item?.unitType}
                     </Typography>
 
-                    <IconButtonCustom onClick={() => handleClickButton(item)}>
+                    <IconButtonCustom
+                      onClick={() => handleClickModalButton(item)}
+                    >
                       <Image
                         alt="icon edit"
                         src={edit}
@@ -464,9 +570,52 @@ const Cart: NextPageWithLayout = () => {
                   textTransform: 'capitalize',
                   textDecoration: 'underline',
                 }}
+                onClick={(e) => handleClickRemoveButton(e, item)}
               >
                 Remove
               </Button>
+
+              <Popover
+                id={id}
+                open={openPopover}
+                anchorEl={anchorEl}
+                onClose={handleClosePopover}
+                anchorOrigin={{
+                  vertical: 'center',
+                  horizontal: 'left',
+                }}
+                transformOrigin={{
+                  vertical: 'center',
+                  horizontal: 'right',
+                }}
+              >
+                <Box sx={{ p: 3, boxShadow: 2 }}>
+                  <Typography mb={2}>
+                    Do you want to remove this item from cart ?
+                  </Typography>
+
+                  <Stack
+                    direction="row"
+                    justifyContent="flex-end"
+                    sx={{ p: 1 }}
+                    gap={2}
+                  >
+                    <ButtonCustom
+                      onClick={handleClosePopover}
+                      variant="contained"
+                      color="error"
+                    >
+                      Cancel
+                    </ButtonCustom>
+                    <ButtonCustom
+                      onClick={handleClickRemoveFromCart}
+                      variant="contained"
+                    >
+                      Yes
+                    </ButtonCustom>
+                  </Stack>
+                </Box>
+              </Popover>
             </Grid>
           </GridCustom>
         )
@@ -506,7 +655,7 @@ const Cart: NextPageWithLayout = () => {
       </div>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         closeAfterTransition
@@ -524,7 +673,7 @@ const Cart: NextPageWithLayout = () => {
                 <TypographyH6 id="modal-modal-title" variant="h6">
                   Adjust quantity
                 </TypographyH6>
-                <IconButton onClick={handleClose}>
+                <IconButton onClick={handleCloseModal}>
                   <X size={24} />
                 </IconButton>
               </Stack>

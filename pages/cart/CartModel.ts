@@ -10,3 +10,5 @@ export interface InstockResponseType {
 export interface UpdateQuantityType {
   quantity?: number
 }
+
+export type DeletedArrayCartItem = (number | undefined)[]

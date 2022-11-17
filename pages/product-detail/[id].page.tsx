@@ -95,7 +95,7 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(2),
   color: theme.palette.text.secondary,
-  // boxShadow: 'none',
+  boxShadow: 'none',
   display: 'flex',
   alignItems: 'center',
   gap: '16px',
@@ -104,7 +104,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const CardCustom = styled(Card)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'light' ? '#F8F9FC' : theme.palette.action.hover,
-  // boxShadow: 'none',
+  boxShadow: 'none',
   borderRadius: '10px',
   paddingBottom: theme.spacing(0),
 }))

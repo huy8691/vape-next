@@ -53,7 +53,7 @@ const ThemeMui = ({ children }: Props) => {
             main: '#BA2532',
           },
         },
-        shadows: Array(25).fill('none') as Shadows,
+        // shadows: Array(25).fill('none') as Shadows,
         typography: {
           fontFamily: 'Poppins',
           fontSize: 14,
