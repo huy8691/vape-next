@@ -1340,7 +1340,7 @@ const Register: NextPageWithLayout = () => {
             <Stack alignItems="center">
               <ButtonRegisterCustom
                 variant="contained"
-                size="large"
+                // size="large"
                 type="submit"
                 disabled={stateCheckMail.valueEmail === '' ? true : false}
               >

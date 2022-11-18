@@ -19,6 +19,7 @@ const ButtonCustom = styled(Button)({
   borderRadius: '12px',
   textTransform: 'none',
   padding: '7px 25px',
+  fontSize: '1.4rem',
 })
 
 const LoadingButtonCustom = styled(LoadingButton)({

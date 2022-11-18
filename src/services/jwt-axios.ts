@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-let urlApi = 'https://648f-115-73-215-16.ap.ngrok.io'
+let urlApi = 'http://192.168.22.27:80'
 
 const env = process.env.ENV
 if (env === 'prod') {
@@ -21,10 +21,10 @@ const callAPI = axios.create({
 })
 
 callAPI.interceptors.response.use(
-  (res) => {
+  (res: any) => {
     return res
   },
-  (err) => {
+  (err: any) => {
     if (err.response && err.response.status === 403) {
       window.location.href = '/403'
     }
@@ -45,10 +45,10 @@ const callAPIWithToken = axios.create({
 })
 
 callAPIWithToken.interceptors.response.use(
-  (res) => {
+  (res: any) => {
     return res
   },
-  (err) => {
+  (err: any) => {
     if (err.response && err.response.status === 401) {
       window.location.href = '/login'
       Cookies.remove('token')

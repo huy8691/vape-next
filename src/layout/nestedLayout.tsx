@@ -19,11 +19,13 @@ import WrapLayout from './wrapLayout'
 import HeaderInner from './header'
 import SideBar from './sidebar'
 
+import { createContext } from 'react'
+
 import {
   ThemeProvider as ThemeProviderMui,
   createTheme,
 } from '@mui/material/styles'
-import { Shadows } from '@mui/material/styles/shadows'
+// import { Shadows } from '@mui/material/styles/shadows'
 import {
   ThemeProvider as ThemeProviderNext,
   useTheme as useThemeNext,
@@ -56,13 +58,9 @@ const ThemeMui = ({ children }: Props) => {
         // shadows: Array(25).fill('none') as Shadows,
         typography: {
           fontFamily: 'Poppins',
-          fontSize: 14,
           htmlFontSize: 10,
+          fontSize: 12,
         },
-
-        // typography: {
-        //   fontSize: 13,
-        // },
       }),
     [mode]
   )
@@ -84,6 +82,10 @@ const ThemeMui = ({ children }: Props) => {
 
 // config layout
 const drawerWidth = 250
+export const DrawerWidthContext = createContext({
+  drawerWidth: drawerWidth,
+  open: true,
+})
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -190,7 +192,6 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
   const handleDrawer = () => {
     setOpen(!open)
   }
-
   return (
     <WrapLayout>
       <RequireAuth>
@@ -235,7 +236,11 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
               </Drawer>
               <BoxMain component="main" sx={{ flexGrow: 1, p: 3 }} open={open}>
                 <DrawerHeader />
-                {children}
+                <DrawerWidthContext.Provider
+                  value={{ drawerWidth: drawerWidth, open: open }}
+                >
+                  {children}
+                </DrawerWidthContext.Provider>
               </BoxMain>
             </Box>
           </ThemeMui>

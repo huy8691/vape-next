@@ -3,6 +3,8 @@ import React, {
   useEffect,
   useState,
 } from 'react'
+import { useContext } from 'react'
+import { DrawerWidthContext } from 'src/layout/nestedLayout'
 
 //layout
 import type { ReactElement } from 'react'
@@ -10,6 +12,7 @@ import NestedLayout from 'src/layout/nestedLayout'
 import type { NextPageWithLayout } from 'pages/_app.page'
 //mui
 import {
+  Card,
   Box,
   Button,
   Checkbox,
@@ -22,6 +25,7 @@ import {
   Popover,
   Skeleton,
   Typography,
+  CardContent,
 } from '@mui/material'
 import { styled } from '@mui/system'
 import Grid from '@mui/material/Unstable_Grid2'
@@ -66,12 +70,15 @@ const IconButtonCustom = styled(IconButton)(() => ({
   marginLeft: '10px',
 }))
 
-const GridCustom = styled(Grid)(() => ({
-  border: '1px solid #E1E6EF',
+const GridCustom = styled(Grid)(({ theme }) => ({
+  border:
+    theme.palette.mode === 'light'
+      ? '1px solid #E1E6EF'
+      : '1px solid rgba(255, 255, 255, 0.12)',
   borderRadius: '10px',
 }))
 
-const BoxModalCustom = styled(Box)(() => ({
+const BoxModalCustom = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -79,7 +86,7 @@ const BoxModalCustom = styled(Box)(() => ({
   width: 400,
   bgcolor: 'background.paper',
   borderRadius: '8px',
-  background: '#ffff',
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
 }))
 const TypographyH6 = styled(Typography)(() => ({
   fontWeight: '400',
@@ -100,8 +107,15 @@ const TypographyCurrentInstock = styled(Typography)(() => ({
   fontWeight: '400',
   fontSize: '14px',
 }))
-
-// dispatch
+const BarCheckout = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  borderRadius: '0px',
+}))
+const StackQuantity = styled(Stack)(({ theme }) => ({
+  backgroundColor:
+    theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
+  padding: theme.spacing(1),
+}))
 
 // validation quantity
 const schema = yup
@@ -120,6 +134,7 @@ interface QuantityFormInput {
 //State use for select all checkbox
 
 const Cart: NextPageWithLayout = () => {
+  const drawerWidthContext = useContext(DrawerWidthContext)
   //dispatch
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
@@ -419,6 +434,7 @@ const Cart: NextPageWithLayout = () => {
       </Grid>
     )
   }
+  console.log('drawerWidthContext', drawerWidthContext)
   return (
     <>
       <TypographyH2 variant="h2" mb={3}>
@@ -493,62 +509,31 @@ const Cart: NextPageWithLayout = () => {
               </Stack>
             </Grid>
             <Grid xs={2}>
-              <Paper
-                elevation={0}
-                style={{
-                  // maxWidth: '170px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
+              <StackQuantity
+                direction="row"
+                alignItems="center"
+                justifyContent="end"
+                spacing={1}
+                className={classes['stack-quantity']}
               >
-                <Box
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    background: '#F8F9FC',
-                    padding: '5px',
-                    paddingLeft: '50px',
-                    borderRadius: '10px',
-                  }}
+                <Typography component="div">{item?.quantity}</Typography>
+                <Divider orientation="vertical" variant="middle" flexItem />
+                <Typography
+                  component={'div'}
+                  className={classes['stack-quantity__unitType']}
                 >
-                  <Stack direction="row" alignItems="center">
-                    {item?.quantity}
-                    <Divider
-                      orientation="vertical"
-                      style={{
-                        height: '14px',
-                        background: '#1CB25B',
-                        marginLeft: '10px',
-                        marginRight: '10px',
-                      }}
-                      variant="middle"
-                      flexItem
-                    />
-                    <Typography
-                      component={'div'}
-                      style={{
-                        fontWeight: '400',
-                        fontSize: '12px',
-                        textTransform: 'lowercase',
-                      }}
-                    >
-                      {item?.unitType}
-                    </Typography>
-
-                    <IconButtonCustom
-                      onClick={() => handleClickModalButton(item)}
-                    >
-                      <Image
-                        alt="icon edit"
-                        src={edit}
-                        objectFit="contain"
-                        width={18}
-                        height={18}
-                      />
-                    </IconButtonCustom>
-                  </Stack>
-                </Box>
-              </Paper>
+                  {item?.unitType}
+                </Typography>
+                <IconButtonCustom onClick={() => handleClickModalButton(item)}>
+                  <Image
+                    alt="icon edit"
+                    src={edit}
+                    objectFit="contain"
+                    width={18}
+                    height={18}
+                  />
+                </IconButtonCustom>
+              </StackQuantity>
             </Grid>
             <Grid xs={2}>
               <Typography
@@ -593,7 +578,6 @@ const Cart: NextPageWithLayout = () => {
                   <Typography mb={2}>
                     Do you want to remove this item from cart ?
                   </Typography>
-
                   <Stack
                     direction="row"
                     justifyContent="flex-end"
@@ -601,17 +585,19 @@ const Cart: NextPageWithLayout = () => {
                     gap={2}
                   >
                     <ButtonCustom
+                      onClick={handleClickRemoveFromCart}
+                      variant="contained"
+                      size="small"
+                    >
+                      Yes
+                    </ButtonCustom>
+                    <ButtonCustom
                       onClick={handleClosePopover}
                       variant="contained"
                       color="error"
+                      size="small"
                     >
                       Cancel
-                    </ButtonCustom>
-                    <ButtonCustom
-                      onClick={handleClickRemoveFromCart}
-                      variant="contained"
-                    >
-                      Yes
                     </ButtonCustom>
                   </Stack>
                 </Box>
@@ -623,7 +609,14 @@ const Cart: NextPageWithLayout = () => {
       <TypographyH2 variant="h2" mb={3}>
         Viewed Product
       </TypographyH2>
-      <div className={classes['checkout-bar']}>
+      <BarCheckout
+        className={classes['checkout-bar']}
+        style={{
+          width: drawerWidthContext?.open
+            ? `calc(100% - ${drawerWidthContext.drawerWidth}px`
+            : `calc(100% - 65px)`,
+        }}
+      >
         <Grid
           container
           spacing={3}
@@ -636,9 +629,7 @@ const Cart: NextPageWithLayout = () => {
                 onChange={(e) => handleSelectAllCheckBox(e)}
                 checked={isCheckAll}
               />
-              <Box sx={{ marginLeft: '10px', marginRight: '10px' }}>
-                Select all product on cart
-              </Box>
+              <Typography>Select all product on cart</Typography>
             </Stack>
           </Grid>
           <Grid xs="auto">
@@ -652,7 +643,7 @@ const Cart: NextPageWithLayout = () => {
             </Stack>
           </Grid>
         </Grid>
-      </div>
+      </BarCheckout>
       <Modal
         open={open}
         onClose={handleCloseModal}
