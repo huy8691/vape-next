@@ -49,11 +49,17 @@ const theme = createTheme({
   // shadows: Array(25).fill('none') as Shadows,
   typography: {
     fontFamily: 'Poppins',
-    // htmlFontSize: 10,
+    htmlFontSize: 10,
     fontSize: 14,
-    button: {
-      fontSize: '1.4rem',
+    body1: {
+      fontSize: 14,
     },
+    body2: {
+      fontSize: 14,
+    },
+    // button: {
+    //   fontSize: '1.4rem',
+    // },
   },
 })
 

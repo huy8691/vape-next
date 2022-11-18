@@ -48,8 +48,8 @@ const Menu = [
   },
   {
     icon: <Cube size={24} />,
-    text: 'Product',
-    link: '/products',
+    text: 'Inventory',
+    link: '/inventory',
   },
 ]
 

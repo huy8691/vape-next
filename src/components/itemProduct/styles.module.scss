@@ -1,20 +1,21 @@
 @import 'styles/colors.scss';
 
 .item-product {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   height: 100%;
   &__category {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
   }
   &__name {
     margin-bottom: 5px;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
   &__price {
     color: $error;
     margin-bottom: 5px;
     &__unit {
-      font-size: 14px;
+      font-size: 12px;
       text-transform: lowercase;
     }
   }

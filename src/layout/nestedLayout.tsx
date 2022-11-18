@@ -59,7 +59,13 @@ const ThemeMui = ({ children }: Props) => {
         typography: {
           fontFamily: 'Poppins',
           htmlFontSize: 10,
-          fontSize: 12,
+          fontSize: 14,
+          body1: {
+            fontSize: 14,
+          },
+          body2: {
+            fontSize: 14,
+          },
         },
       }),
     [mode]

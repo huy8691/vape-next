@@ -12,7 +12,6 @@ import NestedLayout from 'src/layout/nestedLayout'
 import type { NextPageWithLayout } from 'pages/_app.page'
 //mui
 import {
-  Card,
   Box,
   Button,
   Checkbox,
@@ -25,7 +24,6 @@ import {
   Popover,
   Skeleton,
   Typography,
-  CardContent,
 } from '@mui/material'
 import { styled } from '@mui/system'
 import Grid from '@mui/material/Unstable_Grid2'

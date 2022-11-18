@@ -67,11 +67,11 @@ import { TextFieldCustom, LoadingButtonCustom } from 'src/components'
 
 // style
 const TypographyH1 = styled(Typography)(() => ({
-  fontSize: '32px',
+  fontSize: '3.2rem',
   fontWeight: 'bold',
 }))
 const TypographyH2 = styled(Typography)(({ theme }) => ({
-  fontSize: '20px',
+  fontSize: '2rem',
   fontWeight: '600',
   color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
 }))
@@ -88,6 +88,7 @@ const TabPanelCustom = styled('div')(({ theme }) => ({
     theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
   padding: theme.spacing(2),
   minHeight: '300px',
+  borderRadius: '8px',
 }))
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -98,7 +99,7 @@ const Item = styled(Paper)(({ theme }) => ({
   boxShadow: 'none',
   display: 'flex',
   alignItems: 'center',
-  gap: '16px',
+  gap: theme.spacing(1),
   borderRadius: '4px',
 }))
 const CardCustom = styled(Card)(({ theme }) => ({
@@ -126,7 +127,7 @@ const ButtonIncreaseDecrease = styled(Button)(({ theme }) => ({
 }))
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
-  marginBottom: '15px',
+  marginBottom: theme.spacing(1),
   '& .MuiTabs-indicator': {
     display: 'flex',
     justifyContent: 'center',
@@ -451,13 +452,13 @@ const ProductDetail: NextPageWithLayout = () => {
             {stateProductDetail ? (
               <Breadcrumbs separator=">" aria-label="breadcrumb">
                 <Link href="/browse-products">
-                  <a style={{ color: '#2F6FED', fontSize: '14px' }}>Home</a>
+                  <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>Home</a>
                 </Link>
                 {stateProductDetail?.category?.parent_category?.name && (
                   <Link
                     href={`/browse-products?page=1&category=${stateProductDetail.category.parent_category.id}&`}
                   >
-                    <a style={{ color: '#2F6FED', fontSize: '14px' }}>
+                    <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>
                       {stateProductDetail?.category?.parent_category?.name}
                     </a>
                   </Link>
@@ -465,13 +466,13 @@ const ProductDetail: NextPageWithLayout = () => {
                 <Link
                   href={`/browse-products?page=1&category=${stateProductDetail?.category?.id}&`}
                 >
-                  <a style={{ color: '#2F6FED', fontSize: '14px' }}>
+                  <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>
                     {stateProductDetail?.category?.name}
                   </a>
                 </Link>
                 <Link
                   href={`/product-detail/${stateProductDetail?.id}`}
-                  style={{ fontSize: '14px' }}
+                  style={{ fontSize: '1.4rem' }}
                 >
                   <>{stateProductDetail?.name}</>
                 </Link>
@@ -480,7 +481,7 @@ const ProductDetail: NextPageWithLayout = () => {
               <Skeleton
                 animation="wave"
                 variant="text"
-                sx={{ fontSize: '14px' }}
+                sx={{ fontSize: '1.4rem' }}
               />
             )}
           </Box>
@@ -493,7 +494,7 @@ const ProductDetail: NextPageWithLayout = () => {
               <Skeleton
                 animation="wave"
                 variant="text"
-                sx={{ fontSize: '32px' }}
+                sx={{ fontSize: '3.2rem' }}
               />
             )}
           </Box>
@@ -505,7 +506,10 @@ const ProductDetail: NextPageWithLayout = () => {
             mb={2}
           >
             {stateProductDetail ? (
-              <Typography component="div" sx={{ fontWeight: 'bold' }}>
+              <Typography
+                component="div"
+                sx={{ fontWeight: 'bold', fontSize: '18px' }}
+              >
                 {stateProductDetail?.code}
               </Typography>
             ) : (
@@ -520,7 +524,7 @@ const ProductDetail: NextPageWithLayout = () => {
               <TypographyColor className={classes['product-detail__priceUnit']}>
                 <span>{formatMoney(stateProductDetail?.price)}</span>
                 <span className={classes['product-detail__priceUnit__unit']}>
-                  /unit
+                  /{stateProductDetail?.unit_types}
                 </span>
               </TypographyColor>
             ) : (
@@ -639,7 +643,7 @@ const ProductDetail: NextPageWithLayout = () => {
                       alignItems="center"
                       spacing={2}
                     >
-                      <div>Instock</div>
+                      <div style={{ fontWeight: '600' }}>Instock</div>
                       <TypographyColor>
                         {stateProductDetail?.inStock}
                       </TypographyColor>

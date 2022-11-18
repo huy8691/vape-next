@@ -4,18 +4,20 @@ import {
   ProductListDataResponseType,
 } from '../modelProductDetail'
 
+// next
+import Link from 'next/link'
+import Image from 'next/image'
+
 //mui
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Unstable_Grid2'
 import { styled } from '@mui/material/styles'
-
-//styled component
 import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
-import Link from 'next/link'
-import Image from 'next/image'
 import { Skeleton, Typography } from '@mui/material'
 
+//styled component
 const CardCustom = styled(Card)(({ theme }) => ({
   borderRadius: '15px',
   height: '100%',
@@ -25,17 +27,18 @@ const CardCustom = styled(Card)(({ theme }) => ({
       : '1px solid rgba(255, 255, 255, 0.12)',
 }))
 const CodeText = styled('div')(() => ({
-  fontSize: '12px',
+  fontSize: '1.2rem',
   fontWeight: '300',
 }))
 const PriceText = styled('div')(({ theme }) => ({
-  fontSize: '14px',
+  fontSize: '1.4rem',
   fontWeight: '700',
   color: theme.palette.error.main,
 }))
 const TypographyH6 = styled(Typography)(() => ({
-  fontSize: '15px',
+  fontSize: '1.4rem',
   fontWeight: '400',
+  marginBottom: '5px',
 }))
 
 type Props = {
@@ -77,7 +80,7 @@ const RelatedProduct: React.FC<Props> = (props: Props) => {
               <Link href={`/product-detail/${item.id}`}>
                 <a>
                   <CardCustom variant="outlined">
-                    <Box mb={2}>
+                    <CardMedia>
                       <Image
                         alt={item.name}
                         src={
@@ -85,16 +88,19 @@ const RelatedProduct: React.FC<Props> = (props: Props) => {
                             ? item.thumbnail
                             : 'https://via.placeholder.com/250x250?text=VAPE'
                         }
-                        width="255"
-                        height="255"
+                        width="290"
+                        height="290"
                         objectFit="contain"
                       />
-                    </Box>
+                    </CardMedia>
                     <CardContent style={{ paddingBottom: '16px' }}>
                       <CodeText>{item.code}</CodeText>
                       <TypographyH6 variant="h6">{item.name}</TypographyH6>
                       <PriceText>
-                        {item.price} {item.unit_types}
+                        {item.price}{' '}
+                        <span style={{ textTransform: 'lowercase' }}>
+                          {item.unit_types}
+                        </span>
                       </PriceText>
                     </CardContent>
                   </CardCustom>
