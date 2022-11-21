@@ -151,7 +151,6 @@ const Cart: NextPageWithLayout = () => {
   //state use for total
   const [total, setTotal] = useState<number>(0)
   // state use for popper
-  // const [openPopper, setOpenPopper] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
 
   // state use for temporary quantity
@@ -438,7 +437,7 @@ const Cart: NextPageWithLayout = () => {
       <TypographyH2 variant="h2" mb={3}>
         Cart
       </TypographyH2>
-      <Grid container spacing={2} mb={2}>
+      <Grid container spacing={2} mb={2} justifyContent="space-between">
         <Grid xs="auto" style={{ minWidth: '58px' }}></Grid>
         <Grid xs={4}>
           <TypographyCustom>Product</TypographyCustom>
@@ -463,6 +462,7 @@ const Cart: NextPageWithLayout = () => {
             container
             direction="row"
             alignItems="center"
+            justifyContent="space-between"
           >
             <Grid xs="auto">
               <Checkbox
@@ -545,7 +545,7 @@ const Cart: NextPageWithLayout = () => {
                 {formatMoney(Number(item?.quantity) * Number(item?.unitPrice))}
               </Typography>
             </Grid>
-            <Grid xs={1}>
+            <Grid xs={1} style={{ display: 'flex' }} justifyContent="flex-end">
               <Button
                 variant="text"
                 style={{
