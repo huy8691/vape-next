@@ -6,16 +6,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { CartResponseType, CartType } from './cartModels'
 
 interface initialCartStateType {
-  data: CartType
+  data?: CartType
 }
 
 const initialState: initialCartStateType = {
-  data: {
-    amountItems: undefined,
-    cartId: undefined,
-    totalPrice: undefined,
-    items: [],
-  },
+  data: undefined,
 }
 
 const cartSlice = createSlice({
