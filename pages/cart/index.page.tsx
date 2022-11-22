@@ -4,11 +4,15 @@ import React, {
   useState,
 } from 'react'
 import { useContext } from 'react'
-import { DrawerWidthContext } from 'src/layout/nestedLayout'
+// next
+import Image from 'next/image'
+import Head from 'next/head'
+// next
 
 //layout
 import type { ReactElement } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
+import { DrawerWidthContext } from 'src/layout/nestedLayout'
 import type { NextPageWithLayout } from 'pages/_app.page'
 //mui
 import {
@@ -30,7 +34,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import Stack from '@mui/material/Stack'
 
 //other
-import Image from 'next/image'
+
 import { formatMoney } from 'src/utils/money.utils'
 import edit from './parts/edit.svg'
 import { CurrencyCircleDollar, X } from 'phosphor-react'
@@ -55,17 +59,26 @@ import Link from 'next/link'
 
 //style
 const TypographyH2 = styled(Typography)(({ theme }) => ({
-  fontSize: '20px',
+  fontSize: '2rem',
   fontWeight: 'bold',
   color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
 }))
 
-const IconButtonCustom = styled(IconButton)(() => ({
-  border: '1px solid #E1E6EF',
+const IconButtonCustom = styled(IconButton)(({ theme }) => ({
+  border:
+    theme.palette.mode === 'dark'
+      ? '1px solid rgba(255, 255, 255, 0.23)'
+      : '1px solid #E1E6EF',
   borderRadius: '10px',
   padding: '5px',
-  background: 'white',
+  backgroundColor:
+    theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : '#fff',
   marginLeft: '10px',
+  '& span': {
+    fontSize: '1.6rem',
+    color:
+      theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.23)' : '#49516F',
+  },
 }))
 
 const GridCustom = styled(Grid)(({ theme }) => ({
@@ -82,28 +95,33 @@ const BoxModalCustom = styled(Box)(({ theme }) => ({
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: 'background.paper',
   borderRadius: '8px',
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
 }))
 const TypographyH6 = styled(Typography)(() => ({
   fontWeight: '400',
-  fontSize: '16px',
+  fontSize: '1.6rem',
 }))
-const TotalCustom = styled(Box)(() => ({
-  color: '#1CB25B',
+const TotalCustom = styled(Box)(({ theme }) => ({
+  color: theme.palette.primary.main,
   fontWeight: '700',
-  fontSize: '20px',
+  fontSize: '2rem',
 }))
 const TypographyCustom = styled(Typography)(() => ({
   color: '#BABABA',
   fontWeight: '400',
-  fontSize: '14px',
+  fontSize: '1.4rem',
 }))
 
-const TypographyCurrentInstock = styled(Typography)(() => ({
+const TypographyCurrentInstock = styled(Typography)(({ theme }) => ({
   fontWeight: '400',
-  fontSize: '14px',
+  fontSize: '1.4rem',
+  color: theme.palette.primary.main,
+}))
+const TypographyPrice = styled(Typography)(({ theme }) => ({
+  fontWeight: '700',
+  color: theme.palette.primary.main,
+  textAlign: 'center',
 }))
 const BarCheckout = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -113,6 +131,23 @@ const StackQuantity = styled(Stack)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
   padding: theme.spacing(1),
+}))
+const ButtonRemove = styled(Button)(({ theme }) => ({
+  color: theme.palette.error.main,
+  textTransform: 'capitalize',
+  textDecoration: 'underline',
+}))
+const StackStock = styled(Stack)(({ theme }) => ({
+  backgroundColor:
+    theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
+  padding: '5px 10px',
+  borderRadius: '8px',
+  marginBottom: '10px',
+}))
+const DividerCustom = styled('div')(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  height: '10px',
+  width: '1px',
 }))
 
 // validation quantity
@@ -383,9 +418,11 @@ const Cart: NextPageWithLayout = () => {
       .catch((error) => {
         const data = error.response?.data
         dispatch(loadingActions.doLoadingFailure())
-        console.log(
-          '🚀 ~ file: index.page.tsx ~ line 161 ~ getInstockAPI ~ data',
-          data
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : 'Error',
+            type: 'error',
+          })
         )
       })
   }
@@ -431,9 +468,11 @@ const Cart: NextPageWithLayout = () => {
       </Grid>
     )
   }
-  console.log('drawerWidthContext', drawerWidthContext)
   return (
     <>
+      <Head>
+        <title>Cart | VAPE</title>
+      </Head>
       <TypographyH2 variant="h2" mb={3}>
         Cart
       </TypographyH2>
@@ -489,17 +528,20 @@ const Cart: NextPageWithLayout = () => {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
+                gap={'5px'}
               >
-                <Typography style={{ fontWeight: '600', marginRight: '5px' }}>
+                <Typography
+                  style={{
+                    fontWeight: '600',
+                  }}
+                >
                   {formatMoney(item?.unitPrice)}
                 </Typography>
                 /
                 <Typography
                   style={{
-                    fontWeight: '400',
-                    marginLeft: '5px',
                     textTransform: 'lowercase',
-                    fontSize: '14px',
+                    fontSize: '1.2rem',
                   }}
                 >
                   {item?.unitType}
@@ -515,7 +557,7 @@ const Cart: NextPageWithLayout = () => {
                 className={classes['stack-quantity']}
               >
                 <Typography component="div">{item?.quantity}</Typography>
-                <Divider orientation="vertical" variant="middle" flexItem />
+                <DividerCustom />
                 <Typography
                   component={'div'}
                   className={classes['stack-quantity__unitType']}
@@ -523,40 +565,22 @@ const Cart: NextPageWithLayout = () => {
                   {item?.unitType}
                 </Typography>
                 <IconButtonCustom onClick={() => handleClickModalButton(item)}>
-                  <Image
-                    alt="icon edit"
-                    src={edit}
-                    objectFit="contain"
-                    width={18}
-                    height={18}
-                  />
+                  <span className="icon-icon-edit"></span>
                 </IconButtonCustom>
               </StackQuantity>
             </Grid>
             <Grid xs={2}>
-              <Typography
-                component={'div'}
-                style={{
-                  color: '#1CB25B',
-                  fontWeight: '700',
-                  textAlign: 'center',
-                }}
-              >
+              <TypographyPrice component="div">
                 {formatMoney(Number(item?.quantity) * Number(item?.unitPrice))}
-              </Typography>
+              </TypographyPrice>
             </Grid>
             <Grid xs={1} style={{ display: 'flex' }} justifyContent="flex-end">
-              <Button
+              <ButtonRemove
                 variant="text"
-                style={{
-                  color: '#E02D3C',
-                  textTransform: 'capitalize',
-                  textDecoration: 'underline',
-                }}
                 onClick={(e) => handleClickRemoveButton(e, item)}
               >
                 Remove
-              </Button>
+              </ButtonRemove>
 
               <Popover
                 id={id}
@@ -607,6 +631,7 @@ const Cart: NextPageWithLayout = () => {
       <TypographyH2 variant="h2" mb={3}>
         Viewed Product
       </TypographyH2>
+      {/* bar checkout */}
       <BarCheckout
         className={classes['checkout-bar']}
         style={{
@@ -642,6 +667,7 @@ const Cart: NextPageWithLayout = () => {
           </Grid>
         </Grid>
       </BarCheckout>
+      {/* popup */}
       <Modal
         open={open}
         onClose={handleCloseModal}
@@ -667,19 +693,12 @@ const Cart: NextPageWithLayout = () => {
                 </IconButton>
               </Stack>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <Stack
+                <StackStock
                   direction="row"
                   spacing={2}
                   alignItems="center"
                   justifyContent="space-between"
                   mb={2}
-                  style={{
-                    background: '#F8F9FC',
-                    padding: '5px 10px',
-                    borderRadius: '8px',
-                    marginBottom: '10px',
-                    color: '#1CB25B',
-                  }}
                 >
                   <TypographyCurrentInstock>
                     Current in stock
@@ -687,38 +706,40 @@ const Cart: NextPageWithLayout = () => {
                   <div className={classes['popup-quantity__current-instock']}>
                     {instock}
                   </div>
-                </Stack>
-                <Typography mb={1}>Quantity</Typography>
-                <TextFieldCustom
-                  type="number"
-                  placeholder="Ex: 1000"
-                  fullWidth
-                  {...register('quantity')}
-                  error={!!errors.quantity}
-                  onChange={(e: any) => {
-                    if (e.target.value < 1000001) {
-                      handleOnChangeQuantity(e)
-                    }
-                  }}
-                  inputProps={{ min: 1, max: 10000000 }}
-                  onKeyPress={(event) => {
-                    if (
-                      event?.key === '-' ||
-                      event?.key === '+' ||
-                      event?.key === ',' ||
-                      event?.key === '.' ||
-                      event?.key === 'e'
-                    ) {
-                      event.preventDefault()
-                    }
-                  }}
-                  // error={!!errors.quantity}
+                </StackStock>
+                <Box mb={3}>
+                  <Typography mb="5px">Quantity</Typography>
+                  <TextFieldCustom
+                    type="number"
+                    placeholder="Ex: 1000"
+                    fullWidth
+                    {...register('quantity')}
+                    error={!!errors.quantity}
+                    onChange={(e: any) => {
+                      if (e.target.value < 1000001) {
+                        handleOnChangeQuantity(e)
+                      }
+                    }}
+                    inputProps={{ min: 1, max: 10000000 }}
+                    onKeyPress={(event) => {
+                      if (
+                        event?.key === '-' ||
+                        event?.key === '+' ||
+                        event?.key === ',' ||
+                        event?.key === '.' ||
+                        event?.key === 'e'
+                      ) {
+                        event.preventDefault()
+                      }
+                    }}
+                    // error={!!errors.quantity}
 
-                  className={classes['input-number']}
-                />
-                <FormHelperText error>
-                  {errors.quantity?.message}
-                </FormHelperText>
+                    className={classes['input-number']}
+                  />
+                  <FormHelperText error>
+                    {errors.quantity?.message}
+                  </FormHelperText>
+                </Box>
 
                 <Stack
                   direction="row"
@@ -727,8 +748,10 @@ const Cart: NextPageWithLayout = () => {
                   justifyContent="space-between"
                   mb={2}
                 >
-                  <span>Sub Total: </span>
-                  <div className={classes['modal-subtotal']}>
+                  <span className={classes['popup-quantity__subtotal-label']}>
+                    Sub Total:{' '}
+                  </span>
+                  <div className={classes['popup-quantity__subtotal']}>
                     {formatMoney(
                       tempQuantity * Number(currentProduct?.unitPrice)
                     )}
