@@ -1,0 +1,47 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 614717302056.dkr.ecr.us-east-2.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - echo "AWS Credential"
+      - echo "AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID"
+      - echo "AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY"
+      - echo "AWS_DEFAULT_REGION $AWS_DEFAULT_REGION"
+      - docker build
+          --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+          --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+          --build-arg AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+          -f Dockerfile -t $APP_TYPE.$SERVICE_NAME:$VERSIONING .
+      - docker tag $APP_TYPE.$SERVICE_NAME:$VERSIONING 614717302056.dkr.ecr.us-east-2.amazonaws.com/$APP_TYPE.$SERVICE_NAME:$VERSIONING
+      - echo "Building appspec"
+      - echo "Building $APP_TYPE.$SERVICE_NAME:$VERSIONING"
+      - sed -i "s,__APP__,$APP_NAME,g" appspec.yaml
+      - sed -i "s,__TASK_DEFINITION_FAMILY__,$TASK_DEFINITION_FAMILY,g" appspec.yaml
+      - sed -i "s,__APP__,$APP_NAME,g" taskdef.json
+      - sed -i "s,__APP_TYPE__,$APP_TYPE,g" taskdef.json
+      - sed -i "s,__SERVICE_NAME__,$SERVICE_NAME,g" taskdef.json
+      - sed -i "s,__VERSIONING__,$VERSIONING,g" taskdef.json
+      - sed -i "s,__TASK_DEFINITION_FAMILY__,$TASK_DEFINITION_FAMILY,g" taskdef.json
+      - sed -i "s,__LOGS_GROUP__,$LOGS_GROUP,g" taskdef.json
+      - sed -i "s,__AWS_DEFAULT_REGION__,$AWS_DEFAULT_REGION,g" taskdef.json
+      - sed -i "s,__EXECUTION_ROLE_ARN__,$EXECUTION_ROLE_ARN,g" taskdef.json
+      - sed -i "s,__AWS_ACCOUNT_ID__,$AWS_ACCOUNT_ID,g" taskdef.json
+      - sed -i "s,__APP_BUCKET__,$APP_BUCKET,g" taskdef.json
+      - sed -i "s,__GIT_COMMIT_SHA__,$CODEBUILD_RESOLVED_SOURCE_VERSION,g" taskdef.json
+      - sed -i "s,__S3_CONFIG_FILE__,$S3_CONFIG_FILE,g" taskdef.json
+      - aws s3 cp .env.production s3://$APP_BUCKET/cfg/$S3_CONFIG_FILE
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push 614717302056.dkr.ecr.us-east-2.amazonaws.com/$APP_TYPE.$SERVICE_NAME:$VERSIONING
+artifacts:
+  files:
+    - taskdef.json
+    - appspec.yaml
+
