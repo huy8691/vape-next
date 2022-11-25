@@ -9,20 +9,22 @@ import type { AppProps } from 'next/app'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
+  theme?: string
 }
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
-export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
+  console.log('ssss', Component.theme)
   const getLayout = Component.getLayout ?? ((page) => page)
-
   return getLayout(
     <>
-      <ThemeProviderNext forcedTheme={Component.theme || null}>
+      <ThemeProviderNext forcedTheme={Component.theme || 'light'}>
         <Component {...pageProps} />
       </ThemeProviderNext>
     </>
   )
 }
+export default MyApp

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 
 import { useAppDispatch } from 'src/store/hooks'
 import { logOutAPI } from '../../../pages/login/loginAPI'
@@ -92,7 +92,7 @@ const BellCustom = styled(Bell)(({ theme }) => ({
 
 const HeaderInner = () => {
   const dispatch = useAppDispatch()
-  const router = useRouter()
+  // const router = useRouter()
   // next theme
   const { theme, setTheme } = useTheme()
   // handle setting user

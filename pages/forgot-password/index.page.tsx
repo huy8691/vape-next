@@ -1,5 +1,5 @@
 // react
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { ReactElement } from 'react'
 // react
 
@@ -35,7 +35,8 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 // layout
 
 // other
-import ReactCodeInput from 'react-code-input'
+import dynamic from 'next/dynamic'
+const ReactCodeInput = dynamic(import('react-code-input'))
 import Cookies from 'js-cookie'
 import { Eye, EyeSlash } from 'phosphor-react'
 // other
@@ -249,7 +250,7 @@ const ForgotPassword: NextPageWithLayout = () => {
       })
   }
 
-  const props = {
+  const props: any = {
     className: `${classes.reactCodeInput} ${error && classes.error}`,
     inputStyle: {
       margin: '5px',
@@ -263,18 +264,47 @@ const ForgotPassword: NextPageWithLayout = () => {
   }
 
   // set time count down in cookie
-  const countFunction = useMemo(() => {
+  // const countFunction = useMemo(() => {
+  //   let time = Math.floor(Date.now() / 1000)
+  //   let timeCountCookies = Cookies.get('timeCountCookies')
+  //   if (timeCountCookies) {
+  //     if (time - parseInt(timeCountCookies) > 60) {
+  //       setStateCount(60)
+  //       Cookies.remove('timeCountCookies')
+  //     } else {
+  //       // setStateActiveStep('2')
+  //       setStateCount(60 - time + parseInt(timeCountCookies))
+  //       let countDown = setInterval(() => {
+  //         setStateCount((prevCount) => {
+  //           if (prevCount === 1) {
+  //             clearInterval(countDown)
+  //             prevCount = 60
+  //             return prevCount
+  //           }
+  //           prevCount = prevCount - 1
+  //           return prevCount
+  //         })
+  //       }, 1000)
+  //     }
+  //   }
+  // }, [])
+
+  // fix error when use next theme
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+
     let time = Math.floor(Date.now() / 1000)
     let timeCountCookies = Cookies.get('timeCountCookies')
+    Cookies.remove('timeCountCookies')
     if (timeCountCookies) {
       if (time - parseInt(timeCountCookies) > 60) {
         setStateCount(60)
-        Cookies.remove('timeCountCookies')
       } else {
         // setStateActiveStep('2')
         setStateCount(60 - time + parseInt(timeCountCookies))
         let countDown = setInterval(() => {
-          setStateCount((prevCount) => {
+          setStateCount((prevCount: number) => {
             if (prevCount === 1) {
               clearInterval(countDown)
               prevCount = 60
@@ -286,12 +316,6 @@ const ForgotPassword: NextPageWithLayout = () => {
         }, 1000)
       }
     }
-  }, [])
-
-  // fix error when use next theme
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => {
-    setMounted(true)
   }, [])
 
   if (!mounted) {

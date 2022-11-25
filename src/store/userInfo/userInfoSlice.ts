@@ -25,7 +25,9 @@ const userInfoSlice = createSlice({
   name: 'userInfo',
   initialState,
   reducers: {
-    doUserInfo(state: initialUserInfoStateType) {},
+    doUserInfo(state: initialUserInfoStateType) {
+      state.data = {}
+    },
     doUserInfoSuccess(
       state: initialUserInfoStateType,
       action: PayloadAction<UserInfoResponseType>

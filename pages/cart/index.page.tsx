@@ -49,7 +49,7 @@ import { CartType, CartItem } from 'src/store/cart/cartModels'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 //api
-import { deleteCartItem, getInstockAPI, updateQuantityProduct } from './CartAPI'
+import { deleteCartItem, getInstockAPI, updateQuantityProduct } from './cartAPI'
 import { cartActions } from 'src/store/cart/cartSlice'
 import { notificationActions } from 'src/store/notification/notificationSlice'
 import { loadingActions } from 'src/store/loading/loadingSlice'
@@ -708,9 +708,13 @@ const Cart: NextPageWithLayout = () => {
               <CurrencyCircleDollar size={18} />
               <Typography>Total</Typography>
               <TotalCustom>{formatMoney(total)}</TotalCustom>
-              <ButtonCustom variant="contained" size="large">
-                Checkout
-              </ButtonCustom>
+              <Link href="/checkout">
+                <a>
+                  <ButtonCustom variant="contained" size="large">
+                    Checkout
+                  </ButtonCustom>
+                </a>
+              </Link>
             </Stack>
           </Grid>
         </Grid>

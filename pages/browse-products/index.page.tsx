@@ -181,6 +181,7 @@ const BrowseProducts: NextPageWithLayout = () => {
     newValue: number | number[],
     activeThumb: number
   ) => {
+    console.log('11', event)
     if (!Array.isArray(newValue)) {
       return
     }

@@ -6,18 +6,18 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { CartResponseType, CartType } from './cartModels'
 
 interface initialCartStateType {
-  data?: CartType
+  data: CartType
 }
 
 const initialState: initialCartStateType = {
-  data: undefined,
+  data: {},
 }
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    doCart(state: initialCartStateType) {},
+    doCart() {},
     doCartSuccess(
       state: initialCartStateType,
       action: PayloadAction<CartResponseType>
@@ -25,7 +25,7 @@ const cartSlice = createSlice({
       const { data }: CartResponseType = action.payload
       state.data = data
     },
-    doCartFailure(state: initialCartStateType) {},
+    doCartFailure() {},
   },
 })
 

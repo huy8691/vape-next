@@ -3,7 +3,7 @@ import { setAuthToken } from 'src/services/jwt-axios'
 import { LoginResponseType, LoginType } from './loginModels'
 
 interface initialLoginStateType {
-  data?: {
+  data: {
     access_token: string
   }
 }
@@ -21,7 +21,9 @@ const loginSlice = createSlice({
   initialState,
   // Reducers chứa các hàm xử lý cập nhật state
   reducers: {
-    doLogin(state: initialLoginStateType, _action: PayloadAction<LoginType>) {},
+    doLogin(state: initialLoginStateType, _action: PayloadAction<LoginType>) {
+      state.data.access_token = ''
+    },
     doLoginSuccess(
       state: initialLoginStateType,
       action: PayloadAction<LoginResponseType>
@@ -32,9 +34,11 @@ const loginSlice = createSlice({
       }
       setAuthToken(data.access_token)
     },
-    doLoginFailure(state: initialLoginStateType) {},
+    doLoginFailure(state: initialLoginStateType) {
+      state.data.access_token = ''
+    },
     doLogout(state: initialLoginStateType) {
-      state.data = undefined
+      state.data.access_token = ''
     },
   },
 })

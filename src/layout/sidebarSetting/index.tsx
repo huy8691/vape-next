@@ -1,12 +1,9 @@
 import React from 'react'
-import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
+
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 import classes from './styles.module.scss'
-import Button, { ButtonProps } from '@mui/material/Button'
-import Stack from '@mui/material/Stack'
-import { purple } from '@mui/material/colors'
+import Button from '@mui/material/Button'
 
 type Props = {
   isOpen: boolean

@@ -4,7 +4,7 @@ import {
   ProductListDataResponseType,
   PromotionListDataResponseType,
   OutstandingFarmListDataResponseType,
-} from './modelHomePage'
+} from './modelDashboard'
 
 // list products
 const getNewProductList = (): Promise<

@@ -8,31 +8,35 @@ import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
-import LoadingButton from '@mui/lab/LoadingButton'
+// import LoadingButton from '@mui/lab/LoadingButton'
 
 // import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles'
 
 const ButtonCustom = styled(Button)({
-  color: '#ffffff',
   backgroundColor: 'linear-gradient(93.37deg, #1CB35B 0%, #20B598 116.99%)',
   boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
   borderRadius: '12px',
   textTransform: 'none',
+  '&.MuiButton-contained': {
+    color: '#ffffff',
+  },
   '&.MuiButton-sizeLarge': {
     padding: '7px 25px',
   },
 })
 
-const LoadingButtonCustom = styled(LoadingButton)({
-  color: '#ffffff',
-  backgroundColor: 'linear-gradient(93.37deg, #1CB35B 0%, #20B598 116.99%)',
-  boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
-  borderRadius: '12px',
-  textTransform: 'none',
-  '&.MuiButton-sizeLarge': {
-    padding: '7px 25px',
-  },
-})
+// const LoadingButtonCustom = styled(LoadingButton)({
+//   backgroundColor: 'linear-gradient(93.37deg, #1CB35B 0%, #20B598 116.99%)',
+//   boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
+//   borderRadius: '12px',
+//   textTransform: 'none',
+//   '&.MuiButton-contained': {
+//     color: '#ffffff',
+//   },
+//   '&.MuiButton-sizeLarge': {
+//     padding: '7px 25px',
+//   },
+// })
 
 const TextFieldCustom = styled(TextField)({
   '& .MuiOutlinedInput-root': {
@@ -112,5 +116,5 @@ export {
   ComponentFileUploader,
   TextFieldPasswordCustom,
   ItemProduct,
-  LoadingButtonCustom,
+  // LoadingButtonCustom,
 }

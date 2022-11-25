@@ -18,14 +18,14 @@ import { notificationActions } from 'src/store/notification/notificationSlice'
 // api
 
 type Props = {
-  uploadSignatureSuccess: () => void
+  uploadSignatureSuccess: (value: any) => void
   uploadSignatureError: () => void
 }
 
 const SignatureCanvas = forwardRef(
   ({ uploadSignatureSuccess, uploadSignatureError }: Props, ref) => {
     useImperativeHandle(ref, () => ({
-      handleSignature(valueSignUp) {
+      handleSignature(valueSignUp: any) {
         if (sigCanvas.current.isEmpty()) {
           setStateIsSigCanvas(true)
           setTimeout(function () {
@@ -102,7 +102,7 @@ const SignatureCanvas = forwardRef(
     }))
 
     const dispatch = useAppDispatch()
-    const sigCanvas = useRef({})
+    const sigCanvas = useRef<any>(null)
     const [stateIsSigCanvas, setStateIsSigCanvas] =
       React.useState<boolean>(false)
 

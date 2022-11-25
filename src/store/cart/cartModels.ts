@@ -6,6 +6,7 @@ export interface CartType {
 }
 
 export interface CartItem {
+  productCode: string
   cartItemId: number
   productId: number
   productName: string
