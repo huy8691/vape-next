@@ -4,7 +4,7 @@ let urlApi = 'https://fec2-113-161-85-80.ap.ngrok.io'
 
 const env = process.env.ENV
 if (env === 'prod') {
-  urlApi = 'https://api-dev.vuarausach.vn/2'
+  urlApi = 'http://cms.theweedsupplies.com'
 }
 
 const token = Cookies.get('token')
