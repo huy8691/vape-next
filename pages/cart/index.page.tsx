@@ -4,18 +4,21 @@ import React, {
   useState,
 } from 'react'
 import { useContext } from 'react'
-import { DrawerWidthContext } from 'src/layout/nestedLayout'
+// next
+import Image from 'next/image'
+import Head from 'next/head'
+// next
 
 //layout
 import type { ReactElement } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
+import { DrawerWidthContext } from 'src/layout/nestedLayout'
 import type { NextPageWithLayout } from 'pages/_app.page'
 //mui
 import {
   Box,
   Button,
   Checkbox,
-  Divider,
   Fade,
   FormHelperText,
   IconButton,
@@ -30,9 +33,8 @@ import Grid from '@mui/material/Unstable_Grid2'
 import Stack from '@mui/material/Stack'
 
 //other
-import Image from 'next/image'
+
 import { formatMoney } from 'src/utils/money.utils'
-import edit from './parts/edit.svg'
 import { CurrencyCircleDollar, X } from 'phosphor-react'
 import { ButtonCustom, TextFieldCustom } from 'src/components'
 
@@ -55,17 +57,26 @@ import Link from 'next/link'
 
 //style
 const TypographyH2 = styled(Typography)(({ theme }) => ({
-  fontSize: '20px',
+  fontSize: '2rem',
   fontWeight: 'bold',
   color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
 }))
 
-const IconButtonCustom = styled(IconButton)(() => ({
-  border: '1px solid #E1E6EF',
+const IconButtonCustom = styled(IconButton)(({ theme }) => ({
+  border:
+    theme.palette.mode === 'dark'
+      ? '1px solid rgba(255, 255, 255, 0.23)'
+      : '1px solid #E1E6EF',
   borderRadius: '10px',
   padding: '5px',
-  background: 'white',
+  backgroundColor:
+    theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : '#fff',
   marginLeft: '10px',
+  '& span': {
+    fontSize: '1.6rem',
+    color:
+      theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.23)' : '#49516F',
+  },
 }))
 
 const GridCustom = styled(Grid)(({ theme }) => ({
@@ -82,28 +93,33 @@ const BoxModalCustom = styled(Box)(({ theme }) => ({
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: 'background.paper',
   borderRadius: '8px',
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
 }))
 const TypographyH6 = styled(Typography)(() => ({
   fontWeight: '400',
-  fontSize: '16px',
+  fontSize: '1.6rem',
 }))
-const TotalCustom = styled(Box)(() => ({
-  color: '#1CB25B',
+const TotalCustom = styled(Box)(({ theme }) => ({
+  color: theme.palette.primary.main,
   fontWeight: '700',
-  fontSize: '20px',
+  fontSize: '2rem',
 }))
 const TypographyCustom = styled(Typography)(() => ({
   color: '#BABABA',
   fontWeight: '400',
-  fontSize: '14px',
+  fontSize: '1.4rem',
 }))
 
-const TypographyCurrentInstock = styled(Typography)(() => ({
+const TypographyCurrentInstock = styled(Typography)(({ theme }) => ({
   fontWeight: '400',
-  fontSize: '14px',
+  fontSize: '1.4rem',
+  color: theme.palette.primary.main,
+}))
+const TypographyPrice = styled(Typography)(({ theme }) => ({
+  fontWeight: '700',
+  color: theme.palette.primary.main,
+  textAlign: 'center',
 }))
 const BarCheckout = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -113,6 +129,23 @@ const StackQuantity = styled(Stack)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
   padding: theme.spacing(1),
+}))
+const ButtonRemove = styled(Button)(({ theme }) => ({
+  color: theme.palette.error.main,
+  textTransform: 'capitalize',
+  textDecoration: 'underline',
+}))
+const StackStock = styled(Stack)(({ theme }) => ({
+  backgroundColor:
+    theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
+  padding: '5px 10px',
+  borderRadius: '8px',
+  marginBottom: '10px',
+}))
+const DividerCustom = styled('div')(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  height: '10px',
+  width: '1px',
 }))
 
 // validation quantity
@@ -151,7 +184,6 @@ const Cart: NextPageWithLayout = () => {
   //state use for total
   const [total, setTotal] = useState<number>(0)
   // state use for popper
-  // const [openPopper, setOpenPopper] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
 
   // state use for temporary quantity
@@ -276,7 +308,7 @@ const Cart: NextPageWithLayout = () => {
           ...itemNew,
         })
       }
-      setTotal(Number(cart.data.totalPrice))
+      setTotal(Number(cart?.data?.totalPrice))
       setStateCartCheck(newArr)
       setIsCheckAll(!isCheckAll)
     } else {
@@ -351,7 +383,6 @@ const Cart: NextPageWithLayout = () => {
           )
           setFlagUpdate(true)
           console.log('old array', stateCartCheck)
-          console.log('new array', cart.data.items)
 
           handleCloseModal()
         })
@@ -384,9 +415,11 @@ const Cart: NextPageWithLayout = () => {
       .catch((error) => {
         const data = error.response?.data
         dispatch(loadingActions.doLoadingFailure())
-        console.log(
-          '🚀 ~ file: index.page.tsx ~ line 161 ~ getInstockAPI ~ data',
-          data
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : 'Error',
+            type: 'error',
+          })
         )
       })
   }
@@ -396,49 +429,72 @@ const Cart: NextPageWithLayout = () => {
       setTempQuantity(Number(e.target.value))
     } else setTempQuantity(0)
   }
-  if (stateCartCheck?.length === 0) {
+
+  // render
+  const SkeletonItemCart = () => {
     return (
-      <>
-        <Skeleton height={140} />
-      </>
-    )
-  }
-  if (cart.data.items.length === 0) {
-    return (
-      <Grid container spacing={2} justifyContent="center">
-        <Grid>
-          <Stack p={5} spacing={2}>
-            <Image
-              src="/images/not-found.svg"
-              alt="Logo"
-              width="200"
-              height="300"
-            />
-            <Typography variant="h6">
-              You don’t have any products in yours Cart
-            </Typography>
-            <Link href="/browse-products">
-              <ButtonCustom
-                variant="contained"
-                style={{ color: 'white', padding: '15px' }}
-              >
-                <Typography style={{ fontWeight: '600' }}>
-                  Search More
-                </Typography>
-              </ButtonCustom>
-            </Link>
-          </Stack>
+      <Grid container spacing={2} mb={3} justifyContent="space-between">
+        <Grid xs="auto" style={{ minWidth: '58px' }}>
+          <Skeleton animation="wave" height={90} />
+        </Grid>
+        <Grid xs={4}>
+          <Skeleton animation="wave" height={90} />
+        </Grid>
+        <Grid xs={2}>
+          <Skeleton animation="wave" height={90} />
+        </Grid>
+        <Grid xs={2}>
+          <Skeleton animation="wave" height={90} />
+        </Grid>
+        <Grid xs={2}>
+          <Skeleton animation="wave" height={90} />
+        </Grid>
+        <Grid xs={1}>
+          <Skeleton animation="wave" height={90} />
         </Grid>
       </Grid>
     )
   }
-  console.log('drawerWidthContext', drawerWidthContext)
+  if (cart?.data?.items?.length === 0) {
+    return (
+      <>
+        <TypographyH2 variant="h2" mb={3}>
+          Shopping cart
+        </TypographyH2>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid>
+            <Stack p={5} spacing={2}>
+              <Image
+                src="/images/not-found.svg"
+                alt="Logo"
+                width="200"
+                height="300"
+              />
+              <Typography variant="h6">
+                You don’t have any products in yours Cart
+              </Typography>
+              <Link href="/browse-products">
+                <ButtonCustom variant="contained" style={{ padding: '15px' }}>
+                  <Typography style={{ fontWeight: '600' }}>
+                    Search More
+                  </Typography>
+                </ButtonCustom>
+              </Link>
+            </Stack>
+          </Grid>
+        </Grid>
+      </>
+    )
+  }
   return (
     <>
+      <Head>
+        <title>Cart | VAPE</title>
+      </Head>
       <TypographyH2 variant="h2" mb={3}>
-        Cart
+        Shopping cart
       </TypographyH2>
-      <Grid container spacing={2} mb={2}>
+      <Grid container spacing={2} mb={2} justifyContent="space-between">
         <Grid xs="auto" style={{ minWidth: '58px' }}></Grid>
         <Grid xs={4}>
           <TypographyCustom>Product</TypographyCustom>
@@ -454,159 +510,176 @@ const Cart: NextPageWithLayout = () => {
         </Grid>
         <Grid xs={1}></Grid>
       </Grid>
-      {stateCartCheck?.map((item) => {
-        return (
-          <GridCustom
-            spacing={2}
-            key={item?.cartItemId}
-            mb={3}
-            container
-            direction="row"
-            alignItems="center"
-          >
-            <Grid xs="auto">
-              <Checkbox
-                id={item?.cartItemId?.toString()}
-                onChange={(value) => handleClickCheckbox(item, value)}
-                checked={item?.isCheck}
-              />
-            </Grid>
-            <Grid xs={4}>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <div className={classes['image-wrapper']}>
-                  <Image
-                    src={item.productThumbnail || ''}
-                    alt="product"
-                    width={80}
-                    height={80}
-                  />
-                </div>
-                <Typography component="div">{item?.productName}</Typography>
-              </Stack>
-            </Grid>
-            <Grid xs={2} justifyContent="center">
-              <Stack
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Typography style={{ fontWeight: '600', marginRight: '5px' }}>
-                  {formatMoney(item?.unitPrice)}
-                </Typography>
-                /
-                <Typography
-                  style={{
-                    fontWeight: '400',
-                    marginLeft: '5px',
-                    textTransform: 'lowercase',
-                    fontSize: '14px',
-                  }}
-                >
-                  {item?.unitType}
-                </Typography>
-              </Stack>
-            </Grid>
-            <Grid xs={2}>
-              <StackQuantity
+      {!cart?.data ? (
+        SkeletonItemCart()
+      ) : (
+        <>
+          {stateCartCheck?.map((item) => {
+            return (
+              <GridCustom
+                spacing={2}
+                key={item?.cartItemId}
+                mb={3}
+                container
                 direction="row"
                 alignItems="center"
-                justifyContent="end"
-                spacing={1}
-                className={classes['stack-quantity']}
+                justifyContent="space-between"
               >
-                <Typography component="div">{item?.quantity}</Typography>
-                <Divider orientation="vertical" variant="middle" flexItem />
-                <Typography
-                  component={'div'}
-                  className={classes['stack-quantity__unitType']}
-                >
-                  {item?.unitType}
-                </Typography>
-                <IconButtonCustom onClick={() => handleClickModalButton(item)}>
-                  <Image
-                    alt="icon edit"
-                    src={edit}
-                    objectFit="contain"
-                    width={18}
-                    height={18}
+                <Grid xs="auto">
+                  <Checkbox
+                    id={item?.cartItemId?.toString()}
+                    onChange={(value) => handleClickCheckbox(item, value)}
+                    checked={item?.isCheck}
                   />
-                </IconButtonCustom>
-              </StackQuantity>
-            </Grid>
-            <Grid xs={2}>
-              <Typography
-                component={'div'}
-                style={{
-                  color: '#1CB25B',
-                  fontWeight: '700',
-                  textAlign: 'center',
-                }}
-              >
-                {formatMoney(Number(item?.quantity) * Number(item?.unitPrice))}
-              </Typography>
-            </Grid>
-            <Grid xs={1}>
-              <Button
-                variant="text"
-                style={{
-                  color: '#E02D3C',
-                  textTransform: 'capitalize',
-                  textDecoration: 'underline',
-                }}
-                onClick={(e) => handleClickRemoveButton(e, item)}
-              >
-                Remove
-              </Button>
+                </Grid>
+                <Grid xs={4}>
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <div className={classes['image-wrapper']}>
+                      <Link
+                        href={`/product-detail/${item?.productId.toString()}`}
+                      >
+                        <a>
+                          <Image
+                            src={item.productThumbnail || ''}
+                            alt="product"
+                            width={80}
+                            height={80}
+                          />
+                        </a>
+                      </Link>
+                    </div>
 
-              <Popover
-                id={id}
-                open={openPopover}
-                anchorEl={anchorEl}
-                onClose={handleClosePopover}
-                anchorOrigin={{
-                  vertical: 'center',
-                  horizontal: 'left',
-                }}
-                transformOrigin={{
-                  vertical: 'center',
-                  horizontal: 'right',
-                }}
-              >
-                <Box sx={{ p: 3, boxShadow: 2 }}>
-                  <Typography mb={2}>
-                    Do you want to remove this item from cart ?
-                  </Typography>
+                    <Link
+                      href={`/product-detail/${item?.productId.toString()}`}
+                    >
+                      <a>
+                        <Typography component="div">
+                          {item?.productName}
+                        </Typography>
+                      </a>
+                    </Link>
+                  </Stack>
+                </Grid>
+                <Grid xs={2} justifyContent="center">
                   <Stack
                     direction="row"
-                    justifyContent="flex-end"
-                    sx={{ p: 1 }}
-                    gap={2}
+                    justifyContent="center"
+                    alignItems="center"
+                    gap={'5px'}
                   >
-                    <ButtonCustom
-                      onClick={handleClickRemoveFromCart}
-                      variant="contained"
-                      size="small"
+                    <Typography
+                      style={{
+                        fontWeight: '600',
+                      }}
                     >
-                      Yes
-                    </ButtonCustom>
-                    <ButtonCustom
-                      onClick={handleClosePopover}
-                      variant="contained"
-                      color="error"
-                      size="small"
+                      {formatMoney(item?.unitPrice)}
+                    </Typography>
+                    /
+                    <Typography
+                      style={{
+                        textTransform: 'lowercase',
+                        fontSize: '1.2rem',
+                      }}
                     >
-                      Cancel
-                    </ButtonCustom>
+                      {item?.unitType}
+                    </Typography>
                   </Stack>
-                </Box>
-              </Popover>
-            </Grid>
-          </GridCustom>
-        )
-      })}
+                </Grid>
+                <Grid xs={2}>
+                  <StackQuantity
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="end"
+                    spacing={1}
+                    className={classes['stack-quantity']}
+                  >
+                    <Typography component="div">{item?.quantity}</Typography>
+                    <DividerCustom />
+                    <Typography
+                      component="div"
+                      className={classes['stack-quantity__unitType']}
+                    >
+                      {item?.unitType}
+                    </Typography>
+                    <IconButtonCustom
+                      onClick={() => handleClickModalButton(item)}
+                    >
+                      <span className="icon-icon-edit"></span>
+                    </IconButtonCustom>
+                  </StackQuantity>
+                </Grid>
+                <Grid xs={2}>
+                  <TypographyPrice>
+                    {formatMoney(
+                      Number(item?.quantity) * Number(item?.unitPrice)
+                    )}
+                  </TypographyPrice>
+                </Grid>
+                <Grid
+                  xs={1}
+                  style={{ display: 'flex' }}
+                  justifyContent="flex-end"
+                >
+                  <ButtonRemove
+                    variant="text"
+                    onClick={(e) => handleClickRemoveButton(e, item)}
+                  >
+                    Remove
+                  </ButtonRemove>
+
+                  <Popover
+                    id={id}
+                    open={openPopover}
+                    anchorEl={anchorEl}
+                    onClose={handleClosePopover}
+                    anchorOrigin={{
+                      vertical: 'center',
+                      horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                      vertical: 'center',
+                      horizontal: 'right',
+                    }}
+                  >
+                    <Box sx={{ p: 3, boxShadow: 2 }}>
+                      <Typography mb={2}>
+                        Do you want to remove this item from cart ?
+                      </Typography>
+                      <Stack
+                        direction="row"
+                        justifyContent="flex-end"
+                        sx={{ p: 1 }}
+                        gap={2}
+                      >
+                        <ButtonCustom
+                          onClick={handleClickRemoveFromCart}
+                          variant="contained"
+                          size="small"
+                        >
+                          Yes
+                        </ButtonCustom>
+                        <ButtonCustom
+                          onClick={handleClosePopover}
+                          variant="contained"
+                          color="error"
+                          size="small"
+                        >
+                          Cancel
+                        </ButtonCustom>
+                      </Stack>
+                    </Box>
+                  </Popover>
+                </Grid>
+              </GridCustom>
+            )
+          })}
+        </>
+      )}
+
       <TypographyH2 variant="h2" mb={3}>
         Viewed Product
       </TypographyH2>
+      {/* bar checkout */}
       <BarCheckout
         className={classes['checkout-bar']}
         style={{
@@ -642,6 +715,7 @@ const Cart: NextPageWithLayout = () => {
           </Grid>
         </Grid>
       </BarCheckout>
+      {/* popup */}
       <Modal
         open={open}
         onClose={handleCloseModal}
@@ -667,19 +741,12 @@ const Cart: NextPageWithLayout = () => {
                 </IconButton>
               </Stack>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <Stack
+                <StackStock
                   direction="row"
                   spacing={2}
                   alignItems="center"
                   justifyContent="space-between"
                   mb={2}
-                  style={{
-                    background: '#F8F9FC',
-                    padding: '5px 10px',
-                    borderRadius: '8px',
-                    marginBottom: '10px',
-                    color: '#1CB25B',
-                  }}
                 >
                   <TypographyCurrentInstock>
                     Current in stock
@@ -687,38 +754,40 @@ const Cart: NextPageWithLayout = () => {
                   <div className={classes['popup-quantity__current-instock']}>
                     {instock}
                   </div>
-                </Stack>
-                <Typography mb={1}>Quantity</Typography>
-                <TextFieldCustom
-                  type="number"
-                  placeholder="Ex: 1000"
-                  fullWidth
-                  {...register('quantity')}
-                  error={!!errors.quantity}
-                  onChange={(e: any) => {
-                    if (e.target.value < 1000001) {
-                      handleOnChangeQuantity(e)
-                    }
-                  }}
-                  inputProps={{ min: 1, max: 10000000 }}
-                  onKeyPress={(event) => {
-                    if (
-                      event?.key === '-' ||
-                      event?.key === '+' ||
-                      event?.key === ',' ||
-                      event?.key === '.' ||
-                      event?.key === 'e'
-                    ) {
-                      event.preventDefault()
-                    }
-                  }}
-                  // error={!!errors.quantity}
+                </StackStock>
+                <Box mb={3}>
+                  <Typography mb="5px">Quantity</Typography>
+                  <TextFieldCustom
+                    type="number"
+                    placeholder="Ex: 1000"
+                    fullWidth
+                    {...register('quantity')}
+                    error={!!errors.quantity}
+                    onChange={(e: any) => {
+                      if (e.target.value < 1000001) {
+                        handleOnChangeQuantity(e)
+                      }
+                    }}
+                    inputProps={{ min: 1, max: 10000000 }}
+                    onKeyPress={(event) => {
+                      if (
+                        event?.key === '-' ||
+                        event?.key === '+' ||
+                        event?.key === ',' ||
+                        event?.key === '.' ||
+                        event?.key === 'e'
+                      ) {
+                        event.preventDefault()
+                      }
+                    }}
+                    // error={!!errors.quantity}
 
-                  className={classes['input-number']}
-                />
-                <FormHelperText error>
-                  {errors.quantity?.message}
-                </FormHelperText>
+                    className={classes['input-number']}
+                  />
+                  <FormHelperText error>
+                    {errors.quantity?.message}
+                  </FormHelperText>
+                </Box>
 
                 <Stack
                   direction="row"
@@ -727,8 +796,10 @@ const Cart: NextPageWithLayout = () => {
                   justifyContent="space-between"
                   mb={2}
                 >
-                  <span>Sub Total: </span>
-                  <div className={classes['modal-subtotal']}>
+                  <span className={classes['popup-quantity__subtotal-label']}>
+                    Sub Total:{' '}
+                  </span>
+                  <div className={classes['popup-quantity__subtotal']}>
                     {formatMoney(
                       tempQuantity * Number(currentProduct?.unitPrice)
                     )}

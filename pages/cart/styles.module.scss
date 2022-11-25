@@ -17,13 +17,6 @@
   transition: width 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
 }
 
-.modal-subtotal {
-  font-weight: 700;
-  font-size: 24px;
-  background: linear-gradient(93.37deg, #1cb35b 0%, #20b598 116.99%);
-  -webkit-text-fill-color: transparent;
-}
-
 .popup-quantity {
   padding: 16px 25px;
   &__current-instock {
@@ -32,10 +25,17 @@
     background: linear-gradient(93.37deg, #1cb35b 0%, #20b598 116.99%);
     border-radius: 4px;
     padding: 4px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     color: white;
+  }
+  &__subtotal {
+    font-weight: 700;
+    font-size: 24px;
+    background: linear-gradient(93.37deg, #1cb35b 0%, #20b598 116.99%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  &__subtotal-label {
+    font-size: 1.2rem;
   }
 }
 .image-wrapper {

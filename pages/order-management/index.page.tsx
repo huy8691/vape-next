@@ -22,7 +22,9 @@ import NestedLayout from 'src/layout/nestedLayout'
 import { styled } from '@mui/system'
 import { MagnifyingGlass } from 'phosphor-react'
 // import { Controller } from 'react-hook-form'
-import { ButtonCustom } from 'src/components'
+
+// not need this time
+// import { ButtonCustom } from 'src/components'
 
 // import PropTypes from 'prop-types'
 import TablePaginationAction from './parts/TablePaginationAction'
@@ -64,6 +66,11 @@ const TableRowCustom = styled(TableRow)(() => ({
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   marginBottom: theme.spacing(1),
+  '& .Mui-selected': {
+    textTransform: 'capitalize',
+    fontWeight: '700',
+    fontSize: '1.4rem',
+  },
   '& .MuiTabs-indicator': {
     display: 'flex',
     justifyContent: 'center',
@@ -76,16 +83,20 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   },
 }))
 const TabCustom = styled(Tab)(() => ({
-  textTransform: 'capitalize',
-  fontWeight: '700',
   fontSize: '1.4rem',
+  fontWeight: '400',
+  textTransform: 'capitalize',
 }))
 
-const TableCellCustom = styled(TableCell)(() => ({
-  maxWidth: '150px',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
+const TableCellHeadingTextCustom = styled(TableCell)(({ theme }) => ({
+  fontSize: '1.4rem',
+  fontWeight: 400,
+  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+}))
+const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
+  fontSize: '1.4rem',
+  fontWeight: 500,
+  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
 }))
 // form search
 // function createData(
@@ -244,23 +255,30 @@ const OrderManageMent: NextPageWithLayout = () => {
   // state use for table
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [valueTab, setValueTab] = useState(0)
-  // state use for
+  // state use for list order
   const [dataOrders, setDataOrders] = useState<OrderListDataResponseType>()
   const router = useRouter()
+  console.log('🚀 ~ file: index.page.tsx ~ line 259 ~ router', router)
   const dispatch = useAppDispatch()
+  // state use for store next page is null or <number></number>
   const [nextPage, setNextPage] = useState<number | null>()
-  const [page, setPage] = useState(0)
-  console.log('🚀 ~ file: index.page.tsx ~ line 253 ~ page', page)
+  // const [page, setPage] = useState(0)
+
   // temtporary row
   const [tempRow, setTempRow] = useState<OrderDataType>()
   //state use for popper
   const [anchorEl, setAnchorEl] = useState<any>(null)
+  //state use for tab
+  const [tabDisabled, setTabDisabled] = useState<boolean>(false)
+  //state use for temporary input
 
+  // trigger when hover to table cell
   const handleHoverTableCell = (event: any, value: OrderDataType) => {
     setTempRow(value)
     setAnchorEl(value ? event.currentTarget : undefined)
     // setAnchorEl(anchorEl ? null : event.currentTarget)
   }
+  // trigger when mouse leave table cell
   const handleLeaveTableCell = () => {
     setTempRow(undefined)
     setAnchorEl(undefined)
@@ -269,37 +287,45 @@ const OrderManageMent: NextPageWithLayout = () => {
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popper' : undefined
   // function for table pagination
-  const handleChangePage = (event: any, newPage: number) => {
+  const handleChangePage = (event: any) => {
     console.log(event)
-    setPage(newPage)
+    // setPage(newPage)
   }
-
+  // trigger when change row per page option ( page size )
   const handleChangeRowsPerPage = (event: any) => {
     setRowsPerPage(parseInt(event.target.value, 10))
     let tableSize = parseInt(event.target.value)
-    getOrders({ limit: tableSize })
-      .then(() => {
-        router.replace({
-          search: `${objToStringParam({
-            ...router.query,
-            limit: tableSize,
-          })}`,
-        })
-        dispatch(loadingActions.doLoadingSuccess())
-      })
-      .catch((error) => {
-        const data = error.response?.data
-        dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
-      })
+    router.replace({
+      search: `${objToStringParam({
+        ...router.query,
+        limit: tableSize,
+        page: 1,
+      })}`,
+    })
+    // getOrders({ limit: tableSize })
+    //   .then(() => {
+    //     router.replace({
+    //       search: `${objToStringParam({
+    //         ...router.query,
+    //         limit: tableSize,
+    //       })}`,
+    //     })
+    //     dispatch(loadingActions.doLoadingSuccess())
+    //   })
+    //   .catch((error) => {
+    //     const data = error.response?.data
+    //     dispatch(loadingActions.doLoadingFailure())
+    //     dispatch(
+    //       notificationActions.doNotification({
+    //         message: data?.message ? data?.message : 'Error',
+    //         type: 'error',
+    //       })
+    //     )
+    //   })
     // setPage(0)
   }
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    console.log(event)
     setValueTab(newValue)
   }
 
@@ -324,13 +350,15 @@ const OrderManageMent: NextPageWithLayout = () => {
           }
           setDataOrders(data)
           dispatch(loadingActions.doLoadingSuccess())
+          setTabDisabled(false)
         })
         .catch((error: any) => {
           const data = error.response?.data
+          console.log(data)
           dispatch(loadingActions.doLoadingFailure())
           dispatch(
             notificationActions.doNotification({
-              message: data?.message ? data?.message : 'Error',
+              message: 'Something went wrongs with the server',
               type: 'error',
             })
           )
@@ -352,13 +380,19 @@ const OrderManageMent: NextPageWithLayout = () => {
           }
           setDataOrders(data)
           dispatch(loadingActions.doLoadingSuccess())
+          setTabDisabled(false)
         })
         .catch((error: any) => {
           const data = error.response?.data
+          console.log(
+            '🚀 ~ file: index.page.tsx ~ line 386 ~ useEffect ~ data',
+            data
+          )
+
           dispatch(loadingActions.doLoadingFailure())
           dispatch(
             notificationActions.doNotification({
-              message: data?.message ? data?.message : 'Error',
+              message: 'Something went wrongs with the server',
               type: 'error',
             })
           )
@@ -388,10 +422,10 @@ const OrderManageMent: NextPageWithLayout = () => {
   }
 
   const onSubmit = (data: SearchFormInput) => {
-    console.log('here', getValues('content'))
+    console.log(getValues('content'))
     console.log('data', data)
+    setTabDisabled(true)
     if (hasWhiteSpace(getValues('content'))) {
-      console.log('xuong ne')
       dispatch(
         notificationActions.doNotification({
           message: 'Error',
@@ -400,43 +434,16 @@ const OrderManageMent: NextPageWithLayout = () => {
       )
       setDataOrders(undefined)
     } else {
-      console.log('xuong day r nha')
-      dispatch(loadingActions.doLoading())
-      getOrders({ page: 1, code: getValues('content') })
-        .then(() => {
-          router.replace({
-            search: `${objToStringParam({
-              ...router.query,
-              page: 1,
-              code: getValues('content'),
-            })}`,
-          })
-          dispatch(loadingActions.doLoadingSuccess())
-        })
-        .catch((error) => {
-          const data = error.response?.data
-          dispatch(loadingActions.doLoadingFailure())
-          dispatch(
-            notificationActions.doNotification({
-              message: data?.message ? data?.message : 'Error',
-              type: 'error',
-            })
-          )
-        })
-    }
-  }
-  const handleClickFilterTab = (status: string | null) => {
-    if (status) {
-      getOrders({ page: 1 })
       router.replace({
         search: `${objToStringParam({
           ...router.query,
           page: 1,
-          status: null,
+          code: getValues('content'),
         })}`,
       })
     }
-    getOrders({ page: 1, status: status })
+  }
+  const handleClickFilterTab = (status: string | null) => {
     router.replace({
       search: `${objToStringParam({
         ...router.query,
@@ -444,6 +451,10 @@ const OrderManageMent: NextPageWithLayout = () => {
         status: status,
       })}`,
     })
+    setTabDisabled(true)
+  }
+  const handleRowClick = (id: number) => {
+    router.push(`/order-detail/${id}`)
   }
   return (
     <>
@@ -461,26 +472,32 @@ const OrderManageMent: NextPageWithLayout = () => {
         <TabCustom
           label="All Orders"
           onClick={() => handleClickFilterTab(null)}
+          disabled={tabDisabled}
         />
         <TabCustom
           label="Waiting For Approval"
           onClick={() => handleClickFilterTab('WAITING_FOR_APPROVED')}
+          disabled={tabDisabled}
         />
         <TabCustom
           label="Approved"
           onClick={() => handleClickFilterTab('APPROVED')}
+          disabled={tabDisabled}
         />
         <TabCustom
           label="Delivering"
           onClick={() => handleClickFilterTab('DELIVERING')}
+          disabled={tabDisabled}
         />
         <TabCustom
           label="Delivered"
           onClick={() => handleClickFilterTab('DELIVERED')}
+          disabled={tabDisabled}
         />
         <TabCustom
           label="Cancelled"
           onClick={() => handleClickFilterTab('CANCELLED')}
+          disabled={tabDisabled}
         />
       </StyledTabs>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -503,19 +520,19 @@ const OrderManageMent: NextPageWithLayout = () => {
                 inputProps={{ 'aria-label': 'Search by order no...' }}
                 {...register('content')}
               />
-              <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+              <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
                 <MagnifyingGlass size={20} />
               </IconButton>
             </Paper>
           </Grid>
           <Grid xs={4}>
-            <ButtonCustom
+            {/* <ButtonCustom
               type="submit"
               variant="contained"
               style={{ color: 'white', padding: '15px', width: '100%' }}
             >
               <Typography style={{ fontWeight: '600' }}>Action</Typography>
-            </ButtonCustom>
+            </ButtonCustom> */}
           </Grid>
         </Grid>
       </form>
@@ -528,14 +545,28 @@ const OrderManageMent: NextPageWithLayout = () => {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Order No</TableCell>
-              <TableCell align="center">Order Date</TableCell>
-              <TableCell align="center">Total Billing</TableCell>
-              <TableCell align="center">Order Status</TableCell>
-              {/* <TableCell align="center">Payment Method</TableCell> */}
-              <TableCell align="center">Payment Status</TableCell>
-              <TableCell align="center">Receiver</TableCell>
-              <TableCell align="center">Deliver Address</TableCell>
+              <TableCellHeadingTextCustom align="center">
+                Order No
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Order Date
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Total Billing
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Order Status
+              </TableCellHeadingTextCustom>
+              {/* <TableCellHeadingTextCustom align="center">Payment Method</TableCellHeadingTextCustom> */}
+              <TableCellHeadingTextCustom align="center">
+                Payment Status
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Receiver
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Deliver Address
+              </TableCellHeadingTextCustom>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -544,28 +575,47 @@ const OrderManageMent: NextPageWithLayout = () => {
                 hover
                 key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                onClick={() => handleRowClick(row.id)}
               >
-                <TableCell align="center" component="th" scope="row">
-                  {row.code}
-                </TableCell>
-
-                <TableCell align="center">
-                  {moment(row.orderDate).format('DD/MM/YYYY - h:mm:ss A')}{' '}
-                </TableCell>
-                <TableCell align="center">
-                  {formatMoney(row.total_value)}
-                </TableCell>
-                <TableCell align="center">{row.status}</TableCell>
-                {/* <TableCell align="center">{row.paymentMethod}</TableCell> */}
-                <TableCell align="center">{row.payment_status}</TableCell>
-                <TableCell align="center">{row.receiver}</TableCell>
-                <TableCellCustom
+                <TableCellBodyTextCustom
                   align="center"
+                  component="th"
+                  scope="row"
+                >
+                  {row.code}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  {moment(row.orderDate).format('DD/MM/YYYY - h:mm:ss A')}{' '}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  {formatMoney(row.total_value)}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom
+                  align="center"
+                  style={{ textTransform: 'capitalize' }}
+                >
+                  {row.status}
+                </TableCellBodyTextCustom>
+                {/* <TableCellBodyTextCustom align="center">{row.paymentMethod}</TableCellBodyTextCustom> */}
+                <TableCellBodyTextCustom align="center">
+                  {row.payment_status}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  {row.receiver}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom
+                  align="center"
+                  style={{
+                    maxWidth: '150px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
                   onMouseEnter={(e) => handleHoverTableCell(e, row)}
                   onMouseLeave={handleLeaveTableCell}
                 >
                   {row.address}
-                </TableCellCustom>
+                </TableCellBodyTextCustom>
               </TableRowCustom>
             ))}
             {/* {emptyRows > 0 && (
@@ -576,12 +626,19 @@ const OrderManageMent: NextPageWithLayout = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Popper id={id} open={open} anchorEl={anchorEl}>
+      <Popper id={id} open={open} anchorEl={anchorEl} placement="top-start">
         <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
           {tempRow?.address}
         </Box>
       </Popper>
-      <table style={{ width: '100%', backgroundColor: '#F1F3F9' }}>
+      <table
+        style={{
+          width: '100%',
+          backgroundColor: '#F1F3F9',
+          borderRadius: '5px',
+          border: '1px solid #E1E6EF',
+        }}
+      >
         <tbody>
           <tr>
             <TablePagination
@@ -596,9 +653,10 @@ const OrderManageMent: NextPageWithLayout = () => {
               ActionsComponent={(props) => {
                 return (
                   <TablePaginationAction
+                    count={props.count}
                     page={props.page}
                     rowsPerPage={props.rowsPerPage}
-                    onPageChange={props.onPageChange}
+                    // onPageChange={props.onPageChange}
                     nextIsNull={Number(nextPage)}
                   />
                 )

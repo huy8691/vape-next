@@ -12,10 +12,9 @@ import { objToStringParam } from 'src/utils/global.utils'
 interface Props {
   page: number
   rowsPerPage: number
-  onPageChange: Function
-  // nextpage: number | null
+  count: number
+  // onPageChange: Function
   nextIsNull: number
-  // next: number | null
 }
 
 const IconButtonCustom = styled(IconButton)(() => ({
@@ -24,11 +23,26 @@ const IconButtonCustom = styled(IconButton)(() => ({
   borderRadius: '5px',
 }))
 
-const TablePaginationAction = ({ page, onPageChange, nextIsNull }: Props) => {
+const TablePaginationAction = ({
+  page,
+  nextIsNull,
+  count,
+  rowsPerPage,
+}: Props) => {
   let nextPage = page + 1
   const router = useRouter()
-  const handleBackButtonClick = (event: any) => {
-    onPageChange(event, page - 1)
+
+  const handleFirstPageButtonClick = () => {
+    router.replace({
+      search: `${objToStringParam({
+        ...router.query,
+        page: 1,
+      })}`,
+    })
+  }
+
+  const handleBackButtonClick = () => {
+    // onPageChange(event, page - 1)
     router.replace({
       search: `${objToStringParam({
         ...router.query,
@@ -37,8 +51,8 @@ const TablePaginationAction = ({ page, onPageChange, nextIsNull }: Props) => {
     })
   }
 
-  const handleNextButtonClick = (event: any) => {
-    onPageChange(event, page + 1)
+  const handleNextButtonClick = () => {
+    // onPageChange(event, page + 1)
     router.replace({
       search: `${objToStringParam({
         ...router.query,
@@ -47,9 +61,31 @@ const TablePaginationAction = ({ page, onPageChange, nextIsNull }: Props) => {
     })
   }
 
+  const handleLastPageButtonClick = () => {
+    router.replace({
+      search: `${objToStringParam({
+        ...router.query,
+        page: Math.ceil(count / rowsPerPage),
+      })}`,
+    })
+  }
   return (
     <>
-      <Box sx={{ flexShrink: 0, ml: 2.5, p: 2 }}>
+      <Box sx={{ flexShrink: 0, ml: 2.5, p: 1 }}>
+        <IconButtonCustom
+          onClick={handleFirstPageButtonClick}
+          aria-label="first page"
+          style={{ marginRight: '10px' }}
+          disabled={page === 0}
+        >
+          <Image
+            alt="icon previous page"
+            src={iconPreviousPage}
+            objectFit="contain"
+            width="12"
+            height="8"
+          ></Image>
+        </IconButtonCustom>
         <IconButtonCustom
           onClick={handleBackButtonClick}
           aria-label="previous page"
@@ -68,6 +104,20 @@ const TablePaginationAction = ({ page, onPageChange, nextIsNull }: Props) => {
           onClick={handleNextButtonClick}
           aria-label="next page"
           disabled={nextIsNull === 0}
+        >
+          <Image
+            alt="icon next page"
+            src={iconNextPage}
+            objectFit="contain"
+            width="12"
+            height="8"
+          ></Image>
+        </IconButtonCustom>
+        <IconButtonCustom
+          sx={{ marginLeft: '10px' }}
+          onClick={handleLastPageButtonClick}
+          aria-label="next page"
+          disabled={page === Math.max(0, Math.ceil(count / rowsPerPage) - 1)}
         >
           <Image
             alt="icon next page"
