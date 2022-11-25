@@ -181,7 +181,6 @@ const BrowseProducts: NextPageWithLayout = () => {
     newValue: number | number[],
     activeThumb: number
   ) => {
-    console.log('11', event)
     if (!Array.isArray(newValue)) {
       return
     }
@@ -687,6 +686,7 @@ const BrowseProducts: NextPageWithLayout = () => {
 
     // find key search
     if (asPath.indexOf('key=') !== -1) {
+      console.log('asPath', asPath.indexOf('key='))
       let sliceAsPathKeySearch = asPath.slice(
         asPath.indexOf('key=') + 4, //position start
         asPath.indexOf('&', asPath.indexOf('key=')) // position end

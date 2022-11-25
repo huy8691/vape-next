@@ -1,5 +1,6 @@
 import {
   Box,
+  FormControl,
   IconButton,
   InputBase,
   Paper,
@@ -32,7 +33,7 @@ import { formatMoney } from 'src/utils/money.utils'
 import { isEmptyObject, objToStringParam } from 'src/utils/global.utils'
 
 // react-hook-form
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useRouter } from 'next/router'
@@ -246,7 +247,15 @@ const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
 //     'USA...'
 //   ),
 // ]
-
+const StatusFilterType: {
+  [key: string]: number
+} = {
+  WAITING_FOR_APPROVED: 1,
+  APPROVED: 2,
+  DELIVERING: 3,
+  DELIVERED: 4,
+  CANCELLED: 5,
+}
 interface SearchFormInput {
   content: string
 }
@@ -270,7 +279,6 @@ const OrderManageMent: NextPageWithLayout = () => {
   const [anchorEl, setAnchorEl] = useState<any>(null)
   //state use for tab
   const [tabDisabled, setTabDisabled] = useState<boolean>(false)
-  //state use for temporary input
 
   // trigger when hover to table cell
   const handleHoverTableCell = (event: any, value: OrderDataType) => {
@@ -328,8 +336,19 @@ const OrderManageMent: NextPageWithLayout = () => {
     console.log(event)
     setValueTab(newValue)
   }
+  const {
+    // register,
+    setValue,
+    control,
+    getValues,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SearchFormInput>({
+    resolver: yupResolver(schema),
+  })
 
   useEffect(() => {
+    let asPath = router.asPath
     if (!isEmptyObject(router.query)) {
       dispatch(loadingActions.doLoading())
       getOrders(router.query)
@@ -340,6 +359,7 @@ const OrderManageMent: NextPageWithLayout = () => {
             '🚀 ~ file: index.page.tsx ~ line 259 ~ getOrders ~ data',
             data
           )
+
           if (data.data.length === 0) {
             dispatch(
               notificationActions.doNotification({
@@ -347,6 +367,27 @@ const OrderManageMent: NextPageWithLayout = () => {
                 type: 'error',
               })
             )
+          }
+          if (asPath.indexOf('code=') !== -1) {
+            let sliceAsPathCodeSearch = asPath.slice(
+              asPath.indexOf('code=') + 5, //position start
+              asPath.indexOf('&', asPath.indexOf('code=')) // position end
+            )
+            setValue('content', sliceAsPathCodeSearch)
+          }
+          if (asPath.indexOf('status=') !== -1) {
+            let sliceAsPathStatusFilter: string = asPath.slice(
+              asPath.indexOf('status=') + 7,
+              asPath.indexOf('&', asPath.indexOf('status='))
+            )
+            console.log('here', sliceAsPathStatusFilter)
+
+            setValueTab(StatusFilterType[sliceAsPathStatusFilter])
+            // if (sliceAsPathStatusFilter === StatusFilterType[1]) {
+            //   setValueTab(1)
+            // }
+          } else {
+            setValueTab(0)
           }
           setDataOrders(data)
           dispatch(loadingActions.doLoadingSuccess())
@@ -407,15 +448,7 @@ const OrderManageMent: NextPageWithLayout = () => {
   //     ? Math.max(0, (1 + page) * rowsPerPage - dataOrders?.totalItems)
   //     : 0
   // function for react-hook-form
-  const {
-    register,
-    // setValue,
-    getValues,
-    handleSubmit,
-    // formState: { errors },
-  } = useForm<SearchFormInput>({
-    resolver: yupResolver(schema),
-  })
+
   // check if input has white space
   function hasWhiteSpace(s: string) {
     return /^\s+$/g.test(s)
@@ -437,8 +470,8 @@ const OrderManageMent: NextPageWithLayout = () => {
       router.replace({
         search: `${objToStringParam({
           ...router.query,
-          page: 1,
           code: getValues('content'),
+          page: 1,
         })}`,
       })
     }
@@ -514,11 +547,28 @@ const OrderManageMent: NextPageWithLayout = () => {
                 borderRadius: '8px',
               }}
             >
-              <InputBase
+              {/* <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Search by order no..."
                 inputProps={{ 'aria-label': 'Search by order no...' }}
                 {...register('content')}
+              /> */}
+              <Controller
+                control={control}
+                name="content"
+                render={({ field }) => (
+                  <>
+                    <FormControl fullWidth>
+                      <InputBase
+                        sx={{ ml: 1, flex: 1 }}
+                        id="content"
+                        error={!!errors.content}
+                        placeholder="Search by order no..."
+                        {...field}
+                      />
+                    </FormControl>
+                  </>
+                )}
               />
               <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
                 <MagnifyingGlass size={20} />
