@@ -2,8 +2,10 @@ import { IconButton } from '@mui/material'
 import { Box } from '@mui/system'
 import Image from 'next/image'
 import React from 'react'
-import iconNextPage from './arrow-next.svg'
-import iconPreviousPage from './arrow-previous.svg'
+import iconFirstPage from './ArrowLineLeft.svg'
+import iconNextPage from './NextPage.svg'
+import iconPreviousPage from './PreviousPage.svg'
+import iconLastPage from './ArrowLineRight.svg'
 import { styled } from '@mui/system'
 // import { getOrders } from '../apiOrders'
 import { useRouter } from 'next/router'
@@ -80,10 +82,10 @@ const TablePaginationAction = ({
         >
           <Image
             alt="icon previous page"
-            src={iconPreviousPage}
+            src={iconFirstPage}
             objectFit="contain"
-            width="12"
-            height="8"
+            width="20"
+            height="20"
           ></Image>
         </IconButtonCustom>
         <IconButtonCustom
@@ -96,8 +98,8 @@ const TablePaginationAction = ({
             alt="icon previous page"
             src={iconPreviousPage}
             objectFit="contain"
-            width="12"
-            height="8"
+            width="20"
+            height="20"
           ></Image>
         </IconButtonCustom>
         <IconButtonCustom
@@ -109,8 +111,8 @@ const TablePaginationAction = ({
             alt="icon next page"
             src={iconNextPage}
             objectFit="contain"
-            width="12"
-            height="8"
+            width="20"
+            height="20"
           ></Image>
         </IconButtonCustom>
         <IconButtonCustom
@@ -121,10 +123,10 @@ const TablePaginationAction = ({
         >
           <Image
             alt="icon next page"
-            src={iconNextPage}
+            src={iconLastPage}
             objectFit="contain"
-            width="12"
-            height="8"
+            width="20"
+            height="20"
           ></Image>
         </IconButtonCustom>
       </Box>

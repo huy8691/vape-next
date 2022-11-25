@@ -310,27 +310,6 @@ const OrderManageMent: NextPageWithLayout = () => {
         page: 1,
       })}`,
     })
-    // getOrders({ limit: tableSize })
-    //   .then(() => {
-    //     router.replace({
-    //       search: `${objToStringParam({
-    //         ...router.query,
-    //         limit: tableSize,
-    //       })}`,
-    //     })
-    //     dispatch(loadingActions.doLoadingSuccess())
-    //   })
-    //   .catch((error) => {
-    //     const data = error.response?.data
-    //     dispatch(loadingActions.doLoadingFailure())
-    //     dispatch(
-    //       notificationActions.doNotification({
-    //         message: data?.message ? data?.message : 'Error',
-    //         type: 'error',
-    //       })
-    //     )
-    //   })
-    // setPage(0)
   }
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     console.log(event)
@@ -396,6 +375,7 @@ const OrderManageMent: NextPageWithLayout = () => {
         .catch((error: any) => {
           const data = error.response?.data
           console.log(data)
+          setDataOrders(undefined)
           dispatch(loadingActions.doLoadingFailure())
           dispatch(
             notificationActions.doNotification({
@@ -452,6 +432,11 @@ const OrderManageMent: NextPageWithLayout = () => {
   // check if input has white space
   function hasWhiteSpace(s: string) {
     return /^\s+$/g.test(s)
+  }
+
+  function hasSpecialCharacter(input: string) {
+    // eslint-disable-next-line no-useless-escape
+    return /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+$/g.test(input)
   }
 
   const onSubmit = (data: SearchFormInput) => {
@@ -564,6 +549,11 @@ const OrderManageMent: NextPageWithLayout = () => {
                         id="content"
                         error={!!errors.content}
                         placeholder="Search by order no..."
+                        onKeyPress={(event) => {
+                          if (hasSpecialCharacter(event?.key)) {
+                            event.preventDefault()
+                          }
+                        }}
                         {...field}
                       />
                     </FormControl>
