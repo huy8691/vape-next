@@ -16,7 +16,9 @@ const registerSlice = createSlice({
     doRegister(
       state: initialRegisterStateType,
       _action: PayloadAction<RegisterType>
-    ) {},
+    ) {
+      state.data = null
+    },
     doRegisterSuccess(
       state: initialRegisterStateType,
       action: PayloadAction<RegisterResponseType>
@@ -24,7 +26,9 @@ const registerSlice = createSlice({
       const { data }: RegisterResponseType = action.payload
       state.data = data
     },
-    doRegisterFailure(state: initialRegisterStateType) {},
+    doRegisterFailure(state: initialRegisterStateType) {
+      state.data = null
+    },
   },
 })
 

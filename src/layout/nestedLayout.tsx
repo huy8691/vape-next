@@ -122,9 +122,13 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }))
 
+interface AppBarProps extends MuiAppBarProps {
+  open?: boolean
+}
+
 const BoxMain = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
+})<AppBarProps>(({ theme, open }) => ({
   width: open ? `calc(100vw - ${drawerWidth}px)` : `calc(100vw - 65px)`,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -134,17 +138,13 @@ const BoxMain = styled(Box, {
 
 const LogoHeader = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
+})<AppBarProps>(({ theme, open }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: open ? 'space-between' : 'center',
   padding: open ? theme.spacing(1, 2) : theme.spacing(1, 0),
   ...theme.mixins.toolbar,
 }))
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean
-}
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',

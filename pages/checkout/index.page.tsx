@@ -7,7 +7,6 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 // next
 
 // mui
@@ -33,10 +32,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './validations'
 
 // api
-import { useAppDispatch, useAppSelector } from 'src/store/hooks'
+import { useAppSelector } from 'src/store/hooks'
 import { CartType, CartItem } from 'src/store/cart/cartModels'
-import { loadingActions } from 'src/store/loading/loadingSlice'
-import { notificationActions } from 'src/store/notification/notificationSlice'
+// import { loadingActions } from 'src/store/loading/loadingSlice'
+// import { notificationActions } from 'src/store/notification/notificationSlice'
 // api
 
 // layout
@@ -55,6 +54,7 @@ import {
   NoteBlank,
   Notepad,
   WarningCircle,
+  Check,
 } from 'phosphor-react'
 // other
 
@@ -73,15 +73,16 @@ const CardPage = styled(Card)(({ theme }) => ({
 }))
 const CardCustom = styled(Card)(() => ({
   boxShadow: 'none',
+  height: '100%',
 }))
-const ButtonCheckboxCustom = styled(ButtonCustom)(({ theme }) => ({
+const ButtonCheckboxCustom = styled(ButtonCustom)(() => ({
   boxShadow: 'none',
   borderRadius: '4px',
 }))
 const CardHeaderCustom = styled(CardHeader)(() => ({
   paddingBottom: '0px',
 }))
-const CardContentCustom = styled(CardContent)(({ theme }) => ({
+const CardContentCustom = styled(CardContent)(() => ({
   paddingBottom: '16px !important',
 }))
 const TypographyH1 = styled(Typography)(({ theme }) => ({
@@ -99,6 +100,26 @@ const TypographyTotal = styled(Typography)(({ theme }) => ({
   fontWeight: '600',
   color: theme.palette.primary.main,
 }))
+const FormControlLabelCustom = styled(FormControlLabel)(({ theme }) => ({
+  position: 'relative',
+  overflow: 'hidden',
+  '& .MuiTypography-root': {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    color: '#fff',
+  },
+  '&:before': {
+    position: 'absolute',
+    bottom: '-10px',
+    right: '-15px',
+    backgroundColor: theme.palette.primary.main,
+    width: '20px',
+    height: '30px',
+    content: '""',
+    transform: 'rotate(45deg)',
+  },
+}))
 // custom style
 
 const Checkout: NextPageWithLayout = () => {
@@ -113,9 +134,11 @@ const Checkout: NextPageWithLayout = () => {
   } = useForm({
     resolver: yupResolver(schema),
   })
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
 
-  const onSubmit = (values: any) => {}
+  const onSubmit = (values: any) => {
+    console.log('đ', values)
+  }
 
   useEffect(() => {
     // if (cart.data.items.length === 0) return
@@ -314,7 +337,7 @@ const Checkout: NextPageWithLayout = () => {
                     justifyContent="end"
                   >
                     <Grid xs={2}>
-                      <Typography>Unit</Typography>
+                      <Typography>Price</Typography>
                     </Grid>
                     <Grid xs={2}>
                       <Typography>Price</Typography>
@@ -396,16 +419,16 @@ const Checkout: NextPageWithLayout = () => {
                       <Typography>Payment method:</Typography>
                     </Stack>
                     <RadioGroup defaultValue="1" name="payment_method" row>
-                      <FormControlLabel
+                      <FormControlLabelCustom
                         value="1"
                         control={
                           <ButtonCheckboxCustom size="small" variant="outlined">
                             Ship COD
                           </ButtonCheckboxCustom>
                         }
-                        label=""
+                        label={<Check size={10} />}
                       />
-                      <FormControlLabel
+                      <FormControlLabelCustom
                         value="2"
                         control={
                           <ButtonCheckboxCustom size="small" variant="outlined">
@@ -413,9 +436,9 @@ const Checkout: NextPageWithLayout = () => {
                           </ButtonCheckboxCustom>
                         }
                         disabled
-                        label=""
+                        label={<Check size={10} />}
                       />
-                      <FormControlLabel
+                      <FormControlLabelCustom
                         value="3"
                         control={
                           <ButtonCheckboxCustom size="small" variant="outlined">
@@ -423,7 +446,7 @@ const Checkout: NextPageWithLayout = () => {
                           </ButtonCheckboxCustom>
                         }
                         disabled
-                        label=""
+                        label={<Check size={10} />}
                       />
                     </RadioGroup>
                   </Stack>
@@ -449,18 +472,12 @@ const Checkout: NextPageWithLayout = () => {
                         name="note"
                         render={({ field }) => (
                           <>
-                            <InputLabelCustom
-                              htmlFor="note"
-                              error={!!errors.note}
-                            >
-                              Address name
-                            </InputLabelCustom>
                             <FormControl fullWidth>
                               <TextFieldCustom
                                 id="note"
                                 error={!!errors.note}
                                 multiline
-                                rows={2}
+                                rows={3}
                                 {...field}
                               />
                               <FormHelperText error={!!errors.note}>

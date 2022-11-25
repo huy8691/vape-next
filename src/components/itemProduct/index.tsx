@@ -58,7 +58,6 @@ const ItemProduct: React.FC<Props> = (props: Props) => {
       <CardContent style={{ paddingBottom: '16px' }}>
         <TypographyCategory
           variant="body1"
-          component="div"
           className={classes['item-product__category']}
         >
           {props.dataProduct.category?.name}

@@ -44,6 +44,7 @@ import Cookies from 'js-cookie'
 // other
 
 // form
+import { RegisterType } from './registerModels'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema, schemaCheckMail } from './validations'
@@ -116,7 +117,7 @@ const Register: NextPageWithLayout = () => {
   if (token) {
     router.push('/')
   }
-  const signatureRef = useRef()
+  const signatureRef = useRef<any>(null)
   const [stateCheckMail, setStateCheckMail] = React.useState<CheckMail>({
     status: '',
     valueEmail: '',
@@ -168,7 +169,7 @@ const Register: NextPageWithLayout = () => {
   })
   const dispatch = useAppDispatch()
 
-  const onSubmitSignUp = (valueSignUp: any) => {
+  const onSubmitSignUp = (valueSignUp: RegisterType) => {
     console.log('valueSignUp', valueSignUp)
     // setStateStatusSignature(!stateStatusSignature)
     if (stateCheckMail.valueEmail) {
@@ -181,7 +182,7 @@ const Register: NextPageWithLayout = () => {
   }
 
   const onSubmit = useCallback((values: any) => {
-    signatureRef.current.handleSignature(values)
+    signatureRef?.current?.handleSignature(values)
   }, [])
 
   const onSubmitCheckMail = (values: any) => {
@@ -1114,7 +1115,7 @@ const Register: NextPageWithLayout = () => {
                       <FormControl fullWidth>
                         <input id="business_tax_document" {...field} hidden />
                         <ComponentFileUploader
-                          onFileSelectSuccess={(file) => {
+                          onFileSelectSuccess={(file: any) => {
                             setValue('business_tax_document', file)
                             trigger('business_tax_document')
                           }}
@@ -1150,7 +1151,7 @@ const Register: NextPageWithLayout = () => {
                       <FormControl fullWidth>
                         <input id="vapor_tobacco_license" {...field} hidden />
                         <ComponentFileUploader
-                          onFileSelectSuccess={(file) => {
+                          onFileSelectSuccess={(file: any) => {
                             setValue('vapor_tobacco_license', file)
                             trigger('vapor_tobacco_license')
                           }}
@@ -1328,7 +1329,7 @@ const Register: NextPageWithLayout = () => {
               </Grid>
               <Grid xs={12}>
                 <SignatureCanvas
-                  uploadSignatureSuccess={(valueSignUp) => {
+                  uploadSignatureSuccess={(valueSignUp: any) => {
                     onSubmitSignUp(valueSignUp)
                   }}
                   uploadSignatureError={() => {}}

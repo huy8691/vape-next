@@ -14,7 +14,7 @@ import { notificationActions } from 'src/store/notification/notificationSlice'
 // api
 
 type Props = {
-  onFileSelectSuccess: () => void
+  onFileSelectSuccess: (value: any) => void
   onFileSelectError: () => void
   onFileSelectDelete: () => void
   errors: any
@@ -62,10 +62,10 @@ const ComponentFileUploader = ({
   errors,
 }: Props) => {
   const dispatch = useAppDispatch()
-  const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const fileInputRef = React.useRef<any>(null)
   const textFieldRef = React.useRef<HTMLInputElement>(null)
 
-  const [stateFile, setStateFile] = React.useState(null)
+  const [stateFile, setStateFile] = React.useState<{ name: string }>()
 
   const handleFileInput = (e: any) => {
     // handle validations
@@ -160,7 +160,7 @@ const ComponentFileUploader = ({
   }
   const handleDelete = () => {
     fileInputRef.current.value = null
-    setStateFile(null)
+    setStateFile(undefined)
     onFileSelectDelete()
   }
 

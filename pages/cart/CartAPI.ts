@@ -5,7 +5,7 @@ import {
   // DeletedCartItemType,
   InstockResponseType,
   UpdateQuantityType,
-} from './CartModel'
+} from './cartModel'
 
 const getInstockAPI = (
   params: number

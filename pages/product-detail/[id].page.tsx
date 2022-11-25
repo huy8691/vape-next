@@ -33,6 +33,7 @@ import FormControl from '@mui/material/FormControl'
 import Skeleton from '@mui/material/Skeleton'
 import Paper from '@mui/material/Paper'
 import ButtonGroup from '@mui/material/ButtonGroup'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 // layout
 import type { ReactElement } from 'react'
@@ -63,7 +64,7 @@ import { notificationActions } from 'src/store/notification/notificationSlice'
 import { cartActions } from 'src/store/cart/cartSlice'
 
 // custom style
-import { TextFieldCustom, LoadingButtonCustom } from 'src/components'
+import { TextFieldCustom } from 'src/components'
 
 // style
 const TypographyH1 = styled(Typography)(() => ({
@@ -154,6 +155,19 @@ const TextFieldAddToCart = styled(TextFieldCustom)(() => ({
   },
 }))
 
+const LoadingButtonCustom = styled(LoadingButton)({
+  backgroundColor: 'linear-gradient(93.37deg, #1CB35B 0%, #20B598 116.99%)',
+  boxShadow: '0px 3px 44px rgba(71, 255, 123, 0.27)',
+  borderRadius: '12px',
+  textTransform: 'none',
+  '&.MuiButton-contained': {
+    color: '#ffffff',
+  },
+  '&.MuiButton-sizeLarge': {
+    padding: '7px 25px',
+  },
+})
+
 const ProductDetail: NextPageWithLayout = () => {
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -190,6 +204,7 @@ const ProductDetail: NextPageWithLayout = () => {
 
   // tabs
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    console.log('event', event)
     setValueTab(newValue)
   }
   interface TabPanelProps {
