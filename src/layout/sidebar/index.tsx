@@ -218,6 +218,24 @@ const SideBar = ({ open }: Props) => {
                 </ListItemButton>
               </a>
             </Link>
+            <Link href="/order-management">
+              <a>
+                <ListItemButton
+                  sx={{ pl: 3 }}
+                  selected={router.pathname === '/order-management'}
+                >
+                  {open ? (
+                    <>
+                      <ListItemText primary="Order Management" />
+                    </>
+                  ) : (
+                    <ListItemIcon>
+                      <ShoppingCart />
+                    </ListItemIcon>
+                  )}
+                </ListItemButton>
+              </a>
+            </Link>
             <Link href="/">
               <a>
                 <ListItemButton sx={{ pl: 3 }}>
