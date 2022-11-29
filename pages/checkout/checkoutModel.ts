@@ -11,4 +11,21 @@ export interface UpdateQuantityType {
   quantity?: number
 }
 
-export type DeletedArrayCartItem = (number | undefined)[]
+export interface CreateOrderType {
+  shipping_method: number
+  payment_method: number
+  cardItemIds: (number | undefined)[]
+  notes: string | null
+  address_name: string
+  recipient_name: string
+  phone_number: string
+  address: string
+}
+
+export interface CalculateOrderType {
+  sub_total: number
+  delivery_fee: number
+  total: number
+}
+
+export type VerifyArrayCartItem = (number | undefined)[]

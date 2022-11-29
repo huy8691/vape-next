@@ -1,7 +1,8 @@
 import { AxiosResponse } from 'axios'
+import { CreateOrderType } from 'pages/checkout/checkoutModel'
 import { callAPIWithToken } from 'src/services/jwt-axios'
 import {
-  DeletedArrayCartItem,
+  ArrayCartItem,
   // DeletedCartItemType,
   InstockResponseType,
   UpdateQuantityType,
@@ -26,9 +27,7 @@ const updateQuantityProduct = (
     data: value,
   })
 }
-const deleteCartItem = (
-  value: DeletedArrayCartItem
-): Promise<AxiosResponse> => {
+const deleteCartItem = (value: ArrayCartItem): Promise<AxiosResponse> => {
   return callAPIWithToken({
     url: `/api/cart/remove-items/`,
     method: 'delete',
@@ -37,5 +36,14 @@ const deleteCartItem = (
     },
   })
 }
+const verifyCartItem = (value: ArrayCartItem): Promise<AxiosResponse> => {
+  return callAPIWithToken({
+    url: `api/cart/verify-product/`,
+    method: 'post',
+    data: {
+      cart_items: value,
+    },
+  })
+}
 
-export { getInstockAPI, updateQuantityProduct, deleteCartItem }
+export { getInstockAPI, updateQuantityProduct, deleteCartItem, verifyCartItem }
