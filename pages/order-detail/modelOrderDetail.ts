@@ -27,6 +27,7 @@ export interface OrderDataType {
   thumbnail: string
   quantity: number
   unit_price: number
+  unit_type: string
   total: number
 }
 

@@ -280,13 +280,13 @@ const OrderDetail: NextPageWithLayout = () => {
                           </Stack>
                         </TableCell>
                         <TableCell align="right">
-                          {items.quantity} / unit
+                          {items.quantity} {items.unit_type}
                         </TableCell>
                         <TableCell align="right">
                           <TypographyInformationCustom
                             sx={{ fontSize: '14px' }}
                           >
-                            {formatMoney(items.unit_price)} / unit
+                            {formatMoney(items.unit_price)} / {items.unit_type}
                           </TypographyInformationCustom>
                         </TableCell>
                         <TableCell align="right">
