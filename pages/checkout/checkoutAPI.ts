@@ -1,41 +1,53 @@
 import { AxiosResponse } from 'axios'
 import { callAPIWithToken } from 'src/services/jwt-axios'
-import {
-  DeletedArrayCartItem,
-  // DeletedCartItemType,
-  InstockResponseType,
-  UpdateQuantityType,
-} from './checkoutModel'
+import { CreateOrderType, VerifyArrayCartItem } from './checkoutModel'
 
-const getInstockAPI = (
-  params: number
-): Promise<AxiosResponse<InstockResponseType>> => {
+const verifyCartItem = (value: VerifyArrayCartItem): Promise<AxiosResponse> => {
   return callAPIWithToken({
-    url: `/api/customer/stock-item/${params}`,
-    method: 'get',
-  })
-}
-
-const updateQuantityProduct = (
-  value: UpdateQuantityType,
-  params: number
-): Promise<AxiosResponse> => {
-  return callAPIWithToken({
-    url: `/api/cart/update-quantity/${params}/`,
-    method: 'put',
-    data: value,
-  })
-}
-const deleteCartItem = (
-  value: DeletedArrayCartItem
-): Promise<AxiosResponse> => {
-  return callAPIWithToken({
-    url: `/api/cart/remove-items/`,
-    method: 'delete',
+    url: `api/cart/verify-product/`,
+    method: 'post',
     data: {
       cart_items: value,
     },
   })
 }
 
-export { getInstockAPI, updateQuantityProduct, deleteCartItem }
+const createOrderItem = (value: CreateOrderType): Promise<AxiosResponse> => {
+  return callAPIWithToken({
+    url: `/api/customer/order/`,
+    method: 'post',
+    data: value,
+  })
+}
+
+const getItemForCheckout = (
+  value: VerifyArrayCartItem
+): Promise<AxiosResponse> => {
+  return callAPIWithToken({
+    url: `/api/customer/items-checkout/`,
+    method: 'post',
+    data: {
+      cardItemIds: value,
+    },
+  })
+}
+
+const calculateOrderTotal = (
+  value: VerifyArrayCartItem
+): Promise<AxiosResponse> => {
+  return callAPIWithToken({
+    url: `/api/customer/total-bill-order/`,
+    method: 'post',
+    data: {
+      cardItemIds: value,
+      shipping_method: 1,
+    },
+  })
+}
+
+export {
+  verifyCartItem,
+  createOrderItem,
+  getItemForCheckout,
+  calculateOrderTotal,
+}

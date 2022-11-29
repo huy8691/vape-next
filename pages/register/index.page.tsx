@@ -161,10 +161,9 @@ const Register: NextPageWithLayout = () => {
     handleSubmit: handleSubmitCheckMail,
     control: controlCheckMail,
     formState: { errors: errorsCheckMail },
-    // reset: resetCheckMail,
   } = useForm({
     resolver: yupResolver(schemaCheckMail),
-    // reValidateMode: 'onChange',
+
     mode: 'all',
   })
   const dispatch = useAppDispatch()
@@ -519,28 +518,31 @@ const Register: NextPageWithLayout = () => {
                   control={control}
                   defaultValue=""
                   name="phone_number"
-                  render={({ field }) => (
-                    <Box>
-                      <InputLabelCustom
-                        htmlFor="phone_number"
-                        error={!!errors.phone_number}
-                      >
-                        Phone number
-                      </InputLabelCustom>
-                      <FormControl fullWidth>
-                        <TextFieldCustom
-                          id="phone_number"
-                          placeholder="Enter phone number"
+                  render={({ field }) => {
+                    console.log(field)
+                    return (
+                      <Box>
+                        <InputLabelCustom
+                          htmlFor="phone_number"
                           error={!!errors.phone_number}
-                          {...field}
-                        />
-                        <FormHelperText error={!!errors.phone_number}>
-                          {errors.phone_number &&
-                            `${errors.phone_number.message}`}
-                        </FormHelperText>
-                      </FormControl>
-                    </Box>
-                  )}
+                        >
+                          Phone number
+                        </InputLabelCustom>
+                        <FormControl fullWidth>
+                          <TextFieldCustom
+                            id="phone_number"
+                            placeholder="Enter phone number"
+                            error={!!errors.phone_number}
+                            {...field}
+                          />
+                          <FormHelperText error={!!errors.phone_number}>
+                            {errors.phone_number &&
+                              `${errors.phone_number.message}`}
+                          </FormHelperText>
+                        </FormControl>
+                      </Box>
+                    )
+                  }}
                 />
               </Grid>
               <Grid xs={6}>

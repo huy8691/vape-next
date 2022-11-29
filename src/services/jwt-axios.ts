@@ -2,10 +2,10 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 let urlApi = 'https://2169-113-161-85-80.ap.ngrok.io'
 
-const env = process.env.ENV
-if (env === 'prod') {
-  urlApi = 'https://api-dev.vuarausach.vn/2'
-}
+// const env = process.env.ENV
+// if (env === 'prod') {
+//   urlApi = 'http://cms.theweedsupplies.coms'
+// }
 
 const token = Cookies.get('token')
 
