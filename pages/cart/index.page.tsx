@@ -161,7 +161,9 @@ const schema = yup
     quantity: yup
       .number()
       .integer('Input must be an integer')
-      .required('This field is required '),
+      .required('This field is required ')
+      .min(1)
+      .max(1000000),
   })
   .required()
 
@@ -204,11 +206,6 @@ const Cart: NextPageWithLayout = () => {
   const handleCloseChildModal = () => {
     setOpenChildModal(false)
   }
-  // assign list product in cart array then set it to state (list)
-  // function checkIsChecked(isCheck:boolean){
-  //   return isCheck === true
-  // }
-  // variables use for checkout
 
   useEffect(() => {
     // if (cart.data.items.length === 0) return
@@ -221,6 +218,7 @@ const Cart: NextPageWithLayout = () => {
           isCheck: isCheckedListItem[item.cartItemId],
         }
       })
+      console.log('second')
       // if (newArr?.every((item) => item.isCheck == true)) {
       //   setIsCheckAll(true)
       // }
@@ -234,6 +232,7 @@ const Cart: NextPageWithLayout = () => {
           isCheck: false,
         }
       })
+      console.log('first')
       // setIsCheckAll(true)
       setStateCartCheck(newArr)
       calculateTotal(newArr)
@@ -399,6 +398,7 @@ const Cart: NextPageWithLayout = () => {
     formState: { errors },
   } = useForm<QuantityFormInput>({
     resolver: yupResolver(schema),
+    mode: 'all',
   })
   // event submit
   const onSubmit = (data: QuantityFormInput) => {
@@ -497,11 +497,7 @@ const Cart: NextPageWithLayout = () => {
           dispatch(loadingActions.doLoadingSuccess())
           localStorage.setItem('listCartItemId', JSON.stringify(listCartId))
           console.log('checked arr', listCartId)
-          dispatch(
-            notificationActions.doNotification({
-              message: 'Success',
-            })
-          )
+
           router.push('/checkout')
         })
         .catch((error) => {
@@ -512,14 +508,7 @@ const Cart: NextPageWithLayout = () => {
             console.log(item.productId)
           })
           setTempInvalid(invalidListItem)
-
           dispatch(loadingActions.doLoadingFailure())
-          dispatch(
-            notificationActions.doNotification({
-              message: 'Error',
-              type: 'error',
-            })
-          )
         })
     }
   }
@@ -1008,7 +997,7 @@ const Cart: NextPageWithLayout = () => {
                       }
                     }}
                     onKeyDown={(event) =>
-                      ['e', 'E', '+', '-'].includes(event.key) &&
+                      ['e', 'E', '+', '-', ',', '.'].includes(event.key) &&
                       event.preventDefault()
                     }
                     inputProps={{ min: 0, max: 10000000 }}

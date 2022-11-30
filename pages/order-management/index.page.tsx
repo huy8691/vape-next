@@ -1,10 +1,12 @@
 import {
   Box,
   FormControl,
+  FormHelperText,
   IconButton,
   InputBase,
+  Link,
   Paper,
-  Popper,
+  Stack,
   Tab,
   Table,
   TableBody,
@@ -14,6 +16,7 @@ import {
   TablePagination,
   TableRow,
   Tabs,
+  Tooltip,
   Typography,
 } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
@@ -22,6 +25,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
 import { styled } from '@mui/system'
 import { MagnifyingGlass } from 'phosphor-react'
+import classes from './styles.module.scss'
 // import { Controller } from 'react-hook-form'
 
 // not need this time
@@ -43,9 +47,15 @@ import { getOrders } from './apiOrders'
 import { notificationActions } from 'src/store/notification/notificationSlice'
 import { OrderDataType, OrderListDataResponseType } from './modelOrders'
 import moment from 'moment'
+import Image from 'next/image'
+import { ButtonCustom } from 'src/components'
 
 const schema = yup.object({
-  content: yup.string(),
+  content: yup.string().matches(
+    // /^[aA-zZ\s]+$/,
+    /^[\w-_.]*$/,
+    'Special character are not allowed for this field '
+  ),
 })
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
@@ -99,154 +109,7 @@ const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
   fontWeight: 500,
   color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
 }))
-// form search
-// function createData(
-//   id: number,
-//   orderNo: String,
-//   orderDate: String,
-//   totalBilling: number,
-//   orderStatus: String,
-//   paymentMethod: String,
-//   paymentStatus: String,
-//   receiver: String,
-//   deliverAddress: String
-// ) {
-//   return {
-//     id,
-//     orderNo,
-//     orderDate,
-//     totalBilling,
-//     orderStatus,
-//     paymentMethod,
-//     paymentStatus,
-//     receiver,
-//     deliverAddress,
-//   }
-// }
 
-// const rows = [
-//   createData(
-//     1,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     2,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     3,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     4,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     5,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     6,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     7,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     8,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     9,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     10,
-//     '#8237ABC',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-//   createData(
-//     11,
-//     '#8237ABCcccc',
-//     '23/10/2022 - 02:00 PM',
-//     2500,
-//     'Waiting Approval',
-//     'Cash On Delivery',
-//     'Waiting For Payment',
-//     'Richard Rogers',
-//     'USA...'
-//   ),
-// ]
 const StatusFilterType: {
   [key: string]: number
 } = {
@@ -263,6 +126,7 @@ interface SearchFormInput {
 const OrderManageMent: NextPageWithLayout = () => {
   // state use for table
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  // state use for tab
   const [valueTab, setValueTab] = useState(0)
   // state use for list order
   const [dataOrders, setDataOrders] = useState<OrderListDataResponseType>()
@@ -273,27 +137,8 @@ const OrderManageMent: NextPageWithLayout = () => {
   const [nextPage, setNextPage] = useState<number | null>()
   // const [page, setPage] = useState(0)
 
-  // temtporary row
-  const [tempRow, setTempRow] = useState<OrderDataType>()
-  //state use for popper
-  const [anchorEl, setAnchorEl] = useState<any>(null)
   //state use for tab
   const [tabDisabled, setTabDisabled] = useState<boolean>(false)
-
-  // trigger when hover to table cell
-  const handleHoverTableCell = (event: any, value: OrderDataType) => {
-    setTempRow(value)
-    setAnchorEl(value ? event.currentTarget : undefined)
-    // setAnchorEl(anchorEl ? null : event.currentTarget)
-  }
-  // trigger when mouse leave table cell
-  const handleLeaveTableCell = () => {
-    setTempRow(undefined)
-    setAnchorEl(undefined)
-  }
-
-  const open = Boolean(anchorEl)
-  const id = open ? 'simple-popper' : undefined
   // function for table pagination
   const handleChangePage = (event: any) => {
     console.log(event)
@@ -338,15 +183,6 @@ const OrderManageMent: NextPageWithLayout = () => {
             '🚀 ~ file: index.page.tsx ~ line 259 ~ getOrders ~ data',
             data
           )
-
-          if (data.data.length === 0) {
-            dispatch(
-              notificationActions.doNotification({
-                message: 'There are no orders at this time',
-                type: 'error',
-              })
-            )
-          }
           if (asPath.indexOf('code=') !== -1) {
             let sliceAsPathCodeSearch = asPath.slice(
               asPath.indexOf('code=') + 5, //position start
@@ -391,25 +227,27 @@ const OrderManageMent: NextPageWithLayout = () => {
         .then((res) => {
           const data = res.data
           setNextPage(data.nextPage)
-          if (data.data.length === 0) {
-            dispatch(
-              notificationActions.doNotification({
-                message: 'There are no orders at this time',
-                type: 'error',
-              })
-            )
-          }
+          // if (data.data.length === 0) {
+          //   dispatch(
+          //     notificationActions.doNotification({
+          //       message: 'There are no orders at this time',
+          //       type: 'error',
+          //     })
+          //   )
+          // }
+          setValue('content', '')
           setDataOrders(data)
           dispatch(loadingActions.doLoadingSuccess())
           setTabDisabled(false)
+          setValueTab(0)
+          setRowsPerPage(10)
         })
-        .catch((error: any) => {
-          const data = error.response?.data
-          console.log(
-            '🚀 ~ file: index.page.tsx ~ line 386 ~ useEffect ~ data',
-            data
-          )
-
+        .catch(() => {
+          // const data = error.response?.data
+          // console.log(
+          //   '🚀 ~ file: index.page.tsx ~ line 386 ~ useEffect ~ data',
+          //   data
+          // )
           dispatch(loadingActions.doLoadingFailure())
           dispatch(
             notificationActions.doNotification({
@@ -421,14 +259,6 @@ const OrderManageMent: NextPageWithLayout = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, router.query])
-
-  //   Avoid a layout jump when reaching the last page with empty rows.
-  // const emptyRows =
-  //   page > 0
-  //     ? Math.max(0, (1 + page) * rowsPerPage - dataOrders?.totalItems)
-  //     : 0
-  // function for react-hook-form
-
   // check if input has white space
   function hasWhiteSpace(s: string) {
     return /^\s+$/g.test(s)
@@ -436,7 +266,9 @@ const OrderManageMent: NextPageWithLayout = () => {
 
   function hasSpecialCharacter(input: string) {
     // eslint-disable-next-line no-useless-escape
-    return /^[a-zA-Z0-9!@#\$%\^\&*\)\(+=._-]+$/g.test(input)
+    return /[\!\@\#\$\%\^\&\*\)\(\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\/\\?\,]+$/g.test(
+      input
+    )
   }
 
   const onSubmit = (data: SearchFormInput) => {
@@ -451,6 +283,14 @@ const OrderManageMent: NextPageWithLayout = () => {
         })
       )
       setDataOrders(undefined)
+    }
+    if (hasSpecialCharacter(getValues('content'))) {
+      dispatch(
+        notificationActions.doNotification({
+          message: 'Error',
+          type: 'error',
+        })
+      )
     } else {
       router.replace({
         search: `${objToStringParam({
@@ -518,26 +358,10 @@ const OrderManageMent: NextPageWithLayout = () => {
           disabled={tabDisabled}
         />
       </StyledTabs>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={2} style={{ marginBottom: '20px' }}>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ marginBottom: '20px' }}>
+        <Grid container spacing={2}>
           <Grid xs={8} display="flex" alignItems="center">
-            <Paper
-              elevation={0}
-              sx={{
-                p: '5px 20px',
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-                border: '1px solid #E1E6EF',
-                borderRadius: '8px',
-              }}
-            >
-              {/* <InputBase
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="Search by order no..."
-                inputProps={{ 'aria-label': 'Search by order no...' }}
-                {...register('content')}
-              /> */}
+            <div className={classes[`form-search`]}>
               <Controller
                 control={control}
                 name="content"
@@ -545,12 +369,14 @@ const OrderManageMent: NextPageWithLayout = () => {
                   <>
                     <FormControl fullWidth>
                       <InputBase
-                        sx={{ ml: 1, flex: 1 }}
+                        sx={{
+                          padding: '10px',
+                        }}
                         id="content"
                         error={!!errors.content}
                         placeholder="Search by order no..."
                         onKeyPress={(event) => {
-                          if (hasSpecialCharacter(event?.key)) {
+                          if (hasSpecialCharacter(event.key)) {
                             event.preventDefault()
                           }
                         }}
@@ -560,10 +386,16 @@ const OrderManageMent: NextPageWithLayout = () => {
                   </>
                 )}
               />
-              <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+
+              <IconButton
+                type="submit"
+                sx={{ p: '10px' }}
+                aria-label="search"
+                className={classes[`form-search__button`]}
+              >
                 <MagnifyingGlass size={20} />
               </IconButton>
-            </Paper>
+            </div>
           </Grid>
           <Grid xs={4}>
             {/* <ButtonCustom
@@ -575,8 +407,39 @@ const OrderManageMent: NextPageWithLayout = () => {
             </ButtonCustom> */}
           </Grid>
         </Grid>
+        <FormHelperText error>{errors.content?.message}</FormHelperText>
       </form>
-
+      {dataOrders?.data.length === 0 && (
+        <>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid>
+              <Stack
+                p={5}
+                spacing={2}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Image
+                  src="/images/not-found.svg"
+                  alt="Logo"
+                  width="200"
+                  height="200"
+                />
+                <Typography variant="h6" sx={{ marginTop: '0' }}>
+                  You don’t have any order
+                </Typography>
+                <Link href="/browse-products">
+                  <ButtonCustom variant="contained" style={{ padding: '15px' }}>
+                    <Typography style={{ fontWeight: '600' }}>
+                      Back to home
+                    </Typography>
+                  </ButtonCustom>
+                </Link>
+              </Stack>
+            </Grid>
+          </Grid>
+        </>
+      )}
       <TableContainer
         component={Paper}
         elevation={0}
@@ -634,43 +497,56 @@ const OrderManageMent: NextPageWithLayout = () => {
                   align="center"
                   style={{ textTransform: 'capitalize' }}
                 >
-                  {row.status}
+                  {row.status.toLowerCase()}
                 </TableCellBodyTextCustom>
                 {/* <TableCellBodyTextCustom align="center">{row.paymentMethod}</TableCellBodyTextCustom> */}
-                <TableCellBodyTextCustom align="center">
-                  {row.payment_status}
+                <TableCellBodyTextCustom
+                  align="center"
+                  style={{ textTransform: 'capitalize' }}
+                >
+                  {row.payment_status.toLowerCase()}
                 </TableCellBodyTextCustom>
                 <TableCellBodyTextCustom align="center">
                   {row.receiver}
                 </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom
-                  align="center"
-                  style={{
-                    maxWidth: '150px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                  onMouseEnter={(e) => handleHoverTableCell(e, row)}
-                  onMouseLeave={handleLeaveTableCell}
-                >
-                  {row.address}
-                </TableCellBodyTextCustom>
+                {row.address.length > 15 ? (
+                  <Tooltip
+                    title={row.address}
+                    placement="top"
+                    arrow
+                    sx={{ fontSize: '14px' }}
+                  >
+                    <TableCellBodyTextCustom
+                      align="center"
+                      style={{
+                        maxWidth: '150px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {row.address}
+                    </TableCellBodyTextCustom>
+                  </Tooltip>
+                ) : (
+                  <TableCellBodyTextCustom
+                    align="center"
+                    style={{
+                      maxWidth: '150px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {row.address}
+                  </TableCellBodyTextCustom>
+                )}
               </TableRowCustom>
             ))}
-            {/* {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </TableRow>
-            )} */}
           </TableBody>
         </Table>
       </TableContainer>
-      <Popper id={id} open={open} anchorEl={anchorEl} placement="top-start">
-        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-          {tempRow?.address}
-        </Box>
-      </Popper>
+
       <table
         style={{
           width: '100%',
@@ -682,6 +558,7 @@ const OrderManageMent: NextPageWithLayout = () => {
         <tbody>
           <tr>
             <TablePagination
+              sx={{ borderBottom: '0' }}
               count={dataOrders ? dataOrders?.totalItems : 0}
               rowsPerPageOptions={[5, 10, 15, 20]}
               rowsPerPage={rowsPerPage}

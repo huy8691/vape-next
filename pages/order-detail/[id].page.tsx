@@ -49,6 +49,7 @@ const TypographyInformationCustom = styled(Typography)(({ theme }) => ({
   fontSize: '1.6rem',
   fontWeight: '700',
   color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+  textTransform: 'capitalize',
 }))
 const TypographyTableHeadCustom = styled(Typography)(() => ({
   fontSize: '1.4rem',
@@ -102,7 +103,7 @@ const OrderDetail: NextPageWithLayout = () => {
 
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container spacing={5}>
         <Grid xs={8}>
           <Stack spacing={2}>
             <Stack
@@ -138,14 +139,14 @@ const OrderDetail: NextPageWithLayout = () => {
                     sx={{
                       backgroundColor: '#FEF1F2',
                       borderRadius: '9999px',
-                      padding: '10px',
+                      padding: '5px',
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
                       marginRight: '10px',
                     }}
                   >
-                    <ClockClockwise size={15} color="#B25E09" />
+                    <ClockClockwise size={20} color="#B25E09" />
                   </Box>
                   <TypographyH3 sx={{ fontSize: '1.4rem' }}>
                     {stateOrderDetail?.status}
@@ -180,20 +181,25 @@ const OrderDetail: NextPageWithLayout = () => {
                   background: '#F8F9FC',
                   padding: '15px',
                   borderRadius: '5px',
+                  marginTop: '5px !important',
                 }}
               >
                 <Stack spacing={2}>
                   <Stack direction="row" justifyContent="space-between">
                     <TypographyCustom>Order No</TypographyCustom>
-                    <TypographyInformationCustom sx={{ fontWeight: '700' }}>
+                    <TypographyInformationCustom>
                       {stateOrderDetail?.code}
                     </TypographyInformationCustom>
                   </Stack>
                   <Stack direction="row" justifyContent="space-between">
                     <TypographyCustom>Order Status:</TypographyCustom>
-                    <TypographyInformationCustom sx={{ fontWeight: '700' }}>
-                      {stateOrderDetail?.status}
-                    </TypographyInformationCustom>
+                    <Box sx={{ textTransform: 'lowercase' }}>
+                      <TypographyInformationCustom
+                        sx={{ textTransform: 'capitalize' }}
+                      >
+                        {stateOrderDetail?.status.toLowerCase()}
+                      </TypographyInformationCustom>
+                    </Box>
                   </Stack>
                   <Stack direction="row" justifyContent="space-between">
                     <TypographyCustom>Order Date</TypographyCustom>
@@ -214,7 +220,10 @@ const OrderDetail: NextPageWithLayout = () => {
               <TableContainer
                 component={Paper}
                 elevation={0}
-                sx={{ border: '1px solid #E1E6EF' }}
+                sx={{
+                  border: '1px solid #E1E6EF',
+                  marginTop: '5px !important',
+                }}
               >
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
@@ -226,21 +235,21 @@ const OrderDetail: NextPageWithLayout = () => {
                           Product
                         </TypographyTableHeadCustom>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">
                         <TypographyTableHeadCustom
                           sx={{ fontWeight: '400', fontSize: '14px' }}
                         >
                           Quantity
                         </TypographyTableHeadCustom>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">
                         <TypographyTableHeadCustom
                           sx={{ fontWeight: '400', fontSize: '14px' }}
                         >
                           Price
                         </TypographyTableHeadCustom>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">
                         <TypographyTableHeadCustom
                           sx={{ fontWeight: '400', fontSize: '14px' }}
                         >
@@ -255,7 +264,12 @@ const OrderDetail: NextPageWithLayout = () => {
                         key={items.id}
                         sx={{
                           '&:last-child td, &:last-child th': { border: 0 },
+                          cursor: 'pointer',
                         }}
+                        hover
+                        onClick={() =>
+                          router.push(`/product-detail/${items.id}`)
+                        }
                       >
                         <TableCell component="th" scope="row">
                           <Stack direction="row" alignItems="center">
@@ -279,17 +293,28 @@ const OrderDetail: NextPageWithLayout = () => {
                             </Stack>
                           </Stack>
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell
+                          align="center"
+                          sx={{ textTransform: 'lowercase' }}
+                        >
                           {items.quantity} {items.unit_type}
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell align="center">
                           <TypographyInformationCustom
-                            sx={{ fontSize: '14px' }}
+                            sx={{
+                              fontSize: '14px',
+                              textTransform: 'lowercase',
+                            }}
                           >
-                            {formatMoney(items.unit_price)} / {items.unit_type}
+                            {formatMoney(items.unit_price)}
+                            <span
+                              style={{ fontWeight: '400', fontSize: '12px' }}
+                            >
+                              {''} / {items.unit_type}
+                            </span>
                           </TypographyInformationCustom>
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell align="center">
                           <TypographyTotalCustom
                             sx={{ fontWeight: '700', fontSize: '16px' }}
                           >
@@ -312,6 +337,7 @@ const OrderDetail: NextPageWithLayout = () => {
                   background: '#F8F9FC',
                   padding: '15px',
                   borderRadius: '5px',
+                  marginTop: '5px !important',
                 }}
               >
                 <Stack spacing={2}>
@@ -330,15 +356,14 @@ const OrderDetail: NextPageWithLayout = () => {
               <Skeleton variant="rounded" width="100%" height={100} />
             )}
 
-            <TypographyH3 style={{ marginBottom: '10px' }}>
-              Shipping Method
-            </TypographyH3>
+            <TypographyH3>Shipping Method</TypographyH3>
             {stateOrderDetail ? (
               <Box
                 sx={{
                   background: '#F8F9FC',
                   padding: '15px',
                   borderRadius: '5px',
+                  marginTop: '5px !important',
                 }}
               >
                 <TypographyCustom>
@@ -357,6 +382,7 @@ const OrderDetail: NextPageWithLayout = () => {
                   background: '#F8F9FC',
                   padding: '15px',
                   borderRadius: '5px',
+                  marginTop: '5px !important',
                 }}
               >
                 {stateOrderDetail.notes === null ||
@@ -373,7 +399,9 @@ const OrderDetail: NextPageWithLayout = () => {
         </Grid>
         <Grid xs={4}>
           <StickyWrapper>
-            <TypographyH3>Payment Details</TypographyH3>
+            <TypographyH3 sx={{ marginBottom: '15px' }}>
+              Payment Details
+            </TypographyH3>
             {stateOrderDetail ? (
               <Box
                 sx={{
@@ -399,10 +427,15 @@ const OrderDetail: NextPageWithLayout = () => {
                     <TypographyCustom sx={{ fontSize: '14px' }}>
                       Total shipping
                     </TypographyCustom>
-                    <TypographyCustom sx={{ fontSize: '14px' }}>
-                      {/* {formatMoney(stateOrderDetail?.delivery_fee)} */}
-                      Free
-                    </TypographyCustom>
+                    {stateOrderDetail?.delivery_fee === 0 ? (
+                      <TypographyCustom sx={{ fontSize: '14px' }}>
+                        Free
+                      </TypographyCustom>
+                    ) : (
+                      <TypographyCustom sx={{ fontSize: '14px' }}>
+                        {formatMoney(stateOrderDetail?.delivery_fee)}
+                      </TypographyCustom>
+                    )}
                   </Stack>
 
                   <Stack direction="row" justifyContent="space-between">

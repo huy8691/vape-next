@@ -226,7 +226,7 @@ const SideBar = ({ open }: Props) => {
                 >
                   {open ? (
                     <>
-                      <ListItemText primary="Order Management" />
+                      <ListItemText primary="Order" />
                     </>
                   ) : (
                     <ListItemIcon>

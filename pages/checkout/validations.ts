@@ -17,7 +17,7 @@ const schema = Yup.object().shape(
       .notRequired()
       .when('note', {
         is: (value: string) => value?.length,
-        then: (rule) => rule.min(3),
+        then: (rule) => rule.min(3).max(255),
       }),
   },
   [

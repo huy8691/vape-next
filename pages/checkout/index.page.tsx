@@ -278,11 +278,6 @@ const Checkout: NextPageWithLayout = () => {
         setStateInventoryList(data.items)
         console.log('data')
         dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: 'Success',
-          })
-        )
       })
       .catch((error) => {
         const { data } = error.response.data
@@ -291,12 +286,6 @@ const Checkout: NextPageWithLayout = () => {
           data
         )
         dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: 'Error',
-            type: 'error',
-          })
-        )
       })
     calculateOrderTotal(cartItem)
       .then((res) => {
@@ -340,7 +329,11 @@ const Checkout: NextPageWithLayout = () => {
       <TypographyH1 variant="h1" mb={3}>
         Shopping cart
       </TypographyH1>
-      <Breadcrumbs separator=">" aria-label="breadcrumb">
+      <Breadcrumbs
+        separator=">"
+        aria-label="breadcrumb"
+        sx={{ marginBottom: '15px' }}
+      >
         <Link href="/">
           <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>Market Place</a>
         </Link>
@@ -348,7 +341,7 @@ const Checkout: NextPageWithLayout = () => {
           <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>Shopping Cart</a>
         </Link>
         <Link href="/checkout">
-          <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>Checkout</a>
+          <a style={{ fontSize: '1.4rem' }}>Checkout</a>
         </Link>
       </Breadcrumbs>
       <CardPage>
@@ -539,10 +532,12 @@ const Checkout: NextPageWithLayout = () => {
                     justifyContent="end"
                   >
                     <Grid xs={2}>
-                      <Typography>Unit</Typography>
+                      <Typography sx={{ textAlign: 'center' }}>Unit</Typography>
                     </Grid>
                     <Grid xs={2}>
-                      <Typography>Price</Typography>
+                      <Typography sx={{ textAlign: 'center' }}>
+                        Price
+                      </Typography>
                     </Grid>
                   </Grid>
                   {stateInventoryList?.map((item: CartItem) => {
@@ -630,12 +625,14 @@ const Checkout: NextPageWithLayout = () => {
                             </Stack>
                           </Grid>
                           <Grid xs={2}>
-                            <Typography sx={{ opacity: '0.35' }}>
+                            <Typography
+                              sx={{ opacity: '0.35', textAlign: 'center' }}
+                            >
                               {item?.quantity} unit
                             </Typography>
                           </Grid>
 
-                          <Grid xs={2}>
+                          <Grid xs={2} sx={{ textAlign: 'center' }}>
                             <TypographyPrice sx={{ opacity: '0.35' }}>
                               {formatMoney(
                                 Number(item?.quantity) * Number(item?.unitPrice)
@@ -691,11 +688,11 @@ const Checkout: NextPageWithLayout = () => {
                               </Link>
                             </Stack>
                           </Grid>
-                          <Grid xs={2}>
+                          <Grid xs={2} sx={{ textAlign: 'center' }}>
                             <Typography>{item?.quantity} unit</Typography>
                           </Grid>
 
-                          <Grid xs={2}>
+                          <Grid xs={2} sx={{ textAlign: 'center' }}>
                             <TypographyPrice>
                               {formatMoney(
                                 Number(item?.quantity) * Number(item?.unitPrice)
