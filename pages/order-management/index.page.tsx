@@ -1,5 +1,4 @@
 import {
-  Box,
   FormControl,
   FormHelperText,
   IconButton,
@@ -45,7 +44,7 @@ import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
 import { getOrders } from './apiOrders'
 import { notificationActions } from 'src/store/notification/notificationSlice'
-import { OrderDataType, OrderListDataResponseType } from './modelOrders'
+import { OrderListDataResponseType } from './modelOrders'
 import moment from 'moment'
 import Image from 'next/image'
 import { ButtonCustom } from 'src/components'

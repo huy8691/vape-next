@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { CreateOrderType } from 'pages/checkout/checkoutModel'
+
 import { callAPIWithToken } from 'src/services/jwt-axios'
 import {
   ArrayCartItem,
