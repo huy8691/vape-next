@@ -1,10 +1,10 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-let urlApi = 'https://d0cf-27-3-232-90.ap.ngrok.io'
+let urlApi = 'http://cms.theweedsupplies.com'
 
 const env = process.env.ENV
 if (env === 'prod') {
-  urlApi = 'http://cms.theweedsupplies.coms'
+  urlApi = 'http://cms.theweedsupplies.com'
 }
 
 const token = Cookies.get('token')
@@ -61,6 +61,30 @@ callAPIWithToken.interceptors.response.use(
   }
 )
 
+const callAPIUpLoad = axios.create({
+  baseURL: urlApi, // YOUR_API_URL HERE
+  timeout: 10000,
+  timeoutErrorMessage: 'Timeout error',
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'ngrok-skip-browser-warning': '69420',
+    // 'Content-Type': 'image/png',
+  },
+})
+
+callAPIUpLoad.interceptors.response.use(
+  (res: any) => {
+    return res
+  },
+  (err: any) => {
+    if (err.response && err.response.status === 403) {
+      // window.location.href = '/403'
+    }
+    return Promise.reject(err)
+  }
+)
+
 export const setAuthToken = (_token: string) => {
   if (_token) {
     Cookies.set('token', _token)
@@ -69,4 +93,4 @@ export const setAuthToken = (_token: string) => {
   }
 }
 
-export { callAPI, callAPIWithToken }
+export { callAPI, callAPIWithToken, callAPIUpLoad }
