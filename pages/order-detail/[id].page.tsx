@@ -266,24 +266,26 @@ const OrderDetail: NextPageWithLayout = () => {
                           '&:last-child td, &:last-child th': { border: 0 },
                           cursor: 'pointer',
                         }}
-                        hover
-                        onClick={() =>
-                          router.push(`/product-detail/${items.id}`)
-                        }
                       >
                         <TableCell component="th" scope="row">
                           <Stack direction="row" alignItems="center">
                             <div className={classes['image-wrapper']}>
-                              <Image
-                                alt="product-image"
-                                src={items.thumbnail}
-                                width={100}
-                                height={100}
-                              ></Image>
+                              <Link href={`/product-detail/${items.id}`}>
+                                <a>
+                                  <Image
+                                    alt="product-image"
+                                    src={items.thumbnail}
+                                    width={100}
+                                    height={100}
+                                  ></Image>
+                                </a>
+                              </Link>
                             </div>
                             <Stack padding={2}>
                               <TypographyCustom sx={{ fontSize: '16px' }}>
-                                {items.name}
+                                <Link href={`/product-detail/${items.id}`}>
+                                  <a>{items.name}</a>
+                                </Link>
                               </TypographyCustom>
                               <TypographyCustom
                                 sx={{ fontSize: '14px', fontWeight: '300' }}

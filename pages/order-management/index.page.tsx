@@ -3,7 +3,6 @@ import {
   FormHelperText,
   IconButton,
   InputBase,
-  Link,
   Paper,
   Stack,
   Tab,
@@ -47,7 +46,7 @@ import { notificationActions } from 'src/store/notification/notificationSlice'
 import { OrderListDataResponseType } from './modelOrders'
 import moment from 'moment'
 import Image from 'next/image'
-import { ButtonCustom } from 'src/components'
+// import { ButtonCustom } from 'src/components'
 
 const schema = yup.object({
   content: yup.string().matches(
@@ -408,7 +407,7 @@ const OrderManageMent: NextPageWithLayout = () => {
         </Grid>
         <FormHelperText error>{errors.content?.message}</FormHelperText>
       </form>
-      {dataOrders?.data.length === 0 && (
+      {dataOrders?.data.length === 0 ? (
         <>
           <Grid container spacing={2} justifyContent="center">
             <Grid>
@@ -427,161 +426,165 @@ const OrderManageMent: NextPageWithLayout = () => {
                 <Typography variant="h6" sx={{ marginTop: '0' }}>
                   You don’t have any order
                 </Typography>
-                <Link href="/browse-products">
+                {/* <Link href="/browse-products">
                   <ButtonCustom variant="contained" style={{ padding: '15px' }}>
                     <Typography style={{ fontWeight: '600' }}>
                       Back to home
                     </Typography>
                   </ButtonCustom>
-                </Link>
+                </Link> */}
               </Stack>
             </Grid>
           </Grid>
         </>
-      )}
-      <TableContainer
-        component={Paper}
-        elevation={0}
-        style={{ marginBottom: '20px', border: '1px solid #E1E6EF' }}
-      >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCellHeadingTextCustom align="center">
-                Order No
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Order Date
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Total Billing
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Order Status
-              </TableCellHeadingTextCustom>
-              {/* <TableCellHeadingTextCustom align="center">Payment Method</TableCellHeadingTextCustom> */}
-              <TableCellHeadingTextCustom align="center">
-                Payment Status
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Receiver
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Deliver Address
-              </TableCellHeadingTextCustom>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {dataOrders?.data.map((row) => (
-              <TableRowCustom
-                hover
-                key={row.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                onClick={() => handleRowClick(row.id)}
-              >
-                <TableCellBodyTextCustom
-                  align="center"
-                  component="th"
-                  scope="row"
-                >
-                  {row.code}
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom align="center">
-                  {moment(row.orderDate).format('DD/MM/YYYY - h:mm:ss A')}{' '}
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom align="center">
-                  {formatMoney(row.total_value)}
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom
-                  align="center"
-                  style={{ textTransform: 'capitalize' }}
-                >
-                  {row.status.toLowerCase()}
-                </TableCellBodyTextCustom>
-                {/* <TableCellBodyTextCustom align="center">{row.paymentMethod}</TableCellBodyTextCustom> */}
-                <TableCellBodyTextCustom
-                  align="center"
-                  style={{ textTransform: 'capitalize' }}
-                >
-                  {row.payment_status.toLowerCase()}
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom align="center">
-                  {row.receiver}
-                </TableCellBodyTextCustom>
-                {row.address.length > 15 ? (
-                  <Tooltip
-                    title={row.address}
-                    placement="top"
-                    arrow
-                    sx={{ fontSize: '14px' }}
+      ) : (
+        <>
+          <TableContainer
+            component={Paper}
+            elevation={0}
+            style={{ marginBottom: '20px', border: '1px solid #E1E6EF' }}
+          >
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCellHeadingTextCustom align="center">
+                    Order No
+                  </TableCellHeadingTextCustom>
+                  <TableCellHeadingTextCustom align="center">
+                    Order Date
+                  </TableCellHeadingTextCustom>
+                  <TableCellHeadingTextCustom align="center">
+                    Total Billing
+                  </TableCellHeadingTextCustom>
+                  <TableCellHeadingTextCustom align="center">
+                    Order Status
+                  </TableCellHeadingTextCustom>
+                  {/* <TableCellHeadingTextCustom align="center">Payment Method</TableCellHeadingTextCustom> */}
+                  <TableCellHeadingTextCustom align="center">
+                    Payment Status
+                  </TableCellHeadingTextCustom>
+                  <TableCellHeadingTextCustom align="center">
+                    Receiver
+                  </TableCellHeadingTextCustom>
+                  <TableCellHeadingTextCustom align="center">
+                    Deliver Address
+                  </TableCellHeadingTextCustom>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {dataOrders?.data.map((row) => (
+                  <TableRowCustom
+                    hover
+                    key={row.id}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    onClick={() => handleRowClick(row.id)}
                   >
                     <TableCellBodyTextCustom
                       align="center"
-                      style={{
-                        maxWidth: '150px',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}
+                      component="th"
+                      scope="row"
                     >
-                      {row.address}
+                      {row.code}
                     </TableCellBodyTextCustom>
-                  </Tooltip>
-                ) : (
-                  <TableCellBodyTextCustom
-                    align="center"
-                    style={{
-                      maxWidth: '150px',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {row.address}
-                  </TableCellBodyTextCustom>
-                )}
-              </TableRowCustom>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <table
-        style={{
-          width: '100%',
-          backgroundColor: '#F1F3F9',
-          borderRadius: '5px',
-          border: '1px solid #E1E6EF',
-        }}
-      >
-        <tbody>
-          <tr>
-            <TablePagination
-              sx={{ borderBottom: '0' }}
-              count={dataOrders ? dataOrders?.totalItems : 0}
-              rowsPerPageOptions={[5, 10, 15, 20]}
-              rowsPerPage={rowsPerPage}
-              page={
-                Number(router.query.page) ? Number(router.query.page) - 1 : 0
-              }
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={(props) => {
-                return (
-                  <TablePaginationAction
-                    count={props.count}
-                    page={props.page}
-                    rowsPerPage={props.rowsPerPage}
-                    // onPageChange={props.onPageChange}
-                    nextIsNull={Number(nextPage)}
-                  />
-                )
-              }}
-              // rowsPerPageOptions={[-1]}
-            ></TablePagination>
-          </tr>
-        </tbody>
-      </table>
+                    <TableCellBodyTextCustom align="center">
+                      {moment(row.orderDate).format('DD/MM/YYYY - h:mm:ss A')}{' '}
+                    </TableCellBodyTextCustom>
+                    <TableCellBodyTextCustom align="center">
+                      {formatMoney(row.total_value)}
+                    </TableCellBodyTextCustom>
+                    <TableCellBodyTextCustom
+                      align="center"
+                      style={{ textTransform: 'capitalize' }}
+                    >
+                      {row.status.toLowerCase()}
+                    </TableCellBodyTextCustom>
+                    {/* <TableCellBodyTextCustom align="center">{row.paymentMethod}</TableCellBodyTextCustom> */}
+                    <TableCellBodyTextCustom
+                      align="center"
+                      style={{ textTransform: 'capitalize' }}
+                    >
+                      {row.payment_status.toLowerCase()}
+                    </TableCellBodyTextCustom>
+                    <TableCellBodyTextCustom align="center">
+                      {row.receiver}
+                    </TableCellBodyTextCustom>
+                    {row.address.length > 15 ? (
+                      <Tooltip
+                        title={row.address}
+                        placement="top"
+                        arrow
+                        sx={{ fontSize: '14px' }}
+                      >
+                        <TableCellBodyTextCustom
+                          align="center"
+                          style={{
+                            maxWidth: '150px',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {row.address}
+                        </TableCellBodyTextCustom>
+                      </Tooltip>
+                    ) : (
+                      <TableCellBodyTextCustom
+                        align="center"
+                        style={{
+                          maxWidth: '150px',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        {row.address}
+                      </TableCellBodyTextCustom>
+                    )}
+                  </TableRowCustom>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <table
+            style={{
+              width: '100%',
+              backgroundColor: '#F1F3F9',
+              borderRadius: '5px',
+              border: '1px solid #E1E6EF',
+            }}
+          >
+            <tbody>
+              <tr>
+                <TablePagination
+                  sx={{ borderBottom: '0' }}
+                  count={dataOrders ? dataOrders?.totalItems : 0}
+                  rowsPerPageOptions={[5, 10, 15, 20]}
+                  rowsPerPage={rowsPerPage}
+                  page={
+                    Number(router.query.page)
+                      ? Number(router.query.page) - 1
+                      : 0
+                  }
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={(props) => {
+                    return (
+                      <TablePaginationAction
+                        count={props.count}
+                        page={props.page}
+                        rowsPerPage={props.rowsPerPage}
+                        // onPageChange={props.onPageChange}
+                        nextIsNull={Number(nextPage)}
+                      />
+                    )
+                  }}
+                  // rowsPerPageOptions={[-1]}
+                ></TablePagination>
+              </tr>
+            </tbody>
+          </table>
+        </>
+      )}
     </>
   )
 }
