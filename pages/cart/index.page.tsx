@@ -162,7 +162,6 @@ const schema = yup
       .number()
       .integer('Input must be an integer')
       .required('This field is required ')
-      .min(1)
       .max(1000000),
   })
   .required()
@@ -385,21 +384,23 @@ const Cart: NextPageWithLayout = () => {
     setTotal(tempTotal)
   }
 
-  //close modal handler
-  const handleCloseModal = () => {
-    setOpen(false)
-  }
-
   const {
     register,
     setValue,
     getValues,
     handleSubmit,
+    clearErrors,
     formState: { errors },
   } = useForm<QuantityFormInput>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
+
+  //close modal handler
+  const handleCloseModal = () => {
+    setOpen(false)
+    clearErrors('quantity')
+  }
   // event submit
   const onSubmit = (data: QuantityFormInput) => {
     console.log(data)

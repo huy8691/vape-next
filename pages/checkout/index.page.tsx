@@ -206,11 +206,6 @@ const Checkout: NextPageWithLayout = () => {
         const { data } = res.data
         console.log('data', data)
         dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: 'Success ',
-          })
-        )
         handleOpen()
       })
       .catch((error) => {

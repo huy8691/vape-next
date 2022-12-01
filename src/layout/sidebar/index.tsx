@@ -69,9 +69,9 @@ const SideBar = ({ open }: Props) => {
   }, [dispatch])
 
   useEffect(() => {
-    if (cart?.data?.amountItems) {
-      setStateItemCart(cart?.data?.amountItems)
-    }
+    // if (cart?.data?.amountItems) {
+    setStateItemCart(cart.data.amountItems)
+    // }
   }, [cart])
 
   return (

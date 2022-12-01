@@ -1,5 +1,5 @@
 export interface CartType {
-  amountItems?: number
+  amountItems: number
   cartId?: number
   totalPrice?: number
   items?: CartItem[]

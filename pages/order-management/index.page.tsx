@@ -2,7 +2,6 @@ import {
   FormControl,
   FormHelperText,
   IconButton,
-  InputBase,
   Paper,
   Stack,
   Tab,
@@ -46,7 +45,7 @@ import { notificationActions } from 'src/store/notification/notificationSlice'
 import { OrderListDataResponseType } from './modelOrders'
 import moment from 'moment'
 import Image from 'next/image'
-// import { ButtonCustom } from 'src/components'
+import { TextFieldCustom } from 'src/components'
 
 const schema = yup.object({
   content: yup.string().matches(
@@ -366,10 +365,10 @@ const OrderManageMent: NextPageWithLayout = () => {
                 render={({ field }) => (
                   <>
                     <FormControl fullWidth>
-                      <InputBase
-                        sx={{
-                          padding: '10px',
-                        }}
+                      <TextFieldCustom
+                        // sx={{
+                        //   padding: '10px',
+                        // }}
                         id="content"
                         error={!!errors.content}
                         placeholder="Search by order no..."
