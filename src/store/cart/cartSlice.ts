@@ -10,7 +10,7 @@ interface initialCartStateType {
 }
 
 const initialState: initialCartStateType = {
-  data: {},
+  data: { amountItems: 0 },
 }
 
 const cartSlice = createSlice({

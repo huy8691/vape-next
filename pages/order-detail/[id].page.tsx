@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material'
 import { NextPageWithLayout } from 'pages/_app.page'
-import { ClockClockwise } from 'phosphor-react'
+import { CircleWavyCheck, ClockClockwise, Truck } from 'phosphor-react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
 import { styled } from '@mui/system'
@@ -29,12 +29,12 @@ import moment from 'moment'
 import { formatMoney } from 'src/utils/money.utils'
 import Image from 'next/image'
 import classes from './styles.module.scss'
+
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '3.2rem',
   fontWeight: '600',
   color: theme.palette.mode === 'dark' ? '#ddd' : '#1B1F27',
 }))
-
 const TypographyH3 = styled(Typography)(({ theme }) => ({
   fontSize: '2rem',
   fontWeight: '600',
@@ -65,12 +65,52 @@ const StickyWrapper = styled('div')(() => ({
   position: 'sticky',
   top: '80px',
 }))
+const BoxCustom = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#121212' : '#F8F9FC',
+  border: theme.palette.mode === 'dark' ? '1px solid #E1E6EF' : 'none',
+}))
 
 const TableRowCustom = styled(TableRow)(() => ({
   '& .MuiTableCell-root': {
     borderBottom: '0px',
   },
 }))
+
+enum OrderStatus {
+  APPROVED,
+  DELIVERING,
+  DELIVERED,
+  CANCELLED,
+}
+
+const Status = [
+  // {
+  //   text: 'WAITING FOR APPROVED',
+  //   icon: <ClockClockwise size={24} />,
+  //   color: '#49516F',
+  // },
+  {
+    text: 'APPROVED',
+    icon: <CircleWavyCheck color="#1DB46A" size={24} />,
+    color: '#1DB46A',
+  },
+  {
+    text: 'DELIVERING',
+    icon: <Truck color="#2F6FED" size={24} />,
+    color: '#2F6FED',
+  },
+  {
+    text: 'DELIVERED',
+    icon: <ClockClockwise color="#1DB46A" size={24} />,
+    color: '#1DB46A',
+  },
+  {
+    text: 'CANCELLED',
+    icon: <span color="#E02D3C" className="icon-Package"></span>,
+    color: '#E02D3C',
+  },
+]
+
 const OrderDetail: NextPageWithLayout = () => {
   const [stateOrderDetail, setStateOrderDetail] = useState<OrderDetailType>()
   const router = useRouter()
@@ -82,10 +122,6 @@ const OrderDetail: NextPageWithLayout = () => {
         .then((res) => {
           const { data } = res.data
           setStateOrderDetail(data)
-          console.log(
-            '🚀 ~ file: [id].page.tsx ~ line 108 ~ getOrderDetail ~ data',
-            data
-          )
           dispatch(loadingActions.doLoadingSuccess())
         })
         .catch((error) => {
@@ -129,15 +165,17 @@ const OrderDetail: NextPageWithLayout = () => {
                 <Box
                   sx={{
                     padding: '10px',
-                    border: '1px solid #B25E09',
                     borderRadius: '32px',
+                    backgroundColor: `${
+                      Status[OrderStatus[stateOrderDetail?.status]].color
+                    }`,
                   }}
                   display="flex"
                   alignItems="center"
                 >
                   <Box
                     sx={{
-                      backgroundColor: '#FEF1F2',
+                      backgroundColor: 'white',
                       borderRadius: '9999px',
                       padding: '5px',
                       display: 'flex',
@@ -146,10 +184,18 @@ const OrderDetail: NextPageWithLayout = () => {
                       marginRight: '10px',
                     }}
                   >
-                    <ClockClockwise size={20} color="#B25E09" />
+                    {Status[OrderStatus[stateOrderDetail?.status]].icon}
+                    {/* <ClockClockwise size={24} color="#49516F" /> */}
                   </Box>
-                  <TypographyH3 sx={{ fontSize: '1.4rem' }}>
-                    {stateOrderDetail?.status}
+
+                  <TypographyH3
+                    sx={{
+                      fontSize: '1.4rem',
+                      color: 'white',
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    {stateOrderDetail?.status.toLowerCase()}
                   </TypographyH3>
                 </Box>
               ) : (
@@ -176,9 +222,8 @@ const OrderDetail: NextPageWithLayout = () => {
 
             <TypographyH3>Order Details</TypographyH3>
             {stateOrderDetail ? (
-              <Box
+              <BoxCustom
                 sx={{
-                  background: '#F8F9FC',
                   padding: '15px',
                   borderRadius: '5px',
                   marginTop: '5px !important',
@@ -210,7 +255,7 @@ const OrderDetail: NextPageWithLayout = () => {
                     </TypographyInformationCustom>
                   </Stack>
                 </Stack>
-              </Box>
+              </BoxCustom>
             ) : (
               <Skeleton variant="rounded" width="100%" height={140} />
             )}
@@ -334,9 +379,8 @@ const OrderDetail: NextPageWithLayout = () => {
 
             <TypographyH3>Shipping Address</TypographyH3>
             {stateOrderDetail ? (
-              <Box
+              <BoxCustom
                 sx={{
-                  background: '#F8F9FC',
                   padding: '15px',
                   borderRadius: '5px',
                   marginTop: '5px !important',
@@ -353,16 +397,15 @@ const OrderDetail: NextPageWithLayout = () => {
                     {stateOrderDetail?.shipping_address.address}
                   </TypographyCustom>
                 </Stack>
-              </Box>
+              </BoxCustom>
             ) : (
               <Skeleton variant="rounded" width="100%" height={100} />
             )}
 
             <TypographyH3>Shipping Method</TypographyH3>
             {stateOrderDetail ? (
-              <Box
+              <BoxCustom
                 sx={{
-                  background: '#F8F9FC',
                   padding: '15px',
                   borderRadius: '5px',
                   marginTop: '5px !important',
@@ -372,16 +415,15 @@ const OrderDetail: NextPageWithLayout = () => {
                   {/* {stateOrderDetail?.shipping_method} */}
                   Basic Shipping
                 </TypographyCustom>
-              </Box>
+              </BoxCustom>
             ) : (
               <Skeleton variant="rounded" width="100%" height={50} />
             )}
 
             <TypographyH3>Note For Merchant</TypographyH3>
             {stateOrderDetail ? (
-              <Box
+              <BoxCustom
                 sx={{
-                  background: '#F8F9FC',
                   padding: '15px',
                   borderRadius: '5px',
                   marginTop: '5px !important',
@@ -393,7 +435,7 @@ const OrderDetail: NextPageWithLayout = () => {
                 ) : (
                   <TypographyCustom>{stateOrderDetail?.notes}</TypographyCustom>
                 )}
-              </Box>
+              </BoxCustom>
             ) : (
               <Skeleton variant="rounded" width="100%" height={50} />
             )}

@@ -288,11 +288,11 @@ const Checkout: NextPageWithLayout = () => {
         setStateCalculate(data)
 
         dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: 'Success',
-          })
-        )
+        // dispatch(
+        //   notificationActions.doNotification({
+        //     message: 'Success',
+        //   })
+        // )
       })
       .catch((error) => {
         const { data } = error.response.data

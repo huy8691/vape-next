@@ -61,10 +61,10 @@ const TypographyH2 = styled(Typography)(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
 }))
 
-const TableRowCustom = styled(TableRow)(() => ({
+const TableRowCustom = styled(TableRow)(({ theme }) => ({
   cursor: 'pointer',
   '&:nth-of-type(odd)': {
-    backgroundColor: '#F8F9FC',
+    backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#F8F9FC',
   },
   // hide last border
   '&:last-child td, &:last-child th': {
@@ -107,6 +107,10 @@ const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
 }))
 
+// const TableRowPaginationnCustom = styled(TableRow)(({ theme }) => ({
+//   backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#F8F9FC',
+// }))
+
 const StatusFilterType: {
   [key: string]: number
 } = {
@@ -128,7 +132,6 @@ const OrderManageMent: NextPageWithLayout = () => {
   // state use for list order
   const [dataOrders, setDataOrders] = useState<OrderListDataResponseType>()
   const router = useRouter()
-  console.log('🚀 ~ file: index.page.tsx ~ line 259 ~ router', router)
   const dispatch = useAppDispatch()
   // state use for store next page is null or <number></number>
   const [nextPage, setNextPage] = useState<number | null>()
@@ -547,13 +550,13 @@ const OrderManageMent: NextPageWithLayout = () => {
           <table
             style={{
               width: '100%',
-              backgroundColor: '#F1F3F9',
+              // backgroundColor: '#F1F3F9',
               borderRadius: '5px',
               border: '1px solid #E1E6EF',
             }}
           >
             <tbody>
-              <tr>
+              <TableRow>
                 <TablePagination
                   sx={{ borderBottom: '0' }}
                   count={dataOrders ? dataOrders?.totalItems : 0}
@@ -579,7 +582,7 @@ const OrderManageMent: NextPageWithLayout = () => {
                   }}
                   // rowsPerPageOptions={[-1]}
                 ></TablePagination>
-              </tr>
+              </TableRow>
             </tbody>
           </table>
         </>

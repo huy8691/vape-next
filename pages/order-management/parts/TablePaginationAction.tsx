@@ -21,7 +21,7 @@ interface Props {
 
 const IconButtonCustom = styled(IconButton)(() => ({
   background: '#E1E6EF',
-  padding: '10px ',
+  padding: '8px ',
   borderRadius: '5px',
 }))
 

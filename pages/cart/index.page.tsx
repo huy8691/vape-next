@@ -223,7 +223,6 @@ const Cart: NextPageWithLayout = () => {
       // }
       setStateCartCheck(newArr)
       calculateTotal(newArr)
-      // localStorage.setItem('listCheckedProduct', JSON.stringify(newArr))
     } else {
       let newArr = cart?.data?.items?.map((item) => {
         return {
@@ -235,7 +234,6 @@ const Cart: NextPageWithLayout = () => {
       // setIsCheckAll(true)
       setStateCartCheck(newArr)
       calculateTotal(newArr)
-      // localStorage.setItem('listCheckedProduct', JSON.stringify(newArr))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart, flagUpdate])
@@ -510,6 +508,12 @@ const Cart: NextPageWithLayout = () => {
           })
           setTempInvalid(invalidListItem)
           dispatch(loadingActions.doLoadingFailure())
+          dispatch(
+            notificationActions.doNotification({
+              message: 'Some items in cart were invalid',
+              type: 'error',
+            })
+          )
         })
     }
   }
@@ -542,6 +546,9 @@ const Cart: NextPageWithLayout = () => {
   if (cart?.data?.items?.length === 0) {
     return (
       <>
+        <Head>
+          <title>Cart | VAPE</title>
+        </Head>
         <TypographyH2 variant="h2" mb={3}>
           Shopping cart
         </TypographyH2>
@@ -894,9 +901,9 @@ const Cart: NextPageWithLayout = () => {
           </Stack>
         </Box>
       </Popover>
-      <TypographyH2 variant="h2" mb={3}>
+      {/* <TypographyH2 variant="h2" mb={3}>
         Viewed Product
-      </TypographyH2>
+      </TypographyH2> */}
       {/* bar checkout */}
       <BarCheckout
         className={classes['checkout-bar']}
