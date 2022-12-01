@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { callAPI } from 'src/services/jwt-axios'
+import { callAPI, callAPIUpLoad } from 'src/services/jwt-axios'
 import { FileListType, UrlUploadResponseType } from './uploadModels'
 
 const getUrlUploadFileApi = (data: FileListType): Promise<AxiosResponse> => {
@@ -12,7 +12,7 @@ const getUrlUploadFileApi = (data: FileListType): Promise<AxiosResponse> => {
 const uploadFileApi = (
   data: any
 ): Promise<AxiosResponse<UrlUploadResponseType>> => {
-  return callAPI({
+  return callAPIUpLoad({
     url: data.url,
     method: 'post',
     data: data.formData,
