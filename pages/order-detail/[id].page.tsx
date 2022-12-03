@@ -84,11 +84,11 @@ enum OrderStatus {
 }
 
 const Status = [
-  // {
-  //   text: 'WAITING FOR APPROVED',
-  //   icon: <ClockClockwise size={24} />,
-  //   color: '#49516F',
-  // },
+  {
+    text: 'WAITING FOR APPROVED',
+    icon: <ClockClockwise size={24} />,
+    color: '#49516F',
+  },
   {
     text: 'APPROVED',
     icon: <CircleWavyCheck color="#1DB46A" size={24} />,
@@ -110,6 +110,15 @@ const Status = [
     color: '#E02D3C',
   },
 ]
+const StatusFilterType: {
+  [key: string]: number
+} = {
+  'WAITING FOR APPROVED': 0,
+  APPROVED: 1,
+  DELIVERING: 2,
+  DELIVERED: 3,
+  CANCELLED: 4,
+}
 
 const OrderDetail: NextPageWithLayout = () => {
   const [stateOrderDetail, setStateOrderDetail] = useState<OrderDetailType>()
@@ -167,7 +176,9 @@ const OrderDetail: NextPageWithLayout = () => {
                     padding: '10px',
                     borderRadius: '32px',
                     backgroundColor: `${
-                      Status[OrderStatus[stateOrderDetail?.status]].color
+                      Status[StatusFilterType[stateOrderDetail?.status]].color
+                      // Status.find((x) => x.text === stateOrderDetail.status)
+                      //   ?.color
                     }`,
                   }}
                   display="flex"
@@ -184,10 +195,14 @@ const OrderDetail: NextPageWithLayout = () => {
                       marginRight: '10px',
                     }}
                   >
-                    {Status[OrderStatus[stateOrderDetail?.status]].icon}
+                    {Status[StatusFilterType[stateOrderDetail?.status]].icon}
+                    {/* {
+                      Status.find((x) => x.text === stateOrderDetail.status)
+                        ?.icon
+                    } */}
+
                     {/* <ClockClockwise size={24} color="#49516F" /> */}
                   </Box>
-
                   <TypographyH3
                     sx={{
                       fontSize: '1.4rem',

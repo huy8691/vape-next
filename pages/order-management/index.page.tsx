@@ -120,6 +120,40 @@ const StatusFilterType: {
   DELIVERED: 4,
   CANCELLED: 5,
 }
+
+const StatusOrder: {
+  [key: string]: number
+} = {
+  'WAITING FOR APPROVED': 0,
+  APPROVED: 1,
+  DELIVERING: 2,
+  DELIVERED: 3,
+  CANCELLED: 4,
+}
+
+const Status = [
+  {
+    text: 'WAITING FOR APPROVED',
+    color: '#49516F',
+  },
+  {
+    text: 'APPROVED',
+    color: '#1DB46A',
+  },
+  {
+    text: 'DELIVERING',
+    color: '#2F6FED',
+  },
+  {
+    text: 'DELIVERED',
+    color: '#1DB46A',
+  },
+  {
+    text: 'CANCELLED',
+    color: '#E02D3C',
+  },
+]
+
 interface SearchFormInput {
   content: string
 }
@@ -496,7 +530,10 @@ const OrderManageMent: NextPageWithLayout = () => {
                     </TableCellBodyTextCustom>
                     <TableCellBodyTextCustom
                       align="center"
-                      style={{ textTransform: 'capitalize' }}
+                      style={{
+                        textTransform: 'capitalize',
+                        color: `${Status[StatusOrder[row.status]].color}`,
+                      }}
                     >
                       {row.status.toLowerCase()}
                     </TableCellBodyTextCustom>
