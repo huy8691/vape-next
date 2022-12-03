@@ -220,7 +220,7 @@ const Checkout: NextPageWithLayout = () => {
         setTempInvalid(invalidListItem)
         dispatch(
           notificationActions.doNotification({
-            message: error.message ? error.message : 'Somethings went wrong',
+            message: 'Some items in your order were invalid',
             type: 'error',
           })
         )

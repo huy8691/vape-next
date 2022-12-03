@@ -76,13 +76,6 @@ const TableRowCustom = styled(TableRow)(() => ({
   },
 }))
 
-enum OrderStatus {
-  APPROVED,
-  DELIVERING,
-  DELIVERED,
-  CANCELLED,
-}
-
 const Status = [
   {
     text: 'WAITING FOR APPROVED',
@@ -110,6 +103,7 @@ const Status = [
     color: '#E02D3C',
   },
 ]
+
 const StatusFilterType: {
   [key: string]: number
 } = {

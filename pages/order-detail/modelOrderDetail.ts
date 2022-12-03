@@ -1,5 +1,3 @@
-import { ReactElement } from 'react'
-
 export interface OrderDetailType {
   id: number
   code: string

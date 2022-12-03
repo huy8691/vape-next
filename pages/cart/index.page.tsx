@@ -495,8 +495,6 @@ const Cart: NextPageWithLayout = () => {
           console.log('data', data)
           dispatch(loadingActions.doLoadingSuccess())
           localStorage.setItem('listCartItemId', JSON.stringify(listCartId))
-          console.log('checked arr', listCartId)
-
           router.push('/checkout')
         })
         .catch((error) => {
