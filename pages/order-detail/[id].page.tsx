@@ -79,7 +79,7 @@ const TableRowCustom = styled(TableRow)(() => ({
 const Status = [
   {
     text: 'WAITING FOR APPROVED',
-    icon: <ClockClockwise size={24} />,
+    icon: <ClockClockwise color="#49516F" size={24} />,
     color: '#49516F',
   },
   {
@@ -99,20 +99,10 @@ const Status = [
   },
   {
     text: 'CANCELLED',
-    icon: <span color="#E02D3C" className="icon-Package"></span>,
+    icon: <span style={{ color: '#E02D3C' }} className="icon-Package"></span>,
     color: '#E02D3C',
   },
 ]
-
-const StatusFilterType: {
-  [key: string]: number
-} = {
-  'WAITING FOR APPROVED': 0,
-  APPROVED: 1,
-  DELIVERING: 2,
-  DELIVERED: 3,
-  CANCELLED: 4,
-}
 
 const OrderDetail: NextPageWithLayout = () => {
   const [stateOrderDetail, setStateOrderDetail] = useState<OrderDetailType>()
@@ -170,9 +160,9 @@ const OrderDetail: NextPageWithLayout = () => {
                     padding: '10px',
                     borderRadius: '32px',
                     backgroundColor: `${
-                      Status[StatusFilterType[stateOrderDetail?.status]].color
-                      // Status.find((x) => x.text === stateOrderDetail.status)
-                      //   ?.color
+                      Status.find(
+                        (item) => item.text === stateOrderDetail?.status
+                      )?.color
                     }`,
                   }}
                   display="flex"
@@ -189,12 +179,11 @@ const OrderDetail: NextPageWithLayout = () => {
                       marginRight: '10px',
                     }}
                   >
-                    {Status[StatusFilterType[stateOrderDetail?.status]].icon}
-                    {/* {
-                      Status.find((x) => x.text === stateOrderDetail.status)
-                        ?.icon
-                    } */}
-
+                    {
+                      Status.find(
+                        (item) => item.text === stateOrderDetail?.status
+                      )?.icon
+                    }
                     {/* <ClockClockwise size={24} color="#49516F" /> */}
                   </Box>
                   <TypographyH3
@@ -318,7 +307,6 @@ const OrderDetail: NextPageWithLayout = () => {
                         key={items.id}
                         sx={{
                           '&:last-child td, &:last-child th': { border: 0 },
-                          cursor: 'pointer',
                         }}
                       >
                         <TableCell component="th" scope="row">

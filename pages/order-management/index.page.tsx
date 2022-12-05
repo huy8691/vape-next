@@ -121,16 +121,6 @@ const StatusFilterType: {
   CANCELLED: 5,
 }
 
-const StatusOrder: {
-  [key: string]: number
-} = {
-  'WAITING FOR APPROVED': 0,
-  APPROVED: 1,
-  DELIVERING: 2,
-  DELIVERED: 3,
-  CANCELLED: 4,
-}
-
 const Status = [
   {
     text: 'WAITING FOR APPROVED',
@@ -532,7 +522,10 @@ const OrderManageMent: NextPageWithLayout = () => {
                       align="center"
                       style={{
                         textTransform: 'capitalize',
-                        color: `${Status[StatusOrder[row.status]].color}`,
+                        color: `${
+                          Status.find((item) => item.text === row?.status)
+                            ?.color
+                        }`,
                       }}
                     >
                       {row.status.toLowerCase()}
