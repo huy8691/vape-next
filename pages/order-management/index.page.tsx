@@ -171,7 +171,7 @@ const OrderManageMent: NextPageWithLayout = () => {
   // trigger when change row per page option ( page size )
   const handleChangeRowsPerPage = (event: any) => {
     setRowsPerPage(parseInt(event.target.value, 10))
-    let tableSize = parseInt(event.target.value)
+    const tableSize = parseInt(event.target.value)
     router.replace({
       search: `${objToStringParam({
         ...router.query,
@@ -196,7 +196,7 @@ const OrderManageMent: NextPageWithLayout = () => {
   })
 
   useEffect(() => {
-    let asPath = router.asPath
+    const asPath = router.asPath
     if (!isEmptyObject(router.query)) {
       dispatch(loadingActions.doLoading())
       getOrders(router.query)
@@ -208,14 +208,14 @@ const OrderManageMent: NextPageWithLayout = () => {
             data
           )
           if (asPath.indexOf('code=') !== -1) {
-            let sliceAsPathCodeSearch = asPath.slice(
+            const sliceAsPathCodeSearch = asPath.slice(
               asPath.indexOf('code=') + 5, //position start
               asPath.indexOf('&', asPath.indexOf('code=')) // position end
             )
             setValue('content', sliceAsPathCodeSearch)
           }
           if (asPath.indexOf('status=') !== -1) {
-            let sliceAsPathStatusFilter: string = asPath.slice(
+            const sliceAsPathStatusFilter: string = asPath.slice(
               asPath.indexOf('status=') + 7,
               asPath.indexOf('&', asPath.indexOf('status='))
             )

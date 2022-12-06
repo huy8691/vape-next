@@ -193,10 +193,10 @@ const ForgotPassword: NextPageWithLayout = () => {
           })
         )
         // set count down
-        let time = Math.floor(Date.now() / 1000)
+        const time = Math.floor(Date.now() / 1000)
         Cookies.set('timeCountCookies', time.toString())
         setStateCount(59)
-        let countDown = setInterval(() => {
+        const countDown = setInterval(() => {
           setStateCount((prevCount) => {
             if (prevCount === 1) {
               clearInterval(countDown)
@@ -294,8 +294,8 @@ const ForgotPassword: NextPageWithLayout = () => {
   useEffect(() => {
     setMounted(true)
 
-    let time = Math.floor(Date.now() / 1000)
-    let timeCountCookies = Cookies.get('timeCountCookies')
+    const time = Math.floor(Date.now() / 1000)
+    const timeCountCookies = Cookies.get('timeCountCookies')
     Cookies.remove('timeCountCookies')
     if (timeCountCookies) {
       if (time - parseInt(timeCountCookies) > 60) {
@@ -303,7 +303,7 @@ const ForgotPassword: NextPageWithLayout = () => {
       } else {
         // setStateActiveStep('2')
         setStateCount(60 - time + parseInt(timeCountCookies))
-        let countDown = setInterval(() => {
+        const countDown = setInterval(() => {
           setStateCount((prevCount: number) => {
             if (prevCount === 1) {
               clearInterval(countDown)

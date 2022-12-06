@@ -126,9 +126,10 @@ const FormControlLabelCustom = styled(FormControlLabel)(({ theme }) => ({
   overflow: 'hidden',
   '& .MuiTypography-root': {
     position: 'absolute',
-    bottom: 0,
+    bottom: '-6px',
     right: 0,
     color: '#fff',
+    fontSize: '1.2rem',
   },
   '&:before': {
     position: 'absolute',
@@ -139,6 +140,14 @@ const FormControlLabelCustom = styled(FormControlLabel)(({ theme }) => ({
     height: '30px',
     content: '""',
     transform: 'rotate(45deg)',
+  },
+  '&.Mui-disabled': {
+    '&:before': {
+      display: 'none',
+    },
+    '& .MuiTypography-root': {
+      display: 'none',
+    },
   },
 }))
 const BoxModalCustom = styled(Box)(() => ({
@@ -180,13 +189,13 @@ const Checkout: NextPageWithLayout = () => {
     resolver: yupResolver(schema),
     mode: 'all',
   })
-  let listCartId: Array<number | undefined> = []
+  const listCartId: Array<number | undefined> = []
   stateInventoryList?.forEach((item: CartItem) => {
     listCartId.push(item.cartItemId)
   })
   console.log('list', listCartId)
 
-  let objectOrder: CreateOrderType = {
+  const objectOrder: CreateOrderType = {
     // default values for this phase
     shipping_method: 1,
     // default values for this phase
@@ -212,7 +221,7 @@ const Checkout: NextPageWithLayout = () => {
         const { data } = error.response.data
         console.log('data', data)
         dispatch(loadingActions.doLoadingFailure())
-        let invalidListItem: Array<number> = []
+        const invalidListItem: Array<number> = []
         data.forEach((item: invalidCartItemType) => {
           invalidListItem.push(item.productId)
           console.log(item.productId)
@@ -258,7 +267,7 @@ const Checkout: NextPageWithLayout = () => {
 
   useEffect(() => {
     console.log('first render')
-    var cartItem: Array<number | undefined> = JSON.parse(
+    const cartItem: Array<number | undefined> = JSON.parse(
       localStorage.getItem('listCartItemId') || '[]'
     )
 

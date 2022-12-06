@@ -1,22 +1,36 @@
 {
   "extends": [
     "eslint:recommended",
-    // "plugin:@next/next/recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@next/next/recommended",
     "prettier",
     "next"
-    // "plugin:@typescript-eslint/recommended"
-
-    // "plugin:react/recommended", // Uses the recommended rules from @eslint-plugin-react
-    // "plugin:@typescript-eslint/recommended" // Uses the recommended rules from @typescript-eslint/eslint-plugin
-    // // 'plugin:prettier/recommended', // Enables eslint-plugin-prettier and displays prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
-    // // 'prettier',
   ],
+  "plugins": ["autofix", "react-hooks"],
   "rules": {
-    // "@typescript-eslint/no-unused-vars": ["warn"],
-    "@typescript-eslint/no-var-requires": "off",
-    "no-unused-vars": "warn"
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/no-var-requires": "error",
+    // "@typescript-eslint/getter-return": "error",
+    // "@typescript-eslint/no-unreachable": "error",
+    // "@typescript-eslint/use-isnan": "error",
+    // "@typescript-eslint/eqeqeq": "error",
+    // "@typescript-eslint/no-eval": "error",
+    // "@typescript-eslint/no-shadow": "error",
+    // "@typescript-eslint/no-undefined": "error",
+    "no-unused-vars": "error",
+    "autofix/no-debugger": "error",
+    "react-hooks/rules-of-hooks": "error", // Kiểm tra rule của Hook
+    "react-hooks/exhaustive-deps": "warn" // Kiểm tra effect dependency
     // "@typescript-eslint/rule-name": "error"
-  }
+  },
   // "plugins": ["@typescript-eslint"]
-  // "parser": "@typescript-eslint/parser"
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module", // Allows for the use of imports
+    "ecmaFeatures": {
+      "jsx": true // Allows for the parsing of JSX
+    }
+  }
 }
