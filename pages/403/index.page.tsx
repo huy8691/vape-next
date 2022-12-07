@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react'
 import Link from '@mui/material/Link'
 import { Box, Button, Container, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import Image from 'next/image'
+// import Image from 'next/image'
 // layout
 // layout
 import type { ReactElement } from 'react'
