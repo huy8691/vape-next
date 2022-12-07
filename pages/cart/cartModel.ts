@@ -1,6 +1,6 @@
 export interface InstockType {
-  id?: number
-  inStock?: number
+  id: number
+  inStock: number
 }
 
 export interface InstockResponseType {
@@ -8,12 +8,12 @@ export interface InstockResponseType {
 }
 
 export interface UpdateQuantityType {
-  quantity?: number
+  quantity: number
 }
 export interface invalidCartItemType {
   productId: number
-  productName?: string
-  errorMessage?: string
+  productName: string
+  errorMessage: string
 }
 
 export type ArrayCartItem = (number | undefined)[]

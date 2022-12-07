@@ -46,11 +46,11 @@ const Menu = [
     text: 'Dashboard',
     link: '/',
   },
-  {
-    icon: <Cube size={24} />,
-    text: 'Inventory',
-    link: '/inventory',
-  },
+  // {
+  //   icon: <Cube size={24} />,
+  //   text: 'Inventory',
+  //   link: '/inventory',
+  // },
 ]
 
 const SideBar = ({ open }: Props) => {
@@ -58,10 +58,15 @@ const SideBar = ({ open }: Props) => {
   const dispatch = useAppDispatch()
   const cart = useAppSelector((state) => state.cart)
   const [openCollapse, setOpenCollapse] = useState<boolean>(true)
+  const [openCollapse2, setOpenCollapse2] = useState<boolean>(true)
   const [stateItemCart, setStateItemCart] = useState<number>(0)
 
   const handleClick = () => {
     setOpenCollapse(!openCollapse)
+  }
+
+  const handleClickCollapse2 = () => {
+    setOpenCollapse2(!openCollapse2)
   }
 
   useEffect(() => {
@@ -167,6 +172,35 @@ const SideBar = ({ open }: Props) => {
             </Link>
           </ListItem>
         ))}
+        <ListItem disablePadding sx={{ display: 'block' }}>
+          <ListItemButton onClick={handleClickCollapse2}>
+            <ListItemIcon>
+              <Cube size={24} />
+            </ListItemIcon>
+            <ListItemText primary="Inventory" />
+            {openCollapse2 ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={openCollapse2} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <Link href="/add-product">
+              <a>
+                <ListItemButton
+                  sx={{ pl: 3 }}
+                  selected={router.pathname === '/add-product'}
+                >
+                  {open ? (
+                    <ListItemText primary="Add product" />
+                  ) : (
+                    <ListItemIcon>
+                      <FileSearch />
+                    </ListItemIcon>
+                  )}
+                </ListItemButton>
+              </a>
+            </Link>
+          </List>
+        </Collapse>
         <ListItem disablePadding sx={{ display: 'block' }}>
           <ListItemButton onClick={handleClick}>
             <ListItemIcon>

@@ -170,6 +170,7 @@ const Checkout: NextPageWithLayout = () => {
   const [openModal, setOpenModal] = React.useState(false)
   const handleOpen = () => setOpenModal(true)
   const handleClose = () => setOpenModal(false)
+  // react-hook-form
   const {
     handleSubmit,
     control,
@@ -180,6 +181,7 @@ const Checkout: NextPageWithLayout = () => {
     resolver: yupResolver(schema),
     mode: 'all',
   })
+
   let listCartId: Array<number | undefined> = []
   stateInventoryList?.forEach((item: CartItem) => {
     listCartId.push(item.cartItemId)
