@@ -19,7 +19,7 @@ function* handleInfoSaga() {
     yield put(loadingActions.doLoadingFailure())
     yield put(
       notificationActions.doNotification({
-        message: error.response?.data.message,
+        message: error.response.data.message,
         type: 'error',
       })
     )

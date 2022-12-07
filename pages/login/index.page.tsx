@@ -16,7 +16,6 @@ import { styled } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -24,6 +23,9 @@ import FormHelperText from '@mui/material/FormHelperText'
 import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControl from '@mui/material/FormControl'
 // mui
 
 // form
@@ -125,7 +127,6 @@ const Login: NextPageWithLayout = () => {
     dispatch(loadingActions.doLoading())
     loginAPI({
       ...values,
-      user_type: 'CUSTOMER',
     })
       .then((response) => {
         const { data } = response.data
@@ -204,11 +205,58 @@ const Login: NextPageWithLayout = () => {
             onSubmit={handleSubmit(onSubmit)}
             className={classes['login-form']}
           >
+            <Box mb={3}>
+              <FormControl>
+                <Controller
+                  control={control}
+                  name="platform"
+                  defaultValue="SUPPLIER"
+                  render={({ field }) => (
+                    <FormControl>
+                      <RadioGroup row {...field}>
+                        <FormControlLabel
+                          value="SUPPLIER"
+                          control={<Radio />}
+                          label="SUPPLIER"
+                        />
+                        <FormControlLabel
+                          value="MERCHANT"
+                          control={<Radio />}
+                          label="MERCHANT"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  )}
+                />
+              </FormControl>
+
+              {/* <Controller
+                control={control}
+                name="platform"
+                defaultValue="SUPPLIER"
+                render={({ field }) => (
+                  <FormControl>
+                    <RadioGroup row>
+                      <FormControlLabel
+                        value="SUPPLIER"
+                        control={<Radio />}
+                        label="SUPPLIER"
+                      />
+                      <FormControlLabel
+                        value="MERCHANT"
+                        control={<Radio />}
+                        label="MERCHANT"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                )}
+              /> */}
+            </Box>
             <Box mb={2}>
               <Controller
                 control={control}
                 name="email"
-                defaultValue="huy8691@gmail.com"
+                defaultValue="supplier@exnodes.vn"
                 render={({ field }) => (
                   <>
                     <InputLabelCustom htmlFor="email" error={!!errors.email}>
@@ -234,7 +282,7 @@ const Login: NextPageWithLayout = () => {
               <Controller
                 control={control}
                 name="password"
-                defaultValue="huy123456"
+                defaultValue="12345678"
                 render={({ field }) => (
                   <>
                     <InputLabelCustom

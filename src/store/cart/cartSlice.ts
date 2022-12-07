@@ -17,7 +17,9 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    doCart() {},
+    doCart(state: initialCartStateType) {
+      state.data
+    },
     doCartSuccess(
       state: initialCartStateType,
       action: PayloadAction<CartResponseType>
@@ -25,7 +27,9 @@ const cartSlice = createSlice({
       const { data }: CartResponseType = action.payload
       state.data = data
     },
-    doCartFailure() {},
+    doCartFailure(state: initialCartStateType) {
+      state.data
+    },
   },
 })
 
