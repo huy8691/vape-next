@@ -33,11 +33,11 @@ const SignatureCanvas = forwardRef(
           }, 3000)
         } else {
           setStateIsSigCanvas(false)
-          let base64ImageContent = sigCanvas.current
+          const base64ImageContent = sigCanvas.current
             .getTrimmedCanvas()
             .toDataURL('image/png')
             .replace(/^data:image\/(png|jpg);base64,/, '')
-          let blob = base64ToBlob(base64ImageContent, 'image/png')
+          const blob = base64ToBlob(base64ImageContent, 'image/png')
           dispatch(loadingActions.doLoading())
           getUrlUploadFileApi({
             files: [
@@ -50,7 +50,7 @@ const SignatureCanvas = forwardRef(
               const { data } = response.data
               dispatch(loadingActions.doLoadingSuccess())
               dispatch(loadingActions.doLoading())
-              let formData = new FormData()
+              const formData = new FormData()
               formData.append('key', data.fields.key)
               formData.append('x-amz-algorithm', data.fields[`x-amz-algorithm`])
               formData.append(
@@ -108,23 +108,23 @@ const SignatureCanvas = forwardRef(
 
     const base64ToBlob = (base64: string, mime: string) => {
       mime = mime || ''
-      var sliceSize = 1024
-      var byteChars = window.atob(base64)
-      var byteArrays = []
+      const sliceSize = 1024
+      const byteChars = window.atob(base64)
+      const byteArrays = []
 
       for (
-        var offset = 0, len = byteChars.length;
+        let offset = 0, len = byteChars.length;
         offset < len;
         offset += sliceSize
       ) {
-        var slice = byteChars.slice(offset, offset + sliceSize)
+        const slice = byteChars.slice(offset, offset + sliceSize)
 
-        var byteNumbers = new Array(slice.length)
-        for (var i = 0; i < slice.length; i++) {
+        const byteNumbers = new Array(slice.length)
+        for (let i = 0; i < slice.length; i++) {
           byteNumbers[i] = slice.charCodeAt(i)
         }
 
-        var byteArray = new Uint8Array(byteNumbers)
+        const byteArray = new Uint8Array(byteNumbers)
 
         byteArrays.push(byteArray)
       }

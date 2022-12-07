@@ -290,7 +290,7 @@ const BrowseProducts: NextPageWithLayout = () => {
             return item
           })
           // kiem tra thang con bao nhieu cai da check
-          let lengthChecked = newChildCategory
+          const lengthChecked = newChildCategory
             .map((obj) => {
               if (obj.checked === true) {
                 return obj
@@ -343,7 +343,7 @@ const BrowseProducts: NextPageWithLayout = () => {
     })
 
     //
-    let category: string[] = []
+    const category: string[] = []
     const flatten = function (arr: ProductCategoryType[]) {
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].child_category?.length > 0) {
@@ -353,12 +353,12 @@ const BrowseProducts: NextPageWithLayout = () => {
       }
       return category
     }
-    let routerQuery = {
+    const routerQuery = {
       ...router.query,
       page: 1,
       category: newArrCategory ? flatten(newArrCategory).toString() : null,
     }
-    let search = objToStringParam(routerQuery)
+    const search = objToStringParam(routerQuery)
     router.replace({
       search: `${search}`,
     })
@@ -389,7 +389,7 @@ const BrowseProducts: NextPageWithLayout = () => {
     if (!brand) {
       brand = `${event.target.name}`
     } else {
-      let arrayBrand = await `${brand}`?.split(',')
+      const arrayBrand = await `${brand}`?.split(',')
       const index = await arrayBrand.indexOf(event.target.name)
       if (index > -1) {
         await arrayBrand.splice(index, 1)
@@ -433,7 +433,7 @@ const BrowseProducts: NextPageWithLayout = () => {
     if (!manufacturer) {
       manufacturer = `${event.target.name}`
     } else {
-      let arrayManufacturer = await `${manufacturer}`?.split(',')
+      const arrayManufacturer = await `${manufacturer}`?.split(',')
       const index = await arrayManufacturer.indexOf(event.target.name)
       if (index > -1) {
         await arrayManufacturer.splice(index, 1)
@@ -488,7 +488,7 @@ const BrowseProducts: NextPageWithLayout = () => {
           brand: null,
         })}`,
       })
-      let newArrBrand = stateProductBrand?.data?.map((object) => {
+      const newArrBrand = stateProductBrand?.data?.map((object) => {
         return { ...object, checked: false }
       })
       setStateProductBrand({
@@ -507,9 +507,11 @@ const BrowseProducts: NextPageWithLayout = () => {
           manufacturer: null,
         })}`,
       })
-      let newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
-        return { ...object, checked: false }
-      })
+      const newArrManufacturer = stateProductManufacturer?.data?.map(
+        (object) => {
+          return { ...object, checked: false }
+        }
+      )
       setStateProductManufacturer({
         ...stateProductManufacturer,
         data: newArrManufacturer,
@@ -518,18 +520,18 @@ const BrowseProducts: NextPageWithLayout = () => {
   }
 
   useEffect(() => {
-    let asPath = router.asPath
+    const asPath = router.asPath
     // category
     getProductCategory()
       .then((res) => {
         const data = res.data
         // find category
         if (asPath.indexOf('category=') !== -1) {
-          let sliceAsPathCategory = asPath.slice(
+          const sliceAsPathCategory = asPath.slice(
             asPath.indexOf('category=') + 9, //position start
             asPath.indexOf('&', asPath.indexOf('category=')) // position end
           )
-          let arrayCategory = sliceAsPathCategory?.split(',')
+          const arrayCategory = sliceAsPathCategory?.split(',')
           const newArrCategory = data?.data?.map((object) => {
             // cap 2
             let newChildCategory = object.child_category
@@ -557,7 +559,7 @@ const BrowseProducts: NextPageWithLayout = () => {
                 return item
               })
               // kiem tra thang con bao nhieu cai da check
-              let lengthChecked = newChildCategory
+              const lengthChecked = newChildCategory
                 .map((obj) => {
                   if (obj.checked === true) {
                     return obj
@@ -617,11 +619,11 @@ const BrowseProducts: NextPageWithLayout = () => {
 
         // find brand
         if (asPath.indexOf('brand=') !== -1) {
-          let sliceAsPathBrand = asPath.slice(
+          const sliceAsPathBrand = asPath.slice(
             asPath.indexOf('brand=') + 6, //position start
             asPath.indexOf('&', asPath.indexOf('brand=')) // position end
           )
-          let arrayBrand = sliceAsPathBrand?.split(',')
+          const arrayBrand = sliceAsPathBrand?.split(',')
           const newArr = data?.data?.map((object) => {
             for (let i = 0; i < arrayBrand.length; i++) {
               if (arrayBrand[i] === object.id.toString()) {
@@ -654,11 +656,11 @@ const BrowseProducts: NextPageWithLayout = () => {
         const data = res.data
         // find Manufacturer
         if (asPath.indexOf('manufacturer=') !== -1) {
-          let sliceAsPathManufacturer = asPath.slice(
+          const sliceAsPathManufacturer = asPath.slice(
             asPath.indexOf('manufacturer=') + 13, //position start
             asPath.indexOf('&', asPath.indexOf('manufacturer=')) // position end
           )
-          let arrayManufacturer = sliceAsPathManufacturer?.split(',')
+          const arrayManufacturer = sliceAsPathManufacturer?.split(',')
           const newArr = data?.data?.map((object) => {
             for (let i = 0; i < arrayManufacturer.length; i++) {
               if (arrayManufacturer[i] === object.id.toString()) {
@@ -688,7 +690,7 @@ const BrowseProducts: NextPageWithLayout = () => {
     // find key search
     if (asPath.indexOf('key=') !== -1) {
       console.log('asPath', asPath.indexOf('key='))
-      let sliceAsPathKeySearch = asPath.slice(
+      const sliceAsPathKeySearch = asPath.slice(
         asPath.indexOf('key=') + 4, //position start
         asPath.indexOf('&', asPath.indexOf('key=')) // position end
       )
@@ -751,12 +753,14 @@ const BrowseProducts: NextPageWithLayout = () => {
           )
         })
 
-      let newArrBrand = stateProductBrand?.data?.map((object) => {
+      const newArrBrand = stateProductBrand?.data?.map((object) => {
         return { ...object, checked: false }
       })
-      let newArrManufacturer = stateProductManufacturer?.data?.map((object) => {
-        return { ...object, checked: false }
-      })
+      const newArrManufacturer = stateProductManufacturer?.data?.map(
+        (object) => {
+          return { ...object, checked: false }
+        }
+      )
       setStateProductBrand({
         ...stateProductBrand,
         data: newArrBrand,
@@ -1113,7 +1117,6 @@ const BrowseProducts: NextPageWithLayout = () => {
                       //     (obj) => obj.id === value
                       //   )?.monthly_sale
                       // }}
-                      onChange={() => {}}
                       defaultValue="0"
                     >
                       <MenuItem value="0">Newest</MenuItem>

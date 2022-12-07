@@ -210,7 +210,7 @@ const Cart: NextPageWithLayout = () => {
     // if (cart.data.items.length === 0) return
     if (stateFlagUpdate) {
       // return
-      let newArr = cart?.data?.items?.map((item) => {
+      const newArr = cart?.data?.items?.map((item) => {
         return {
           ...item,
           isCheck: stateIsCheckedListItem[item.cartItemId],
@@ -223,7 +223,7 @@ const Cart: NextPageWithLayout = () => {
       setStateCartCheck(newArr)
       calculateTotal(newArr)
     } else {
-      let newArr = cart?.data?.items?.map((item) => {
+      const newArr = cart?.data?.items?.map((item) => {
         return {
           ...item,
           isCheck: false,
@@ -277,8 +277,8 @@ const Cart: NextPageWithLayout = () => {
     setAnchorEl(null)
   }
   const handleRemoveFromCart = () => {
-    let deleteCartItemId = currentProduct?.cartItemId
-    let arrNumber = [deleteCartItemId]
+    const deleteCartItemId = currentProduct?.cartItemId
+    const arrNumber = [deleteCartItemId]
     dispatch(loadingActions.doLoading())
     deleteCartItem(arrNumber)
       .then(() => {
@@ -304,8 +304,8 @@ const Cart: NextPageWithLayout = () => {
       })
   }
   const handleClickRemoveFromCart = () => {
-    let deleteCartItemId = currentProduct?.cartItemId
-    let arrNumber = [deleteCartItemId]
+    const deleteCartItemId = currentProduct?.cartItemId
+    const arrNumber = [deleteCartItemId]
     dispatch(loadingActions.doLoading())
     deleteCartItem(arrNumber)
       .then(() => {
@@ -334,7 +334,7 @@ const Cart: NextPageWithLayout = () => {
   // CheckallClickHandler
   const handleSelectAllCheckBox = (e: any) => {
     if (e.target.checked) {
-      let newArr = stateCartCheck?.map((item) => {
+      const newArr = stateCartCheck?.map((item) => {
         return { ...item, isCheck: true }
       })
       if (newArr) {
@@ -352,7 +352,7 @@ const Cart: NextPageWithLayout = () => {
       setStateCartCheck(newArr)
       setStateIsCheckAll(!stateIsCheckAll)
     } else {
-      let newArr = stateCartCheck?.map((item) => {
+      const newArr = stateCartCheck?.map((item) => {
         return { ...item, isCheck: false }
       })
       if (newArr) {
@@ -481,10 +481,10 @@ const Cart: NextPageWithLayout = () => {
         })
       )
     } else {
-      let checkedArr = stateCartCheck?.filter(function (item) {
+      const checkedArr = stateCartCheck?.filter(function (item) {
         return item.isCheck === true
       })
-      let listCartId: Array<number | undefined> = []
+      const listCartId: Array<number | undefined> = []
       checkedArr?.forEach((item: CartItem) => {
         listCartId.push(item.cartItemId)
       })
@@ -498,7 +498,7 @@ const Cart: NextPageWithLayout = () => {
         })
         .catch((error) => {
           const { data } = error.response.data
-          let invalidListItem: Array<number> = []
+          const invalidListItem: Array<number> = []
           data.forEach((item: invalidCartItemType) => {
             invalidListItem.push(item.productId)
             console.log(item.productId)

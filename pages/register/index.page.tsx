@@ -172,7 +172,7 @@ const Register: NextPageWithLayout = () => {
     console.log('valueSignUp', valueSignUp)
     // setStateStatusSignature(!stateStatusSignature)
     if (stateCheckMail.valueEmail) {
-      let newValues = {
+      const newValues = {
         ...valueSignUp,
         email: stateCheckMail.valueEmail,
       }
@@ -1121,7 +1121,9 @@ const Register: NextPageWithLayout = () => {
                             setValue('business_tax_document', file)
                             trigger('business_tax_document')
                           }}
-                          onFileSelectError={() => {}}
+                          onFileSelectError={() => {
+                            return
+                          }}
                           onFileSelectDelete={() => {
                             setValue('business_tax_document', '')
                             trigger('business_tax_document')
@@ -1157,7 +1159,9 @@ const Register: NextPageWithLayout = () => {
                             setValue('vapor_tobacco_license', file)
                             trigger('vapor_tobacco_license')
                           }}
-                          onFileSelectError={() => {}}
+                          onFileSelectError={() => {
+                            return
+                          }}
                           onFileSelectDelete={() => {
                             setValue('vapor_tobacco_license', '')
                             trigger('vapor_tobacco_license')
@@ -1334,7 +1338,9 @@ const Register: NextPageWithLayout = () => {
                   uploadSignatureSuccess={(valueSignUp: any) => {
                     onSubmitSignUp(valueSignUp)
                   }}
-                  uploadSignatureError={() => {}}
+                  uploadSignatureError={() => {
+                    return
+                  }}
                   ref={signatureRef}
                 />
               </Grid>

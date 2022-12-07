@@ -559,6 +559,18 @@ const ProductDetail: NextPageWithLayout = () => {
                 sx={{ fontSize: '1.4rem' }}
               />
             )}
+            {/* </Stack> */}
+            {stateProductDetail ? (
+              <Typography variant="body2" mb={2}>
+                Short description: {stateProductDetail?.description}
+              </Typography>
+            ) : (
+              <Skeleton
+                animation="wave"
+                variant="text"
+                sx={{ fontSize: '1.4rem' }}
+              />
+            )}
             <Box>
               {stateProductDetail ? (
                 <StyledTabs
@@ -583,6 +595,16 @@ const ProductDetail: NextPageWithLayout = () => {
                   />
                 </Box>
               )}
+              {/* {stateProductDetail ? (
+              <>
+                <TabPanel value={valueTab} index={0}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: `${stateProductDetail?.longDescription}`,
+                    }}
+                  />
+                </Box>
+              )} */}
               {stateProductDetail ? (
                 <>
                   <TabPanel value={valueTab} index={0}>

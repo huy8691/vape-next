@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react'
 import Link from '@mui/material/Link'
 import { Box, Button, Container, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
-// import Link from 'next/link'
+import Image from 'next/image'
 // layout
 // layout
 import type { ReactElement } from 'react'
@@ -53,7 +53,7 @@ const Custom404: NextPageWithLayout = () => {
             </Link>
           </Grid>
           <Grid xs={6}>
-            <img
+            <Image
               src="https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569__340.jpg"
               alt=""
               width={500}

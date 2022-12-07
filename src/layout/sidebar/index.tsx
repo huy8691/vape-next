@@ -56,7 +56,7 @@ const Menu = [
 const SideBar = ({ open }: Props) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const cart = useAppSelector((state) => state.cart)
+  // const cart = useAppSelector((state) => state.cart)
   const [openCollapse, setOpenCollapse] = useState<boolean>(true)
   const [openCollapse2, setOpenCollapse2] = useState<boolean>(true)
   const [stateItemCart, setStateItemCart] = useState<number>(0)
@@ -70,14 +70,14 @@ const SideBar = ({ open }: Props) => {
   }
 
   useEffect(() => {
-    dispatch(cartActions.doCart())
+    // dispatch(cartActions.doCart())
   }, [dispatch])
 
-  useEffect(() => {
-    // if (cart?.data?.amountItems) {
-    setStateItemCart(cart.data.amountItems)
-    // }
-  }, [cart])
+  // useEffect(() => {
+  //   // if (cart?.data?.amountItems) {
+  //   setStateItemCart(cart.data.amountItems)
+  //   // }
+  // }, [cart])
 
   return (
     <>
@@ -183,14 +183,14 @@ const SideBar = ({ open }: Props) => {
         </ListItem>
         <Collapse in={openCollapse2} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <Link href="/add-product">
+            <Link href="/create-product">
               <a>
                 <ListItemButton
                   sx={{ pl: 3 }}
-                  selected={router.pathname === '/add-product'}
+                  selected={router.pathname === '/create-product'}
                 >
                   {open ? (
-                    <ListItemText primary="Add product" />
+                    <ListItemText primary="Create product" />
                   ) : (
                     <ListItemIcon>
                       <FileSearch />

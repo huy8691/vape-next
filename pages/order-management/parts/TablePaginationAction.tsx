@@ -31,7 +31,7 @@ const TablePaginationAction = ({
   count,
   rowsPerPage,
 }: Props) => {
-  let nextPage = page + 1
+  const nextPage = page + 1
   const router = useRouter()
 
   const handleFirstPageButtonClick = () => {

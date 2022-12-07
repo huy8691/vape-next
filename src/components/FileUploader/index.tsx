@@ -115,7 +115,7 @@ const ComponentFileUploader = ({
         const { data } = response.data
         dispatch(loadingActions.doLoadingSuccess())
         dispatch(loadingActions.doLoading())
-        let formData = new FormData()
+        const formData = new FormData()
         formData.append('key', data.fields.key)
         formData.append('x-amz-algorithm', data.fields[`x-amz-algorithm`])
         formData.append('x-amz-credential', data.fields[`x-amz-credential`])

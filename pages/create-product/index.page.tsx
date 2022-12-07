@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@mui/material'
 import { NextPageWithLayout } from 'pages/_app.page'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
 import { styled } from '@mui/system'
 import {
@@ -26,7 +26,30 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './validations'
 // style
 import classes from './styles.module.scss'
-import { AddFormInput, DropdownDataType } from './addProductModel'
+import {
+  AddFormInput,
+  DropdownDataType,
+  ProductBrandType,
+  ProductCategoryType,
+  ProductManufacturerType,
+} from './addProductModel'
+
+//react-quill
+// import ReactQuill from 'react-quill'
+import dynamic from 'next/dynamic'
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+import 'react-quill/dist/quill.snow.css'
+import {
+  CreateProductApi,
+  getProductBrand,
+  getProductCategory,
+  getProductManufacturer,
+} from './apiAddProduct'
+import { loadingActions } from 'src/store/loading/loadingSlice'
+
+import { useAppDispatch } from 'src/store/hooks'
+import { notificationActions } from 'src/store/notification/notificationSlice'
+import { hasSpecialCharacter } from 'src/utils/global.utils'
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '3.2rem',
@@ -55,21 +78,25 @@ const CustomImageBox = styled(Box)(() => ({
 const temporaryArray: DropdownDataType[] = [
   {
     id: 1,
-    name: ' Name',
+    name: 'UNIT',
   },
   {
     id: 2,
-    name: 'Name 2',
-  },
-  {
-    id: 3,
-    name: 'Name 3',
+    name: 'PACKAGE',
   },
 ]
 
-const AddProduct: NextPageWithLayout = () => {
+const CreateProduct: NextPageWithLayout = () => {
   const [stateParentCategorySelected, setStateParentCategorySelected] =
-    useState<string>()
+    useState<number>()
+  const [stateListCategory, setStateListCategory] =
+    useState<ProductCategoryType[]>()
+  const [stateListBrand, setStateListBrand] = useState<ProductBrandType[]>()
+  const [stateListManufacturer, setStateListManufacturer] =
+    useState<ProductManufacturerType[]>()
+
+  // const router = useRouter()
+  const dispatch = useAppDispatch()
   // const [stateParentCategorySelected, setStateParentCategorySelected] =
   //   useState<DropdownDataType>()
 
@@ -79,6 +106,8 @@ const AddProduct: NextPageWithLayout = () => {
     control,
     setValue,
     getValues,
+    watch,
+    register,
     formState: { errors },
   } = useForm<AddFormInput>({
     resolver: yupResolver(schema),
@@ -87,14 +116,80 @@ const AddProduct: NextPageWithLayout = () => {
 
   const onSubmit = (values: AddFormInput) => {
     console.log('here', values)
+    let addProduct: AddFormInput = {
+      name: values.name,
+      brand: values.brand,
+      manufacturer: values.manufacturer,
+      unit_type: values.unit_type,
+      category: values.category,
+      longDescription: values.longDescription,
+      price: values.price,
+      description: values.description,
+      thumbnail:
+        'https://develop-bizbookly.s3.ap-southeast-1.amazonaws.com/images/2022/8/9/Combo_91__36775.png',
+    }
+    dispatch(loadingActions.doLoading())
+    CreateProductApi(addProduct)
+      .then(() => {
+        dispatch(loadingActions.doLoadingSuccess())
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Successfully',
+          })
+        )
+      })
+      .catch(() => {
+        dispatch(loadingActions.doLoadingFailure())
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Error',
+            type: 'error',
+          })
+        )
+      })
   }
 
-  const hasSpecialCharacter = (input: string) => {
-    // eslint-disable-next-line no-useless-escape
-    return /[\!\@\#\$\%\^\&\*\)\(\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\/\\?\,]+$/g.test(
-      input
-    )
+  useEffect(() => {
+    register('longDescription', { required: true, minLength: 11 })
+  })
+
+  const editorContent = watch('longDescription')
+  const onEditorStateChange = (value: string) => {
+    // console.log(value)
+    setValue('longDescription', value)
+    console.log(getValues('longDescription'))
   }
+
+  // // fix error when use next theme
+  // const [mounted, setMounted] = useState(false)
+  // useEffect(() => {
+  //   setMounted(true)
+  // }, [])
+  // if (!mounted) {
+  //   return null
+  // }
+  // fix error when use next theme
+  useEffect(() => {
+    // dispatch(loadingActions.doLoading())
+    getProductCategory()
+      .then((res) => {
+        const { data } = res.data
+        setStateListCategory(data)
+      })
+      .catch((error) => {})
+    getProductBrand()
+      .then((res) => {
+        const { data } = res.data
+        setStateListBrand(data)
+      })
+      .catch((error) => {})
+    getProductManufacturer()
+      .then((res) => {
+        const { data } = res.data
+        setStateListManufacturer(data)
+      })
+      .catch((error) => {})
+  }, [])
 
   return (
     <>
@@ -131,12 +226,12 @@ const AddProduct: NextPageWithLayout = () => {
               <Grid xs={6}>
                 <Controller
                   control={control}
-                  name="product_name"
+                  name="name"
                   render={({ field }) => (
                     <>
                       <InputLabelCustom
                         htmlFor="product_name"
-                        error={!!errors.product_name}
+                        error={!!errors.name}
                       >
                         Product name
                       </InputLabelCustom>
@@ -144,12 +239,11 @@ const AddProduct: NextPageWithLayout = () => {
                         <TextFieldCustom
                           id="product_name"
                           placeholder="Enter product name"
-                          error={!!errors.product_name}
+                          error={!!errors.name}
                           {...field}
                         />
-                        <FormHelperText error={!!errors.product_name}>
-                          {errors.product_name &&
-                            `${errors.product_name.message}`}
+                        <FormHelperText error={!!errors.name}>
+                          {errors.name && `${errors.name.message}`}
                         </FormHelperText>
                       </FormControl>
                     </>
@@ -179,7 +273,7 @@ const AddProduct: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return temporaryArray?.find(
+                            return stateListBrand?.find(
                               (obj) => obj.id === value
                             )?.name
                           }}
@@ -189,7 +283,7 @@ const AddProduct: NextPageWithLayout = () => {
                             // trigger('monthly_purchase')
                           }}
                         >
-                          {temporaryArray?.map((item, index) => {
+                          {stateListBrand?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}
@@ -233,7 +327,7 @@ const AddProduct: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return temporaryArray?.find(
+                            return stateListManufacturer?.find(
                               (obj) => obj.id === value
                             )?.name
                           }}
@@ -243,7 +337,7 @@ const AddProduct: NextPageWithLayout = () => {
                             // trigger('monthly_purchase')
                           }}
                         >
-                          {temporaryArray?.map((item, index) => {
+                          {stateListManufacturer?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}
@@ -289,19 +383,18 @@ const AddProduct: NextPageWithLayout = () => {
                               )
                             }
                             return temporaryArray?.find(
-                              (obj) => obj.id === value
+                              (obj) => obj.name === value
                             )?.name
                           }}
                           {...field}
                           onChange={(event: any) => {
                             setValue('unit_type', event.target.value)
-                            // trigger('monthly_purchase')
                           }}
                         >
                           {temporaryArray?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
-                                value={item.id}
+                                value={item.name}
                                 key={index + Math.random()}
                               >
                                 {item.name}
@@ -356,12 +449,12 @@ const AddProduct: NextPageWithLayout = () => {
                 <Box>
                   <Controller
                     control={control}
-                    name="parent_category"
+                    name="category"
                     render={({ field }) => (
                       <>
                         <InputLabelCustom
                           htmlFor="parent_category"
-                          error={!!errors.parent_category}
+                          error={!!errors.category}
                         >
                           Parent category
                         </InputLabelCustom>
@@ -378,20 +471,20 @@ const AddProduct: NextPageWithLayout = () => {
                                   </PlaceholderSelect>
                                 )
                               }
-                              return temporaryArray?.find(
+                              return stateListCategory?.find(
                                 (obj) => obj.id === value
                               )?.name
                             }}
                             {...field}
                             onChange={(event: any) => {
-                              setValue('parent_category', event.target.value)
-                              setStateParentCategorySelected(
-                                getValues('parent_category')
-                              )
+                              setValue('category', event.target.value)
+                              // setStateParentCategorySelected(
+                              //   getValues('category')
+                              // )
                               // trigger('monthly_purchase')
                             }}
                           >
-                            {temporaryArray?.map((item, index) => {
+                            {stateListCategory?.map((item, index) => {
                               return (
                                 <MenuItemSelectCustom
                                   value={item.id}
@@ -402,9 +495,8 @@ const AddProduct: NextPageWithLayout = () => {
                               )
                             })}
                           </SelectCustom>
-                          <FormHelperText error={!!errors.parent_category}>
-                            {errors.parent_category &&
-                              `${errors.parent_category.message}`}
+                          <FormHelperText error={!!errors.category}>
+                            {errors.category && `${errors.category.message}`}
                           </FormHelperText>
                         </FormControl>
                       </>
@@ -413,7 +505,7 @@ const AddProduct: NextPageWithLayout = () => {
                 </Box>
               </Grid>
               <Grid xs={6}>
-                <Box>
+                {/* <Box>
                   <Controller
                     control={control}
                     name="category"
@@ -469,7 +561,7 @@ const AddProduct: NextPageWithLayout = () => {
                       </>
                     )}
                   />
-                </Box>
+                </Box> */}
               </Grid>
             </Grid>
           </CustomBox>
@@ -479,27 +571,27 @@ const AddProduct: NextPageWithLayout = () => {
                 <Box>
                   <Controller
                     control={control}
-                    name="short_description"
+                    name="description"
                     render={({ field }) => (
                       <>
                         <InputLabelCustom
-                          htmlFor="short_description"
-                          error={!!errors.short_description}
+                          htmlFor="description"
+                          error={!!errors.description}
                         >
                           Short description
                         </InputLabelCustom>
                         <FormControl fullWidth>
                           <TextFieldCustom
-                            id="short_description"
+                            id="description"
                             multiline
                             minRows={5}
                             placeholder="Enter short description"
-                            error={!!errors.short_description}
+                            error={!!errors.description}
                             {...field}
                           />
-                          <FormHelperText error={!!errors.short_description}>
-                            {errors.short_description &&
-                              `${errors.short_description.message}`}
+                          <FormHelperText error={!!errors.description}>
+                            {errors.description &&
+                              `${errors.description.message}`}
                           </FormHelperText>
                         </FormControl>
                       </>
@@ -511,26 +603,24 @@ const AddProduct: NextPageWithLayout = () => {
                 <Box>
                   <Controller
                     control={control}
-                    name="overview"
+                    name="longDescription"
                     render={({ field }) => (
                       <>
                         <InputLabelCustom
-                          htmlFor="overview"
-                          error={!!errors.overview}
+                          htmlFor="longDescription"
+                          error={!!errors.longDescription}
                         >
                           Overview
                         </InputLabelCustom>
                         <FormControl fullWidth>
-                          <TextFieldCustom
-                            id="overview"
-                            multiline
-                            minRows={5}
-                            placeholder="Enter overview"
-                            error={!!errors.overview}
-                            {...field}
+                          <ReactQuill
+                            theme="snow"
+                            value={editorContent}
+                            onChange={onEditorStateChange}
                           />
-                          <FormHelperText error={!!errors.overview}>
-                            {errors.overview && `${errors.overview.message}`}
+                          <FormHelperText error={!!errors.longDescription}>
+                            {errors.longDescription &&
+                              `${errors.longDescription.message}`}
                           </FormHelperText>
                         </FormControl>
                       </>
@@ -538,6 +628,7 @@ const AddProduct: NextPageWithLayout = () => {
                   />
                 </Box>
               </Grid>
+              <Grid xs={12}></Grid>
             </Grid>
           </CustomBox>
           <Box display="flex" justifyContent="flex-end">
@@ -551,7 +642,7 @@ const AddProduct: NextPageWithLayout = () => {
   )
 }
 
-AddProduct.getLayout = function getLayout(page: ReactElement) {
+CreateProduct.getLayout = function getLayout(page: ReactElement) {
   return <NestedLayout>{page}</NestedLayout>
 }
-export default AddProduct
+export default CreateProduct

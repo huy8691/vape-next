@@ -125,7 +125,7 @@ const Login: NextPageWithLayout = () => {
     dispatch(loadingActions.doLoading())
     loginAPI({
       ...values,
-      user_type: 'CUSTOMER',
+      platform: 'SUPPLIER',
     })
       .then((response) => {
         const { data } = response.data

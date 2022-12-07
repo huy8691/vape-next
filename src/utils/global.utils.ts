@@ -11,3 +11,10 @@ export const objToStringParam = (obj: object) => {
 export const isEmptyObject = (obj: object) => {
   return Object.entries(obj).length === 0 && obj.constructor === Object
 }
+
+export const hasSpecialCharacter = (input: string) => {
+  // eslint-disable-next-line no-useless-escape
+  return /[\!\@\#\$\%\^\&\*\)\(\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\/\\?\,]+$/g.test(
+    input
+  )
+}
