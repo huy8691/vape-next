@@ -11,7 +11,6 @@ const nextConfig = {
     // limit of 25 imageSizes values
     // imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     // limit of 50 domains values
-    unoptimized: true,
     domains: [
       'develop-bizbookly.s3.ap-southeast-1.amazonaws.com',
       'vape-test.s3.ap-southeast-1.amazonaws.com',
