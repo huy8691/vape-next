@@ -11,6 +11,7 @@ const nextConfig = {
     // limit of 25 imageSizes values
     // imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     // limit of 50 domains values
+    unoptimized: true,
     domains: [
       'develop-bizbookly.s3.ap-southeast-1.amazonaws.com',
       'vape-test.s3.ap-southeast-1.amazonaws.com',
@@ -18,11 +19,12 @@ const nextConfig = {
       'via.placeholder.com',
       'cdn.shopify.com',
       'product.hstatic.net',
+      'cdn.pixabay.com',
     ],
     // path prefix for Image Optimization API, useful with `loader`
-    path: '/_next/image',
+    path: '',
     // loader can be 'default', 'imgix', 'cloudinary', 'akamai', or 'custom'
-    loader: 'default',
+    loader: 'akamai',
     // disable static imports for image files
     disableStaticImages: false,
     // minimumCacheTTL is in seconds, must be integer 0 or more
