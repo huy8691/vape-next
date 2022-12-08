@@ -127,7 +127,11 @@ const SelectCustomSort = styled(Select)({
   },
 })
 
-const BrowseProducts: NextPageWithLayout = () => {
+type Props = {
+  dataProductCategory: any
+}
+
+const BrowseProducts: NextPageWithLayout<Props> = ({ dataProductCategory }) => {
   const minDistance = 10
   const [dataProducts, setDataProducts] =
     useState<ProductListDataResponseType>()
@@ -146,6 +150,8 @@ const BrowseProducts: NextPageWithLayout = () => {
 
   const [valueRangePrice, setValueRangPrice] = React.useState<number[]>([0, 40])
   // const [stateMaxPrice, setStateMaxPrice] = React.useState<number>(0)
+
+  console.log('dataProductCategory', dataProductCategory)
 
   const CategoryItem = ({ list }: any) => {
     return list?.map((item: ProductCategoryType, index: number) => {
@@ -1141,6 +1147,24 @@ const BrowseProducts: NextPageWithLayout = () => {
       </Grid>
     </>
   )
+}
+
+export async function getStaticProps() {
+  const dataProductCategory = await getProductBrand()
+    .then((response) => {
+      console.log('dataProductCategory11')
+      const { data } = response.data
+      return data
+    })
+    .catch(() => {
+      console.log('dataProductCategory22')
+      return []
+    })
+  return {
+    props: {
+      dataProductCategory: dataProductCategory,
+    },
+  }
 }
 
 BrowseProducts.getLayout = function getLayout(page: ReactElement) {

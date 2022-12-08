@@ -110,6 +110,7 @@ const InnerLayout = ({ children }: Props) => {
     }
   }, [notificationApp])
   // Snackbar
+
   return (
     <div style={{ minHeight: '100vh' }}>
       {children}
@@ -135,6 +136,7 @@ const WrapLayout = ({ children }: Props) => {
   const router = useRouter()
   const token = Boolean(Cookies.get('token'))
   const [mounted, setMounted] = useState<boolean>(false)
+
   useEffect(() => {
     if (
       (router.asPath === '/login' ||
@@ -157,6 +159,7 @@ const WrapLayout = ({ children }: Props) => {
       </div>
     )
   }
+
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>

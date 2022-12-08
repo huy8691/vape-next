@@ -1,5 +1,5 @@
 // react
-import React, { useCallback, useRef, useEffect } from 'react'
+import React, { useCallback, useRef } from 'react'
 import type { ReactElement } from 'react'
 // react
 
@@ -111,7 +111,19 @@ type CheckMail = {
   status: string
   valueEmail: string
 }
-const Register: NextPageWithLayout = () => {
+type Props = {
+  dataMonthlyPurchase: { id: number; monthly: string }[]
+  dataMonthlySale: { id: number; monthly_sale: string }[]
+  dataTypeOfSale: { id: number; type_of_sale: string }[]
+  dataFindUsOver: { id: number; find_us_over: string }[]
+}
+
+const Register: NextPageWithLayout<Props> = ({
+  dataMonthlyPurchase,
+  dataMonthlySale,
+  dataTypeOfSale,
+  dataFindUsOver,
+}) => {
   const router = useRouter()
   const token = Boolean(Cookies.get('token'))
   if (token) {
@@ -124,24 +136,12 @@ const Register: NextPageWithLayout = () => {
   })
   const [stateValueMonthlyPurchase, setStateValueMonthlyPurchase] =
     React.useState<string>()
-  const [stateSelectMonthlyPurchase, setStateSelectMonthlyPurchase] =
-    React.useState<{ id: number; monthly: string }[]>([])
-
   const [stateValueMonthlySale, setStateValueMonthlySale] =
     React.useState<string>()
-  const [stateSelectMonthlySale, setStateSelectMonthlySale] = React.useState<
-    { id: number; monthly_sale: string }[]
-  >([])
   const [stateValueTypeOfSale, setStateValueTypeOfSale] =
     React.useState<string>()
-  const [stateSelectTypeOfSale, setStateSelectTypeOfSale] = React.useState<
-    { id: number; type_of_sale: string }[]
-  >([])
   const [stateValueFindUsOver, setStateValueFindUsOver] =
     React.useState<string>()
-  const [stateSelectFindUsOver, setStateSelectFindUsOver] = React.useState<
-    { id: number; find_us_over: string }[]
-  >([])
 
   const {
     setValue,
@@ -231,110 +231,27 @@ const Register: NextPageWithLayout = () => {
   //
   const handleChangeMonthlyPurchase = (value: number) => {
     setStateValueMonthlyPurchase(
-      stateSelectMonthlyPurchase.find((obj) => obj.id === value)?.monthly
+      dataMonthlyPurchase.find((obj) => obj.id === value)?.monthly
     )
   }
 
   const handleChangeMonthlySale = (value: number) => {
     setStateValueMonthlySale(
-      stateSelectMonthlySale.find((obj) => obj.id === value)?.monthly_sale
+      dataMonthlySale.find((obj) => obj.id === value)?.monthly_sale
     )
   }
 
   const handleChangeTypeOfSale = (value: number) => {
     setStateValueTypeOfSale(
-      stateSelectTypeOfSale.find((obj) => obj.id === value)?.type_of_sale
+      dataTypeOfSale.find((obj) => obj.id === value)?.type_of_sale
     )
   }
 
   const handleChangeFindUsOver = (value: number) => {
     setStateValueFindUsOver(
-      stateSelectFindUsOver.find((obj) => obj.id === value)?.find_us_over
+      dataFindUsOver.find((obj) => obj.id === value)?.find_us_over
     )
   }
-
-  useEffect(() => {
-    //
-    getMonthlyPurchaseApi()
-      .then((response) => {
-        const { data } = response.data
-        setStateSelectMonthlyPurchase(data)
-        dispatch(
-          notificationActions.doNotification({
-            message: data.message,
-          })
-        )
-      })
-      .catch((error) => {
-        const data = error.response?.data
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
-      })
-    //
-    getMonthlySaleApi()
-      .then((response) => {
-        const { data } = response.data
-        setStateSelectMonthlySale(data)
-        dispatch(
-          notificationActions.doNotification({
-            message: data.message,
-          })
-        )
-      })
-      .catch((error) => {
-        const data = error.response?.data
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
-      })
-    //
-    getTypeOfSaleApi()
-      .then((response) => {
-        const { data } = response.data
-        setStateSelectTypeOfSale(data)
-        dispatch(
-          notificationActions.doNotification({
-            message: data.message,
-          })
-        )
-      })
-      .catch((error) => {
-        const data = error.response?.data
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
-      })
-    //
-    getFindUsOverApi()
-      .then((response) => {
-        const { data } = response.data
-        setStateSelectFindUsOver(data)
-        dispatch(
-          notificationActions.doNotification({
-            message: data.message,
-          })
-        )
-      })
-      .catch((error) => {
-        const data = error.response?.data
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
-      })
-  }, [dispatch])
 
   return (
     <div className={classes['register-page']}>
@@ -621,9 +538,7 @@ const Register: NextPageWithLayout = () => {
                           id="monthly_purchase"
                           displayEmpty
                           disabled={
-                            stateSelectMonthlyPurchase?.length > 0
-                              ? false
-                              : true
+                            dataMonthlyPurchase?.length > 0 ? false : true
                           }
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
@@ -634,7 +549,7 @@ const Register: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return stateSelectMonthlyPurchase?.find(
+                            return dataMonthlyPurchase?.find(
                               (obj) => obj.id === value
                             )?.monthly
                           }}
@@ -645,7 +560,17 @@ const Register: NextPageWithLayout = () => {
                             handleChangeMonthlyPurchase(event.target.value)
                           }}
                         >
-                          {stateSelectMonthlyPurchase?.map((item, index) => {
+                          {/* {stateSelectMonthlyPurchase?.map((item, index) => {
+                            return (
+                              <MenuItemSelectCustom
+                                value={item.id}
+                                key={index + Math.random()}
+                              >
+                                {item.monthly}
+                              </MenuItemSelectCustom>
+                            )
+                          })} */}
+                          {dataMonthlyPurchase?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}
@@ -708,9 +633,7 @@ const Register: NextPageWithLayout = () => {
                         <SelectCustom
                           id="monthly_sale"
                           displayEmpty
-                          disabled={
-                            stateSelectMonthlySale?.length > 0 ? false : true
-                          }
+                          disabled={dataMonthlySale?.length > 0 ? false : true}
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
                             if (value === '') {
@@ -720,7 +643,7 @@ const Register: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return stateSelectMonthlySale?.find(
+                            return dataMonthlySale?.find(
                               (obj) => obj.id === value
                             )?.monthly_sale
                           }}
@@ -731,7 +654,7 @@ const Register: NextPageWithLayout = () => {
                             handleChangeMonthlySale(event.target.value)
                           }}
                         >
-                          {stateSelectMonthlySale?.map((item, index) => {
+                          {dataMonthlySale?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}
@@ -792,9 +715,7 @@ const Register: NextPageWithLayout = () => {
                         <SelectCustom
                           id="type_of_sale"
                           displayEmpty
-                          disabled={
-                            stateSelectTypeOfSale?.length > 0 ? false : true
-                          }
+                          disabled={dataTypeOfSale?.length > 0 ? false : true}
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
                             if (value === '') {
@@ -804,7 +725,7 @@ const Register: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return stateSelectTypeOfSale?.find(
+                            return dataTypeOfSale?.find(
                               (obj) => obj.id === value
                             )?.type_of_sale
                           }}
@@ -815,7 +736,7 @@ const Register: NextPageWithLayout = () => {
                             handleChangeTypeOfSale(event.target.value)
                           }}
                         >
-                          {stateSelectTypeOfSale?.map((item, index) => {
+                          {dataTypeOfSale?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}
@@ -905,9 +826,7 @@ const Register: NextPageWithLayout = () => {
                         <SelectCustom
                           id="find_us_over"
                           displayEmpty
-                          disabled={
-                            stateSelectFindUsOver?.length > 0 ? false : true
-                          }
+                          disabled={dataFindUsOver?.length > 0 ? false : true}
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
                             if (value === '') {
@@ -917,7 +836,7 @@ const Register: NextPageWithLayout = () => {
                                 </PlaceholderSelect>
                               )
                             }
-                            return stateSelectFindUsOver?.find(
+                            return dataFindUsOver?.find(
                               (obj) => obj.id === value
                             )?.find_us_over
                           }}
@@ -928,7 +847,7 @@ const Register: NextPageWithLayout = () => {
                             handleChangeFindUsOver(event.target.value)
                           }}
                         >
-                          {stateSelectFindUsOver?.map((item, index) => {
+                          {dataFindUsOver?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.id}
@@ -1361,6 +1280,49 @@ const Register: NextPageWithLayout = () => {
       </div>
     </div>
   )
+}
+
+export async function getStaticProps() {
+  const dataMonthlyPurchase = await getMonthlyPurchaseApi()
+    .then((response) => {
+      const { data } = response.data
+      return data
+    })
+    .catch(() => {
+      return []
+    })
+  const dataMonthlySale = await getMonthlySaleApi()
+    .then((response) => {
+      const { data } = response.data
+      return data
+    })
+    .catch(() => {
+      return []
+    })
+  const dataTypeOfSale = await getTypeOfSaleApi()
+    .then((response) => {
+      const { data } = response.data
+      return data
+    })
+    .catch(() => {
+      return []
+    })
+  const dataFindUsOver = await getFindUsOverApi()
+    .then((response) => {
+      const { data } = response.data
+      return data
+    })
+    .catch(() => {
+      return []
+    })
+  return {
+    props: {
+      dataMonthlyPurchase: dataMonthlyPurchase,
+      dataMonthlySale: dataMonthlySale,
+      dataTypeOfSale: dataTypeOfSale,
+      dataFindUsOver: dataFindUsOver,
+    },
+  }
 }
 
 Register.getLayout = function getLayout(page: ReactElement) {

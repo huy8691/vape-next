@@ -108,6 +108,7 @@ const ButtonLoginCustom = styled(ButtonCustom)(() => ({
 const Login: NextPageWithLayout = () => {
   const router = useRouter()
   const {
+    setValue,
     handleSubmit,
     control,
     formState: { errors },
@@ -213,7 +214,21 @@ const Login: NextPageWithLayout = () => {
                   defaultValue="SUPPLIER"
                   render={({ field }) => (
                     <FormControl>
-                      <RadioGroup row {...field}>
+                      <RadioGroup
+                        row
+                        {...field}
+                        onChange={(e) => {
+                          console.log('e', e.target.value)
+                          setValue('platform', e.target.value)
+                          if (e.target.value === 'MERCHANT') {
+                            setValue('email', 'khoaanh4920@gmail.com')
+                            setValue('password', 'dev1234!@#')
+                          } else {
+                            setValue('email', 'supplier@exnodes.vn')
+                            setValue('password', '12345678')
+                          }
+                        }}
+                      >
                         <FormControlLabel
                           value="SUPPLIER"
                           control={<Radio />}
@@ -229,28 +244,6 @@ const Login: NextPageWithLayout = () => {
                   )}
                 />
               </FormControl>
-
-              {/* <Controller
-                control={control}
-                name="platform"
-                defaultValue="SUPPLIER"
-                render={({ field }) => (
-                  <FormControl>
-                    <RadioGroup row>
-                      <FormControlLabel
-                        value="SUPPLIER"
-                        control={<Radio />}
-                        label="SUPPLIER"
-                      />
-                      <FormControlLabel
-                        value="MERCHANT"
-                        control={<Radio />}
-                        label="MERCHANT"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                )}
-              /> */}
             </Box>
             <Box mb={2}>
               <Controller
