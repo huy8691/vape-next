@@ -1,24 +1,21 @@
-/**
- * @Copyright 2020, Exnodes. All Rights Reserved.
- * @date 2022/02/08 21:48
- */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserInfoResponseType, UserInfoType } from './userInfoModels'
 
 interface initialUserInfoStateType {
   data: UserInfoType
-  isSuccess: boolean
 }
 
 const initialState: initialUserInfoStateType = {
   data: {
-    avatar: '',
+    phone_number: '',
     email: '',
-    fullName: '',
-    id: 0,
-    phoneNumber: '',
+    first_name: '',
+    last_name: '',
+    gender: '',
+    dob: '',
+    avatar: '',
+    address: '',
   },
-  isSuccess: false,
 }
 
 const userInfoSlice = createSlice({
@@ -26,18 +23,19 @@ const userInfoSlice = createSlice({
   initialState,
   reducers: {
     doUserInfo(state: initialUserInfoStateType) {
-      state.data = {}
+      state.data
     },
     doUserInfoSuccess(
       state: initialUserInfoStateType,
       action: PayloadAction<UserInfoResponseType>
     ) {
       const { data }: UserInfoResponseType = action.payload
-      state.data = data
-      state.isSuccess = true
+      if (data) {
+        state.data = data
+      }
     },
     doUserInfoFailure(state: initialUserInfoStateType) {
-      state.isSuccess = false
+      state.data
     },
   },
 })

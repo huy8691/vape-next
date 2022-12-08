@@ -22,7 +22,7 @@ import { useRouter } from 'next/router'
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { useAppSelector } from 'src/store/hooks'
-import { cartActions } from 'src/store/cart/cartSlice'
+// import { cartActions } from 'src/store/cart/cartSlice'
 
 // import classes from './styles.module.scss'
 

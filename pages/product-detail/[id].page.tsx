@@ -610,7 +610,7 @@ const ProductDetail: NextPageWithLayout = () => {
                   <TabPanel value={valueTab} index={0}>
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: stateProductDetail?.longDescription!,
+                        __html: `${stateProductDetail?.longDescription}`,
                       }}
                     />
                   </TabPanel>

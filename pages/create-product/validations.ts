@@ -20,9 +20,9 @@ const schema = Yup.object().shape({
     .min(20)
     .max(500),
   category: Yup.number().required(),
-  child_category: Yup.string().when('category', {
-    is: '1',
-    then: Yup.string().required(),
+  child_category: Yup.number().when('category', {
+    is: '2',
+    then: Yup.number().required(),
   }),
 })
 

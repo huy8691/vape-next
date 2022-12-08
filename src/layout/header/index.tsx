@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 
 // import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 import { useAppDispatch } from 'src/store/hooks'
+import { useAppSelector } from 'src/store/hooks'
 import { logOutAPI } from '../../../pages/login/loginAPI'
 import { loadingActions } from 'src/store/loading/loadingSlice'
 import { notificationActions } from 'src/store/notification/notificationSlice'
+import { userInfoActions } from 'src/store/userInfo/userInfoSlice'
 import Cookies from 'js-cookie'
 
 // mui
@@ -92,6 +95,7 @@ const BellCustom = styled(Bell)(({ theme }) => ({
 
 const HeaderInner = () => {
   const dispatch = useAppDispatch()
+  const userInfo = useAppSelector((state) => state.userInfo)
   // const router = useRouter()
   // next theme
   const { theme, setTheme } = useTheme()
@@ -115,6 +119,10 @@ const HeaderInner = () => {
   const handleClickAway = () => {
     setSideBarOpen(false)
   }
+
+  useEffect(() => {
+    dispatch(userInfoActions.doUserInfo())
+  }, [dispatch])
 
   // fix error when use next theme
   const [mounted, setMounted] = useState(false)
@@ -178,7 +186,10 @@ const HeaderInner = () => {
         </IconButton>
         <Box sx={{ flexGrow: 0 }}>
           <IconButton onClick={handleOpenUserMenu}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Avatar
+              alt={userInfo.data.first_name}
+              src="/static/images/avatar/2.jpg"
+            />
           </IconButton>
           <Menu
             sx={{ mt: '45px' }}
@@ -200,7 +211,11 @@ const HeaderInner = () => {
               <Typography textAlign="center">Setting</Typography>
             </MenuItem>
             <MenuItem onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">My account</Typography>
+              <Link href="/account">
+                <a>
+                  <Typography textAlign="center">My account</Typography>
+                </a>
+              </Link>
             </MenuItem>
             <MenuItem onClick={handleLogout}>
               <Typography textAlign="center">Logout</Typography>

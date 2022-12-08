@@ -1,23 +1,18 @@
 import * as Yup from 'yup'
+
 const schema = Yup.object().shape({
-  fullName: Yup.string().required('Vui lòng nhập tên đăng nhập của bạn'),
-  email: Yup.string()
-    .email('Email không đúng')
-    .max(255)
-    .required('Vui lòng nhập email'),
-  dob: Yup.date()
-    .required('Vui lòng nhập ngày sinh')
-    .nullable()
-    .default(undefined),
-  gender: Yup.string().required('Vui lòng chọn giới tính'),
+  first_name: Yup.string()
+    .required('First name is a required field')
+    .min(2, 'First name must be at least 2 characters')
+    .max(50, 'First name must be at most 50 characters'),
+
+  last_name: Yup.string()
+    .required('Last name is a required field')
+    .min(2, 'Last name must be at least 2 characters')
+    .max(50, 'Last name must be at most 50 characters'),
+
+  gender: Yup.string().required('Gender is a required field'),
+  address: Yup.string().required('Address is a required field'),
 })
 
-const schemaPassword = Yup.object().shape({
-  currentPassword: Yup.string().required('Vui lòng nhập mật khẩu cũ'),
-  newPassword: Yup.string().required('Vui lòng nhập mật khẩu mới'),
-  passwordConfirmation: Yup.string()
-    .required('Vui lòng nhập mật khẩu')
-    .oneOf([Yup.ref('newPassword'), null], 'Mật khẩu không khớp'),
-})
-
-export { schema, schemaPassword }
+export { schema }

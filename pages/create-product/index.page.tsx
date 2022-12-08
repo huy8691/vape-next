@@ -28,6 +28,7 @@ import { schema } from './validations'
 import classes from './styles.module.scss'
 import {
   AddFormInput,
+  CreateProductDataType,
   DropdownDataType,
   ProductBrandType,
   ProductCategoryType,
@@ -75,7 +76,7 @@ const CustomImageBox = styled(Box)(() => ({
   borderRadius: '10px',
 }))
 
-const temporaryArray: DropdownDataType[] = [
+const unitTypeArray: DropdownDataType[] = [
   {
     id: 1,
     name: 'UNIT',
@@ -87,18 +88,19 @@ const temporaryArray: DropdownDataType[] = [
 ]
 
 const CreateProduct: NextPageWithLayout = () => {
-  const [stateParentCategorySelected, setStateParentCategorySelected] =
-    useState<number>()
+  // const [stateParentCategorySelected, setStateParentCategorySelected] =
+  //   useState<number>()
   const [stateListCategory, setStateListCategory] =
     useState<ProductCategoryType[]>()
   const [stateListBrand, setStateListBrand] = useState<ProductBrandType[]>()
   const [stateListManufacturer, setStateListManufacturer] =
     useState<ProductManufacturerType[]>()
-
+  const [stateChildListCategory, setStateChildListCategory] =
+    useState<ProductCategoryType[]>()
+  const [stateDisableChildCategory, setStateDisableChildCategory] =
+    useState<boolean>(true)
   // const router = useRouter()
   const dispatch = useAppDispatch()
-  // const [stateParentCategorySelected, setStateParentCategorySelected] =
-  //   useState<DropdownDataType>()
 
   // react-hook-form
   const {
@@ -108,26 +110,39 @@ const CreateProduct: NextPageWithLayout = () => {
     getValues,
     watch,
     register,
+    reset,
     formState: { errors },
   } = useForm<AddFormInput>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
 
-  const onSubmit = (values: AddFormInput) => {
+  const onSubmit = (values: CreateProductDataType) => {
     console.log('here', values)
-    let addProduct: AddFormInput = {
+    let tempCate = 0
+    if (!stateDisableChildCategory) {
+      tempCate = getValues('child_category')
+    } else {
+      tempCate = getValues('category')
+    }
+    const addProduct: CreateProductDataType = {
       name: values.name,
       brand: values.brand,
       manufacturer: values.manufacturer,
       unit_type: values.unit_type,
-      category: values.category,
       longDescription: values.longDescription,
       price: values.price,
       description: values.description,
+      category: tempCate,
+      // child_category: values.child_category,
       thumbnail:
         'https://develop-bizbookly.s3.ap-southeast-1.amazonaws.com/images/2022/8/9/Combo_91__36775.png',
     }
+    console.log(
+      '🚀 ~ file: index.page.tsx:140 ~ onSubmit ~ addProduct',
+      addProduct
+    )
+
     dispatch(loadingActions.doLoading())
     CreateProductApi(addProduct)
       .then(() => {
@@ -137,6 +152,7 @@ const CreateProduct: NextPageWithLayout = () => {
             message: 'Successfully',
           })
         )
+        reset()
       })
       .catch(() => {
         dispatch(loadingActions.doLoadingFailure())
@@ -160,35 +176,52 @@ const CreateProduct: NextPageWithLayout = () => {
     console.log(getValues('longDescription'))
   }
 
-  // // fix error when use next theme
-  // const [mounted, setMounted] = useState(false)
-  // useEffect(() => {
-  //   setMounted(true)
-  // }, [])
-  // if (!mounted) {
-  //   return null
-  // }
-  // fix error when use next theme
   useEffect(() => {
     // dispatch(loadingActions.doLoading())
+
     getProductCategory()
       .then((res) => {
         const { data } = res.data
         setStateListCategory(data)
       })
-      .catch((error) => {})
+      .catch((error) => {
+        console.log(error)
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Error',
+            type: 'error',
+          })
+        )
+      })
     getProductBrand()
       .then((res) => {
         const { data } = res.data
         setStateListBrand(data)
       })
-      .catch((error) => {})
+      .catch((error) => {
+        console.log(error)
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Error',
+            type: 'error',
+          })
+        )
+      })
     getProductManufacturer()
       .then((res) => {
         const { data } = res.data
         setStateListManufacturer(data)
       })
-      .catch((error) => {})
+      .catch((error) => {
+        console.log(error)
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Error',
+            type: 'error',
+          })
+        )
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -206,9 +239,7 @@ const CreateProduct: NextPageWithLayout = () => {
               {' '}
               Add Thumbnail Product
             </Typography>
-            <CustomImageBox>
-              <Box>Choose a image</Box>
-            </CustomImageBox>
+            <CustomImageBox></CustomImageBox>
           </Stack>
           <Stack
             spacing={1}
@@ -261,7 +292,7 @@ const CreateProduct: NextPageWithLayout = () => {
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <SelectCustom
-                          id="brannd"
+                          id="brand"
                           displayEmpty
                           defaultValue=""
                           IconComponent={() => <KeyboardArrowDownIcon />}
@@ -269,7 +300,7 @@ const CreateProduct: NextPageWithLayout = () => {
                             if (value === '') {
                               return (
                                 <PlaceholderSelect>
-                                  <div>Select value</div>
+                                  <div>Select brand</div>
                                 </PlaceholderSelect>
                               )
                             }
@@ -323,7 +354,7 @@ const CreateProduct: NextPageWithLayout = () => {
                             if (value === '') {
                               return (
                                 <PlaceholderSelect>
-                                  <div>Select value</div>
+                                  <div>Select manufacturer</div>
                                 </PlaceholderSelect>
                               )
                             }
@@ -361,6 +392,7 @@ const CreateProduct: NextPageWithLayout = () => {
                 <Controller
                   control={control}
                   name="unit_type"
+                  defaultValue=""
                   render={({ field }) => (
                     <>
                       <InputLabelCustom
@@ -378,11 +410,11 @@ const CreateProduct: NextPageWithLayout = () => {
                             if (value === '') {
                               return (
                                 <PlaceholderSelect>
-                                  <div>Select value</div>
+                                  <div>Select unit type</div>
                                 </PlaceholderSelect>
                               )
                             }
-                            return temporaryArray?.find(
+                            return unitTypeArray?.find(
                               (obj) => obj.name === value
                             )?.name
                           }}
@@ -391,7 +423,7 @@ const CreateProduct: NextPageWithLayout = () => {
                             setValue('unit_type', event.target.value)
                           }}
                         >
-                          {temporaryArray?.map((item, index) => {
+                          {unitTypeArray?.map((item, index) => {
                             return (
                               <MenuItemSelectCustom
                                 value={item.name}
@@ -453,14 +485,14 @@ const CreateProduct: NextPageWithLayout = () => {
                     render={({ field }) => (
                       <>
                         <InputLabelCustom
-                          htmlFor="parent_category"
+                          htmlFor="category"
                           error={!!errors.category}
                         >
                           Parent category
                         </InputLabelCustom>
                         <FormControl fullWidth>
                           <SelectCustom
-                            id="parent_category"
+                            id="category"
                             displayEmpty
                             IconComponent={() => <KeyboardArrowDownIcon />}
                             renderValue={(value: any) => {
@@ -478,6 +510,20 @@ const CreateProduct: NextPageWithLayout = () => {
                             {...field}
                             onChange={(event: any) => {
                               setValue('category', event.target.value)
+                              if (
+                                stateListCategory?.find(
+                                  (item) => item.id === event.target.value
+                                )?.child_category.length === 0
+                              ) {
+                                setStateDisableChildCategory(true)
+                              } else {
+                                setStateDisableChildCategory(false)
+                              }
+                              setStateChildListCategory(
+                                stateListCategory?.find(
+                                  (item) => item.id === event.target.value
+                                )?.child_category
+                              )
                               // setStateParentCategorySelected(
                               //   getValues('category')
                               // )
@@ -505,26 +551,29 @@ const CreateProduct: NextPageWithLayout = () => {
                 </Box>
               </Grid>
               <Grid xs={6}>
-                {/* <Box>
+                <Box>
                   <Controller
                     control={control}
-                    name="category"
+                    name="child_category"
                     render={({ field }) => (
                       <>
                         <InputLabelCustom
-                          htmlFor="category"
-                          error={!!errors.category}
+                          htmlFor="child_category"
+                          error={!!errors.child_category}
                         >
                           Category
                         </InputLabelCustom>
                         <FormControl fullWidth>
                           <SelectCustom
-                            id="category"
+                            id="child_category"
                             displayEmpty
                             // disable={}
-                            disabled={
-                              stateParentCategorySelected ? false : true
-                            }
+                            // disabled={
+                            //   HasChildCategory(getValues('category'))
+                            //     ? true
+                            //     : false
+                            // }
+                            disabled={stateDisableChildCategory}
                             IconComponent={() => <KeyboardArrowDownIcon />}
                             renderValue={(value: any) => {
                               if (value === '') {
@@ -534,16 +583,16 @@ const CreateProduct: NextPageWithLayout = () => {
                                   </PlaceholderSelect>
                                 )
                               }
-                              return temporaryArray?.find(
+                              return stateChildListCategory?.find(
                                 (obj) => obj.id === value
                               )?.name
                             }}
                             {...field}
                             onChange={(event: any) => {
-                              setValue('category', event.target.value)
+                              setValue('child_category', event.target.value)
                             }}
                           >
-                            {temporaryArray?.map((item, index) => {
+                            {stateChildListCategory?.map((item, index) => {
                               return (
                                 <MenuItemSelectCustom
                                   value={item.id}
@@ -554,14 +603,15 @@ const CreateProduct: NextPageWithLayout = () => {
                               )
                             })}
                           </SelectCustom>
-                          <FormHelperText error={!!errors.category}>
-                            {errors.category && `${errors.category.message}`}
+                          <FormHelperText error={!!errors.child_category}>
+                            {errors.child_category &&
+                              `${errors.child_category.message}`}
                           </FormHelperText>
                         </FormControl>
                       </>
                     )}
                   />
-                </Box> */}
+                </Box>
               </Grid>
             </Grid>
           </CustomBox>
@@ -604,7 +654,7 @@ const CreateProduct: NextPageWithLayout = () => {
                   <Controller
                     control={control}
                     name="longDescription"
-                    render={({ field }) => (
+                    render={() => (
                       <>
                         <InputLabelCustom
                           htmlFor="longDescription"
@@ -614,6 +664,7 @@ const CreateProduct: NextPageWithLayout = () => {
                         </InputLabelCustom>
                         <FormControl fullWidth>
                           <ReactQuill
+                            style={{ height: '80px' }}
                             theme="snow"
                             value={editorContent}
                             onChange={onEditorStateChange}

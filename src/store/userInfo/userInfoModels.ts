@@ -1,13 +1,13 @@
 export interface UserInfoType {
-  avatar?: string | null
-  email?: string
-  fullName?: string
-  id?: number
-  phoneNumber?: string
-  dob?: string
-  gender?: string
+  phone_number: string
+  email: string
+  first_name: string
+  last_name: string
+  gender: string
+  dob: string
+  avatar: string
+  address: string
 }
 export interface UserInfoResponseType {
   data: UserInfoType
-  isSuccess: boolean
 }

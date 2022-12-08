@@ -1,14 +1,14 @@
 import { AxiosResponse } from 'axios'
-import { callAPI, callAPIWithToken } from 'src/services/jwt-axios'
+import { callAPIWithToken } from 'src/services/jwt-axios'
 import {
-  AddFormInput,
+  CreateProductDataType,
   ProductBrandResponseType,
   ProductCategoryResponseType,
   RegisterResponseType,
 } from './addProductModel'
 
 const CreateProductApi = (
-  data: AddFormInput
+  data: CreateProductDataType
 ): Promise<AxiosResponse<RegisterResponseType>> => {
   return callAPIWithToken({
     url: '/api/supplier/products/',

@@ -4,7 +4,7 @@ import { UserInfoResponseType } from './userInfoModels'
 
 const userInfoAPI = (): Promise<AxiosResponse<UserInfoResponseType>> => {
   return callAPIWithToken({
-    url: '/customers/me',
+    url: '/api/user/me/profile/',
     method: 'get',
   })
 }
