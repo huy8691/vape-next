@@ -2,6 +2,7 @@ import {
   Box,
   FormControl,
   FormHelperText,
+  IconButton,
   Stack,
   Typography,
 } from '@mui/material'
@@ -51,6 +52,9 @@ import { loadingActions } from 'src/store/loading/loadingSlice'
 import { useAppDispatch } from 'src/store/hooks'
 import { notificationActions } from 'src/store/notification/notificationSlice'
 import { hasSpecialCharacter } from 'src/utils/global.utils'
+import ModalAddNewBrand from './parts/ModalAddNewBrand'
+import ModalAddManufacturer from './parts/ModalAddManufacturer'
+// import ModalAddNewBrand from './parts/ModalAddNewBrand'
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '3.2rem',
@@ -76,6 +80,24 @@ const CustomImageBox = styled(Box)(() => ({
   borderRadius: '10px',
 }))
 
+const IconButtonCustom = styled(IconButton)(({ theme }) => ({
+  border:
+    theme.palette.mode === 'dark'
+      ? '1px solid rgba(255, 255, 255, 0.23)'
+      : '1px solid #E1E6EF',
+  borderRadius: '10px',
+  padding: '5px',
+  backgroundColor:
+    theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : '#fff',
+  marginBottom: '5px',
+  marginLeft: '10px',
+  '& span': {
+    fontSize: '1.6rem',
+    color:
+      theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.23)' : '#49516F',
+  },
+}))
+
 const unitTypeArray: DropdownDataType[] = [
   {
     id: 1,
@@ -99,6 +121,17 @@ const CreateProduct: NextPageWithLayout = () => {
     useState<ProductCategoryType[]>()
   const [stateDisableChildCategory, setStateDisableChildCategory] =
     useState<boolean>(true)
+
+  const [stateOpenModalAddBrand, setStateOpenModalAddBrand] = useState(false)
+  const [stateOpenModalManufacturer, setStateOpenModalManufacturer] =
+    useState(false)
+  const handleCloseModalAddBrand = () => setStateOpenModalAddBrand(false)
+  const handleOpenModalAddBrand = () => setStateOpenModalAddBrand(true)
+  const handleCloseModalAddManufacturer = () =>
+    setStateOpenModalManufacturer(false)
+  const handleOpenModalAddManufacturer = () =>
+    setStateOpenModalManufacturer(true)
+
   // const router = useRouter()
   const dispatch = useAppDispatch()
 
@@ -116,6 +149,15 @@ const CreateProduct: NextPageWithLayout = () => {
     resolver: yupResolver(schema),
     mode: 'all',
   })
+
+  // const {
+  //   handleSubmit: handleSubmitBrand,
+  //   control: brandControl,
+  //   formState: { errors: errorsBrand },
+  // } = useForm<AddBrandType>({
+  //   resolver: yupResolver(brandSchema),
+  //   mode: 'all',
+  // })
 
   const onSubmit = (values: CreateProductDataType) => {
     console.log('here', values)
@@ -164,6 +206,48 @@ const CreateProduct: NextPageWithLayout = () => {
         )
       })
   }
+  // const onSubmitBrand = (values: AddBrandType) => {
+  //   console.log(values)
+  //   const addBrand: AddBrandType = {
+  //     name: values.name,
+  //     logo: 'https://vape-test.s3.ap-southeast-1.amazonaws.com/images/2022/9/23/767445.png',
+  //   }
+  //   dispatch(loadingActions.doLoading())
+
+  //   createBrand(addBrand)
+  //     .then(() => {
+  //       dispatch(loadingActions.doLoadingSuccess())
+  //       dispatch(
+  //         notificationActions.doNotification({
+  //           message: 'Successfully',
+  //         })
+  //       )
+
+  //       getProductBrand()
+  //         .then((res) => {
+  //           const { data } = res.data
+  //           setStateListBrand(data)
+  //         })
+  //         .catch((error) => {
+  //           console.log(error)
+  //           dispatch(
+  //             notificationActions.doNotification({
+  //               message: 'Error',
+  //               type: 'error',
+  //             })
+  //           )
+  //         })
+  //     })
+  //     .catch(() => {
+  //       dispatch(loadingActions.doLoadingFailure())
+  //       dispatch(
+  //         notificationActions.doNotification({
+  //           message: 'Error',
+  //           type: 'error',
+  //         })
+  //       )
+  //     })
+  // }
 
   useEffect(() => {
     register('longDescription', { required: true, minLength: 11 })
@@ -287,9 +371,18 @@ const CreateProduct: NextPageWithLayout = () => {
                   name="brand"
                   render={({ field }) => (
                     <>
-                      <InputLabelCustom htmlFor="brand" error={!!errors.brand}>
-                        Brand
-                      </InputLabelCustom>
+                      <Stack direction="row" alignItems="center">
+                        <InputLabelCustom
+                          htmlFor="brand"
+                          error={!!errors.brand}
+                        >
+                          Brand
+                        </InputLabelCustom>
+
+                        <IconButtonCustom onClick={handleOpenModalAddBrand}>
+                          <span className="icon-icon-edit"></span>
+                        </IconButtonCustom>
+                      </Stack>
                       <FormControl fullWidth>
                         <SelectCustom
                           id="brand"
@@ -339,12 +432,21 @@ const CreateProduct: NextPageWithLayout = () => {
                   name="manufacturer"
                   render={({ field }) => (
                     <>
-                      <InputLabelCustom
-                        htmlFor="manufacturer"
-                        error={!!errors.manufacturer}
-                      >
-                        Manufacturer
-                      </InputLabelCustom>
+                      <Stack direction="row">
+                        <InputLabelCustom
+                          htmlFor="manufacturer"
+                          error={!!errors.manufacturer}
+                        >
+                          Manufacturer
+                        </InputLabelCustom>
+
+                        <IconButtonCustom
+                          onClick={handleOpenModalAddManufacturer}
+                        >
+                          <span className="icon-icon-edit"></span>
+                        </IconButtonCustom>
+                      </Stack>
+
                       <FormControl fullWidth>
                         <SelectCustom
                           id="manufacturer"
@@ -689,6 +791,17 @@ const CreateProduct: NextPageWithLayout = () => {
           </Box>
         </CustomStack>
       </form>
+
+      <ModalAddNewBrand
+        openBrandModal={stateOpenModalAddBrand}
+        handleClose={handleCloseModalAddBrand}
+        handleSetStateBrand={setStateListBrand}
+      ></ModalAddNewBrand>
+      <ModalAddManufacturer
+        openManufacturer={stateOpenModalManufacturer}
+        handleClose={handleCloseModalAddManufacturer}
+        handleSetStateManufacturer={setStateListManufacturer}
+      ></ModalAddManufacturer>
     </>
   )
 }

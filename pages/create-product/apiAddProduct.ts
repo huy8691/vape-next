@@ -1,6 +1,8 @@
 import { AxiosResponse } from 'axios'
 import { callAPIWithToken } from 'src/services/jwt-axios'
 import {
+  AddBrandType,
+  AddManufacturerType,
   CreateProductDataType,
   ProductBrandResponseType,
   ProductCategoryResponseType,
@@ -34,6 +36,16 @@ const getProductBrand = (): Promise<
   })
 }
 
+const createBrand = (
+  data: AddBrandType
+): Promise<AxiosResponse<ProductBrandResponseType>> => {
+  return callAPIWithToken({
+    url: `/api/supplier/brands/`,
+    method: 'post',
+    data: data,
+  })
+}
+
 const getProductManufacturer = (): Promise<
   AxiosResponse<ProductBrandResponseType>
 > => {
@@ -42,10 +54,21 @@ const getProductManufacturer = (): Promise<
     method: 'get',
   })
 }
+const createManufacturer = (
+  data: AddManufacturerType
+): Promise<AxiosResponse<ProductBrandResponseType>> => {
+  return callAPIWithToken({
+    url: `/api/supplier/manufacturer/`,
+    method: 'post',
+    data: data,
+  })
+}
 
 export {
   CreateProductApi,
   getProductCategory,
   getProductBrand,
+  createBrand,
   getProductManufacturer,
+  createManufacturer,
 }

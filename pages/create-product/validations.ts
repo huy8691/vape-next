@@ -26,4 +26,26 @@ const schema = Yup.object().shape({
   }),
 })
 
-export { schema }
+const brandSchema = Yup.object().shape({
+  name: Yup.string()
+    .required('Brand is a required field')
+    .min(2, 'Brand name must be at least 2 characters')
+    .max(50, 'Brand name must be at most 50 characters'),
+})
+
+const manufacturerSchema = Yup.object().shape({
+  name: Yup.string()
+    .required('Manufacturer is a required field')
+    .min(2, 'Manufacturer must be at least 2 characters')
+    .max(50, 'Manufacturer must be at most 50 characters'),
+})
+
+const categorySchema = Yup.object().shape({
+  name: Yup.string()
+    .required('Category is a required field')
+    .min(2, 'Category must be at least 2 characters')
+    .max(50, 'Category must be at most 50 characters'),
+  parent_category: Yup.string().nullable(),
+  child_category: Yup.string().nullable(),
+})
+export { schema, brandSchema, manufacturerSchema, categorySchema }
