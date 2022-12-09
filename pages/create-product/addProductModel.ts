@@ -11,7 +11,7 @@ export interface AddFormInput {
   unit_type: string
   price: number
   category: number
-  child_category: number
+
   description: string
   longDescription: string
   thumbnail: string
@@ -24,7 +24,7 @@ export interface CreateProductDataType {
   unit_type: string
   price: number
   category: number
-  // child_category?: number
+
   description: string
   longDescription: string
   thumbnail: string

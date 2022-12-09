@@ -118,10 +118,6 @@ const CreateProduct: NextPageWithLayout = () => {
   const [stateListBrand, setStateListBrand] = useState<ProductBrandType[]>()
   const [stateListManufacturer, setStateListManufacturer] =
     useState<ProductManufacturerType[]>()
-  const [stateChildListCategory, setStateChildListCategory] =
-    useState<ProductCategoryType[]>()
-  const [stateDisableChildCategory, setStateDisableChildCategory] =
-    useState<boolean>(true)
 
   const [stateOpenModalAddBrand, setStateOpenModalAddBrand] = useState(false)
   const [stateOpenModalManufacturer, setStateOpenModalManufacturer] =
@@ -162,12 +158,7 @@ const CreateProduct: NextPageWithLayout = () => {
 
   const onSubmit = (values: CreateProductDataType) => {
     console.log('here', values)
-    let tempCate = 0
-    if (!stateDisableChildCategory) {
-      tempCate = getValues('child_category')
-    } else {
-      tempCate = getValues('category')
-    }
+
     const addProduct: CreateProductDataType = {
       name: values.name,
       brand: values.brand,
@@ -176,7 +167,7 @@ const CreateProduct: NextPageWithLayout = () => {
       longDescription: values.longDescription,
       price: values.price,
       description: values.description,
-      category: tempCate,
+      category: values.category,
       // child_category: values.child_category,
       thumbnail:
         'https://develop-bizbookly.s3.ap-southeast-1.amazonaws.com/images/2022/8/9/Combo_91__36775.png',
@@ -621,46 +612,23 @@ const CreateProduct: NextPageWithLayout = () => {
                             {...field}
                             onChange={(event: any) => {
                               setValue('category', event.target.value)
-                              if (
-                                stateListCategory?.find(
-                                  (item) => item.id === event.target.value
-                                )?.child_category.length === 0
-                              ) {
-                                setStateDisableChildCategory(true)
-                              } else {
-                                setStateDisableChildCategory(false)
-                              }
-                              setStateChildListCategory(
-                                stateListCategory?.find(
-                                  (item) => item.id === event.target.value
-                                )?.child_category
-                              )
                             }}
                           >
                             {stateListCategory?.map((item, index) => {
-                              if (item.child_category.length === 0) {
-                                return (
-                                  <MenuItemSelectCustom
-                                    value={item.id}
-                                    key={index + Math.random()}
-                                  >
-                                    {item.name}
-                                  </MenuItemSelectCustom>
-                                )
-                              } else {
+                              if (item.child_category.length > 0) {
                                 const listChild = item.child_category.map(
                                   (childItem) => {
                                     return (
                                       <MenuItemSelectCustom
                                         value={childItem.id}
                                         key={index + Math.random()}
+                                        sx={{ marginLeft: '15px' }}
                                       >
-                                        + {childItem.name}
+                                        {childItem.name}
                                       </MenuItemSelectCustom>
                                     )
                                   }
                                 )
-
                                 return [
                                   <ListSubheader
                                     key={index + Math.random()}
@@ -671,73 +639,23 @@ const CreateProduct: NextPageWithLayout = () => {
                                   listChild,
                                 ]
                               }
+                              if (
+                                item.child_category.length === 0 &&
+                                !item.parent_category
+                              ) {
+                                return (
+                                  <MenuItemSelectCustom
+                                    value={item.id}
+                                    key={index + Math.random()}
+                                  >
+                                    {item.name}
+                                  </MenuItemSelectCustom>
+                                )
+                              }
                             })}
                           </SelectCustom>
                           <FormHelperText error={!!errors.category}>
                             {errors.category && `${errors.category.message}`}
-                          </FormHelperText>
-                        </FormControl>
-                      </>
-                    )}
-                  />
-                </Box>
-              </Grid>
-              <Grid xs={6}>
-                <Box>
-                  <Controller
-                    control={control}
-                    name="child_category"
-                    render={({ field }) => (
-                      <>
-                        <InputLabelCustom
-                          htmlFor="child_category"
-                          error={!!errors.child_category}
-                        >
-                          Category
-                        </InputLabelCustom>
-                        <FormControl fullWidth>
-                          <SelectCustom
-                            id="child_category"
-                            displayEmpty
-                            // disable={}
-                            // disabled={
-                            //   HasChildCategory(getValues('category'))
-                            //     ? true
-                            //     : false
-                            // }
-                            disabled={stateDisableChildCategory}
-                            IconComponent={() => <KeyboardArrowDownIcon />}
-                            renderValue={(value: any) => {
-                              if (value === '') {
-                                return (
-                                  <PlaceholderSelect>
-                                    <div>Select value</div>
-                                  </PlaceholderSelect>
-                                )
-                              }
-                              return stateChildListCategory?.find(
-                                (obj) => obj.id === value
-                              )?.name
-                            }}
-                            {...field}
-                            onChange={(event: any) => {
-                              setValue('child_category', event.target.value)
-                            }}
-                          >
-                            {stateChildListCategory?.map((item, index) => {
-                              return (
-                                <MenuItemSelectCustom
-                                  value={item.id}
-                                  key={index + Math.random()}
-                                >
-                                  {item.name}
-                                </MenuItemSelectCustom>
-                              )
-                            })}
-                          </SelectCustom>
-                          <FormHelperText error={!!errors.child_category}>
-                            {errors.child_category &&
-                              `${errors.child_category.message}`}
                           </FormHelperText>
                         </FormControl>
                       </>
