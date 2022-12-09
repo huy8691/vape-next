@@ -15,6 +15,7 @@ const initialState: initialUserInfoStateType = {
     dob: '',
     avatar: '',
     address: '',
+    user_type: '',
   },
 }
 

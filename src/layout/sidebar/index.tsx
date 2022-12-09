@@ -22,7 +22,7 @@ import { useRouter } from 'next/router'
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { useAppSelector } from 'src/store/hooks'
-// import { cartActions } from 'src/store/cart/cartSlice'
+import { cartActions } from 'src/store/cart/cartSlice'
 
 // import classes from './styles.module.scss'
 
@@ -56,7 +56,8 @@ const Menu = [
 const SideBar = ({ open }: Props) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  // const cart = useAppSelector((state) => state.cart)
+  const cart = useAppSelector((state) => state.cart)
+  const userInfo = useAppSelector((state) => state.userInfo)
   const [openCollapse, setOpenCollapse] = useState<boolean>(true)
   const [openCollapse2, setOpenCollapse2] = useState<boolean>(true)
   const [stateItemCart, setStateItemCart] = useState<number>(0)
@@ -70,14 +71,16 @@ const SideBar = ({ open }: Props) => {
   }
 
   useEffect(() => {
-    // dispatch(cartActions.doCart())
-  }, [dispatch])
+    if (userInfo.data.user_type === 'MERCHANT') {
+      dispatch(cartActions.doCart())
+    }
+  }, [dispatch, userInfo.data.user_type])
 
-  // useEffect(() => {
-  //   // if (cart?.data?.amountItems) {
-  //   setStateItemCart(cart.data.amountItems)
-  //   // }
-  // }, [cart])
+  useEffect(() => {
+    // if (cart?.data?.amountItems) {
+    setStateItemCart(cart.data.amountItems)
+    // }
+  }, [cart])
 
   return (
     <>

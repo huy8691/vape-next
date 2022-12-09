@@ -9,7 +9,7 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 
 import { useAppSelector } from 'src/store/hooks'
 // dayjs
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 // mui
@@ -42,6 +42,12 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './validations'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 
+// api
+import { updateUserInfo } from './accountAPI'
+import { useAppDispatch } from 'src/store/hooks'
+import { loadingActions } from 'src/store/loading/loadingSlice'
+import { notificationActions } from 'src/store/notification/notificationSlice'
+
 // custom style
 const CardPage = styled(Card)(({ theme }) => ({
   backgroundColor:
@@ -50,6 +56,7 @@ const CardPage = styled(Card)(({ theme }) => ({
 }))
 const CardContentCustom = styled(CardContent)(() => ({
   paddingBottom: '16px !important',
+  maxWidth: '500px',
 }))
 const TypographyH1 = styled(Typography)(({ theme }) => ({
   fontSize: '2rem',
@@ -73,9 +80,10 @@ const genderArray = [
 ]
 
 const Account: NextPageWithLayout = () => {
+  const dispatch = useAppDispatch()
   const userInfo = useAppSelector((state) => state.userInfo)
   // fix error when use next theme
-  const [stateDate, setStateDate] = useState<Dayjs | null>(null)
+  const [stateDisable, setStateDisable] = useState<boolean>(true)
   const {
     handleSubmit,
     control,
@@ -85,19 +93,39 @@ const Account: NextPageWithLayout = () => {
     formState: { errors },
   } = useForm<AccountDataType>({
     resolver: yupResolver(schema),
-    shouldUnregister: false,
     mode: 'all',
   })
 
   const onSubmit = (values: AccountDataType) => {
     console.log(values)
+    dispatch(loadingActions.doLoading())
+    updateUserInfo(values)
+      .then(() => {
+        dispatch(loadingActions.doLoadingSuccess())
+        dispatch(
+          notificationActions.doNotification({
+            message: 'successfully',
+          })
+        )
+      })
+      .catch((error) => {
+        const data = error.response?.data
+
+        dispatch(loadingActions.doLoadingFailure())
+        dispatch(
+          notificationActions.doNotification({
+            message: data?.message ? data?.message : 'Error',
+            type: 'error',
+          })
+        )
+      })
   }
 
   useEffect(() => {
     setValue('first_name', userInfo.data.first_name)
     setValue('last_name', userInfo.data.last_name)
     setValue('gender', userInfo.data.gender)
-    setValue('dob', dayjs(`${userInfo.data.dob}`))
+    setValue('dob', userInfo.data.dob)
     setValue('address', userInfo.data.address)
   }, [userInfo, setValue])
 
@@ -157,12 +185,23 @@ const Account: NextPageWithLayout = () => {
       </TypographyH1>
       <CardPage>
         <CardContentCustom>
+          <Box mb={2}>
+            <ButtonCustom
+              variant="outlined"
+              size="medium"
+              onClick={() => {
+                setStateDisable(!stateDisable)
+              }}
+            >
+              Update
+            </ButtonCustom>
+          </Box>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box mb={2}>
               <Controller
                 control={control}
                 name="first_name"
-                defaultValue="hehe"
+                defaultValue=""
                 render={({ field }) => (
                   <>
                     <InputLabelCustom
@@ -173,6 +212,7 @@ const Account: NextPageWithLayout = () => {
                     </InputLabelCustom>
                     <FormControl fullWidth>
                       <TextFieldCustom
+                        disabled={stateDisable}
                         id="first_name"
                         error={!!errors.first_name}
                         {...field}
@@ -189,6 +229,7 @@ const Account: NextPageWithLayout = () => {
               <Controller
                 control={control}
                 name="last_name"
+                defaultValue=""
                 render={({ field }) => (
                   <>
                     <InputLabelCustom
@@ -199,6 +240,7 @@ const Account: NextPageWithLayout = () => {
                     </InputLabelCustom>
                     <FormControl fullWidth>
                       <TextFieldCustom
+                        disabled={stateDisable}
                         id="last_name"
                         error={!!errors.last_name}
                         {...field}
@@ -215,6 +257,7 @@ const Account: NextPageWithLayout = () => {
               <Controller
                 control={control}
                 name="gender"
+                defaultValue=""
                 render={({ field }) => (
                   <>
                     <InputLabelCustom htmlFor="gender" error={!!errors.gender}>
@@ -222,6 +265,7 @@ const Account: NextPageWithLayout = () => {
                     </InputLabelCustom>
                     <FormControl fullWidth>
                       <SelectCustom
+                        disabled={stateDisable}
                         id="gender"
                         displayEmpty
                         IconComponent={() => <KeyboardArrowDownIcon />}
@@ -260,10 +304,12 @@ const Account: NextPageWithLayout = () => {
                 )}
               />
             </Box>
+
             <Box mb={2}>
               <Controller
                 control={control}
                 name="dob"
+                defaultValue=""
                 render={({ field }) => (
                   <>
                     <InputLabelCustom htmlFor="dob" error={!!errors.dob}>
@@ -272,10 +318,11 @@ const Account: NextPageWithLayout = () => {
                     <FormControl fullWidth>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
+                          disabled={stateDisable}
+                          inputFormat="YYYY-MM-DD"
                           {...field}
-                          onChange={(value: Dayjs) => {
-                            console.log('value', value)
-                            setValue('dob', new Date(value))
+                          onChange={(value: dayjs.Dayjs | null) => {
+                            setValue('dob', dayjs(value).format('YYYY-MM-DD'))
                           }}
                           renderInput={(params) => (
                             <TextFieldCustom {...params} error={!!errors.dob} />
@@ -294,6 +341,7 @@ const Account: NextPageWithLayout = () => {
               <Controller
                 control={control}
                 name="address"
+                defaultValue=""
                 render={({ field }) => (
                   <>
                     <InputLabelCustom
@@ -304,6 +352,7 @@ const Account: NextPageWithLayout = () => {
                     </InputLabelCustom>
                     <FormControl fullWidth>
                       <TextFieldCustom
+                        disabled={stateDisable}
                         id="address"
                         error={!!errors.address}
                         {...field}
@@ -316,9 +365,11 @@ const Account: NextPageWithLayout = () => {
                 )}
               />
             </Box>
-            <ButtonCustom variant="contained" size="large" type="submit">
-              Update Information
-            </ButtonCustom>
+            {!stateDisable && (
+              <ButtonCustom variant="contained" size="large" type="submit">
+                Submit
+              </ButtonCustom>
+            )}
           </form>
         </CardContentCustom>
       </CardPage>

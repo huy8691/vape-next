@@ -7,6 +7,7 @@ export interface UserInfoType {
   dob: string
   avatar: string
   address: string
+  user_type: string
 }
 export interface UserInfoResponseType {
   data: UserInfoType
