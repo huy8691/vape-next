@@ -3,6 +3,7 @@ import {
   FormControl,
   FormHelperText,
   IconButton,
+  ListSubheader,
   Stack,
   Typography,
 } from '@mui/material'
@@ -308,6 +309,26 @@ const CreateProduct: NextPageWithLayout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // const renderDOM = () => {
+  //   let array = []
+  //   const cloneData = JSON.parse(JSON.stringify(stateListCategory))
+  //   cloneData.forEach((item: any) => {
+  //     if (item.child_category.length > 0) {
+  //       array.push({
+  //         item,
+  //       })
+  //     }
+  //     if (item.parent_category) {
+  //       array.push({
+  //         parent_category: {
+  //           id: 22,
+  //           name: 'Cape',
+  //         },
+  //       })
+  //     }
+  //   })
+  // }
+
   return (
     <>
       <TypographyH2 variant="h2" sx={{ textAlign: 'center' }} mb={4}>
@@ -597,18 +618,6 @@ const CreateProduct: NextPageWithLayout = () => {
                             id="category"
                             displayEmpty
                             IconComponent={() => <KeyboardArrowDownIcon />}
-                            renderValue={(value: any) => {
-                              if (value === '') {
-                                return (
-                                  <PlaceholderSelect>
-                                    <div>Select value</div>
-                                  </PlaceholderSelect>
-                                )
-                              }
-                              return stateListCategory?.find(
-                                (obj) => obj.id === value
-                              )?.name
-                            }}
                             {...field}
                             onChange={(event: any) => {
                               setValue('category', event.target.value)
@@ -626,21 +635,42 @@ const CreateProduct: NextPageWithLayout = () => {
                                   (item) => item.id === event.target.value
                                 )?.child_category
                               )
-                              // setStateParentCategorySelected(
-                              //   getValues('category')
-                              // )
-                              // trigger('monthly_purchase')
                             }}
                           >
                             {stateListCategory?.map((item, index) => {
-                              return (
-                                <MenuItemSelectCustom
-                                  value={item.id}
-                                  key={index + Math.random()}
-                                >
-                                  {item.name}
-                                </MenuItemSelectCustom>
-                              )
+                              if (item.child_category.length === 0) {
+                                return (
+                                  <MenuItemSelectCustom
+                                    value={item.id}
+                                    key={index + Math.random()}
+                                  >
+                                    {item.name}
+                                  </MenuItemSelectCustom>
+                                )
+                              } else {
+                                const listChild = item.child_category.map(
+                                  (childItem) => {
+                                    return (
+                                      <MenuItemSelectCustom
+                                        value={childItem.id}
+                                        key={index + Math.random()}
+                                      >
+                                        + {childItem.name}
+                                      </MenuItemSelectCustom>
+                                    )
+                                  }
+                                )
+
+                                return [
+                                  <ListSubheader
+                                    key={index + Math.random()}
+                                    sx={{ fontStyle: 'italic' }}
+                                  >
+                                    {item.name}
+                                  </ListSubheader>,
+                                  listChild,
+                                ]
+                              }
                             })}
                           </SelectCustom>
                           <FormHelperText error={!!errors.category}>

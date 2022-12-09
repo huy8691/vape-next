@@ -41,7 +41,7 @@ export interface ProductCategoryType {
 
   indeterminate?: boolean
   child_category: ProductCategoryType[]
-  parent_category: ProductCategoryType[]
+  parent_category: ProductCategoryType
 }
 
 export interface ProductCategoryResponseType {
