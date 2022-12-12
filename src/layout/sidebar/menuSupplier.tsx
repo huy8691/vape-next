@@ -33,7 +33,7 @@ const Menu = [
   {
     icon: <ListBullets size={24} />,
     text: 'Category',
-    link: '/supplier-categories',
+    link: '/categories-management',
   },
   {
     icon: <At size={24} />,
