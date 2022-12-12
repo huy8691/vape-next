@@ -38,22 +38,22 @@ const Menu = [
   {
     icon: <At size={24} />,
     text: 'Brand',
-    link: '/supplier-categories',
+    link: '/brand',
   },
   {
     icon: <Factory size={24} />,
     text: 'Manufacturer',
-    link: '/supplier-categories',
+    link: '/manufacturer',
   },
   {
     icon: <UsersThree size={24} />,
     text: 'Staff',
-    link: '/supplier-categories',
+    link: '/staff',
   },
   {
     icon: <ShoppingCart size={24} />,
     text: 'Order',
-    link: '/supplier-categories',
+    link: '/order-management',
   },
 ]
 

@@ -40,7 +40,7 @@ const CardSection = styled(Card)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'light' ? '#F1F3F9' : theme.palette.action.hover,
   boxShadow: 'none',
-  marginBottom: '30px',
+  marginBottom: '20px',
 }))
 
 const Home: NextPageWithLayout = () => {
@@ -76,10 +76,8 @@ const Home: NextPageWithLayout = () => {
                     spacing={2}
                   >
                     <Box>
-                      <Typography variant="h5">3</Typography>
-                      <Typography variant="subtitle1">
-                        Low Stock Items
-                      </Typography>
+                      <Typography variant="h5">55</Typography>
+                      <Typography variant="subtitle1">Total order</Typography>
                     </Box>
                     <Fab size="small" color="primary" aria-label="add">
                       <Folder size={24} />
@@ -120,10 +118,8 @@ const Home: NextPageWithLayout = () => {
                     spacing={2}
                   >
                     <Box>
-                      <Typography variant="h5">3</Typography>
-                      <Typography variant="subtitle1">
-                        Low Stock Items
-                      </Typography>
+                      <Typography variant="h5">124</Typography>
+                      <Typography variant="subtitle1">Total product</Typography>
                     </Box>
                     <Fab size="small" color="primary" aria-label="add">
                       <Folder size={24} />
@@ -142,10 +138,8 @@ const Home: NextPageWithLayout = () => {
                     spacing={2}
                   >
                     <Box>
-                      <Typography variant="h5">3</Typography>
-                      <Typography variant="subtitle1">
-                        Low Stock Items
-                      </Typography>
+                      <Typography variant="h5">3694$</Typography>
+                      <Typography variant="subtitle1">Total revenue</Typography>
                     </Box>
                     <Fab size="small" color="primary" aria-label="add">
                       <Folder size={24} />

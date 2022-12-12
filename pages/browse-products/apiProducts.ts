@@ -11,7 +11,7 @@ const getProducts = (
 ): Promise<AxiosResponse<ProductListDataResponseType>> => {
   console.log('parm', params)
   return callAPIWithToken({
-    url: `/api/customer/products/`,
+    url: `/api/products/`,
     method: 'get',
     params: {
       ...params,
@@ -24,7 +24,7 @@ const getProductCategory = (): Promise<
   AxiosResponse<ProductCategoryResponseType>
 > => {
   return callAPIWithToken({
-    url: `/api/customer/category/`,
+    url: `/api/category/`,
     method: 'get',
   })
 }
@@ -32,7 +32,7 @@ const getProductBrand = (): Promise<
   AxiosResponse<ProductBrandResponseType>
 > => {
   return callAPIWithToken({
-    url: `/api/customer/brands/`,
+    url: `/api/brands/`,
     method: 'get',
   })
 }
@@ -41,7 +41,7 @@ const getProductManufacturer = (): Promise<
   AxiosResponse<ProductBrandResponseType>
 > => {
   return callAPIWithToken({
-    url: `/api/customer/manufacturer/`,
+    url: `/api/manufacturer/`,
     method: 'get',
   })
 }
