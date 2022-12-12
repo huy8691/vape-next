@@ -79,12 +79,12 @@ const CustomStack = styled(Stack)(() => ({
   borderRadius: '10px',
 }))
 
-const CustomImageBox = styled(Box)(() => ({
-  paddingBottom: '100%',
-  border: '1px dashed #BABABA',
-  background: '#F1F3F9',
-  borderRadius: '10px',
-}))
+// const CustomImageBox = styled(Box)(() => ({
+//   paddingBottom: '100%',
+//   border: '1px dashed #BABABA',
+//   background: '#F1F3F9',
+//   borderRadius: '10px',
+// }))
 
 const IconButtonCustom = styled(IconButton)(({ theme }) => ({
   border:
@@ -178,7 +178,7 @@ const CreateProduct: NextPageWithLayout = () => {
       quantity: values.quantity,
       category: values.category,
       thumbnail: values.thumbnail,
-      images: [values.images],
+      images: values.images,
       warehouse: stateListWarehouse ? stateListWarehouse[0].id : 0,
       distribution_channel: stateOrganization ? stateOrganization[0].id : 0,
     }
