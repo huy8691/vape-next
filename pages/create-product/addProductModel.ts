@@ -14,7 +14,7 @@ export interface AddFormInput {
   category: number
 
   description: string
-
+  images: string[]
   thumbnail: string
 }
 
@@ -28,6 +28,7 @@ export interface CreateProductDataType {
   category: number
   description: string
   thumbnail: string
+  images: string[]
   warehouse: number
   distribution_channel: number
 }

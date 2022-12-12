@@ -59,6 +59,7 @@ import { notificationActions } from 'src/store/notification/notificationSlice'
 import { hasSpecialCharacter } from 'src/utils/global.utils'
 import ModalAddNewBrand from './parts/ModalAddNewBrand'
 import ModalAddManufacturer from './parts/ModalAddManufacturer'
+import UploadImage from 'src/components/uploadImage'
 // import ModalAddNewBrand from './parts/ModalAddNewBrand'
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
@@ -145,6 +146,7 @@ const CreateProduct: NextPageWithLayout = () => {
     control,
     setValue,
     getValues,
+    trigger,
     watch,
     register,
     reset,
@@ -175,8 +177,8 @@ const CreateProduct: NextPageWithLayout = () => {
       price: values.price,
       quantity: values.quantity,
       category: values.category,
-      thumbnail:
-        'https://develop-bizbookly.s3.ap-southeast-1.amazonaws.com/images/2022/8/9/Combo_91__36775.png',
+      thumbnail: values.thumbnail,
+      images: [values.images],
       warehouse: stateListWarehouse ? stateListWarehouse[0].id : 0,
       distribution_channel: stateOrganization ? stateOrganization[0].id : 0,
     }
@@ -382,7 +384,21 @@ const CreateProduct: NextPageWithLayout = () => {
               {' '}
               Add Thumbnail Product
             </Typography>
-            <CustomImageBox></CustomImageBox>
+            <UploadImage
+              fileList={undefined}
+              onFileSelectSuccess={(file: any) => {
+                setValue('thumbnail', file)
+                trigger('thumbnail')
+              }}
+              onFileSelectError={() => {
+                return
+              }}
+              onFileSelectDelete={() => {
+                setValue('thumbnail', '')
+                trigger('thumbnail')
+              }}
+            />
+            {/* <CustomImageBox></CustomImageBox> */}
           </Stack>
           <Stack
             spacing={1}
@@ -391,7 +407,21 @@ const CreateProduct: NextPageWithLayout = () => {
             <Typography sx={{ width: '165px', textAlign: 'center' }}>
               Add Product Images
             </Typography>
-            <CustomImageBox></CustomImageBox>
+            <UploadImage
+              fileList={undefined}
+              onFileSelectSuccess={(file: string) => {
+                setValue('images', [file])
+                trigger('images')
+              }}
+              onFileSelectError={() => {
+                return
+              }}
+              onFileSelectDelete={() => {
+                setValue('images', [''])
+                trigger('images')
+              }}
+            />
+            {/* <CustomImageBox></CustomImageBox> */}
           </Stack>
         </CustomStack>
         <CustomStack spacing={2}>
