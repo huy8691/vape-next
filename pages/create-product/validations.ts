@@ -10,12 +10,15 @@ const schema = Yup.object().shape({
   unit_type: Yup.string().required('Unit type is a required field'),
   price: Yup.number()
     .required('Price is a required field')
-    .positive('Price must be a positive number'),
+    .positive('Price must be a positive number')
+    .min(1)
+    .max(10000000),
+  quantity: Yup.number()
+    .required('Quantity is a required field')
+    .positive('Quantity must be a positive number')
+    .min(1)
+    .max(10000000),
   description: Yup.string()
-    .required('Short description is a required field')
-    .min(2, 'Short description must be at least 2 characters')
-    .max(500),
-  longDescription: Yup.string()
     .required('Overview is a required field')
     .min(20)
     .max(500),
@@ -48,4 +51,5 @@ const categorySchema = Yup.object().shape({
   parent_category: Yup.string().nullable(),
   child_category: Yup.string().nullable(),
 })
+
 export { schema, brandSchema, manufacturerSchema, categorySchema }

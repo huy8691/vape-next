@@ -32,9 +32,11 @@ import {
   AddFormInput,
   CreateProductDataType,
   DropdownDataType,
+  OrganizationType,
   ProductBrandType,
   ProductCategoryType,
   ProductManufacturerType,
+  WarehouseType,
 } from './addProductModel'
 
 //react-quill
@@ -47,6 +49,8 @@ import {
   getProductBrand,
   getProductCategory,
   getProductManufacturer,
+  getWareHouse,
+  getOrganization,
 } from './apiAddProduct'
 import { loadingActions } from 'src/store/loading/loadingSlice'
 
@@ -55,6 +59,7 @@ import { notificationActions } from 'src/store/notification/notificationSlice'
 import { hasSpecialCharacter } from 'src/utils/global.utils'
 import ModalAddNewBrand from './parts/ModalAddNewBrand'
 import ModalAddManufacturer from './parts/ModalAddManufacturer'
+import UploadImage from 'src/components/uploadImage'
 // import ModalAddNewBrand from './parts/ModalAddNewBrand'
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
@@ -74,12 +79,12 @@ const CustomStack = styled(Stack)(() => ({
   borderRadius: '10px',
 }))
 
-const CustomImageBox = styled(Box)(() => ({
-  paddingBottom: '100%',
-  border: '1px dashed #BABABA',
-  background: '#F1F3F9',
-  borderRadius: '10px',
-}))
+// const CustomImageBox = styled(Box)(() => ({
+//   paddingBottom: '100%',
+//   border: '1px dashed #BABABA',
+//   background: '#F1F3F9',
+//   borderRadius: '10px',
+// }))
 
 const IconButtonCustom = styled(IconButton)(({ theme }) => ({
   border:
@@ -118,10 +123,13 @@ const CreateProduct: NextPageWithLayout = () => {
   const [stateListBrand, setStateListBrand] = useState<ProductBrandType[]>()
   const [stateListManufacturer, setStateListManufacturer] =
     useState<ProductManufacturerType[]>()
-
   const [stateOpenModalAddBrand, setStateOpenModalAddBrand] = useState(false)
   const [stateOpenModalManufacturer, setStateOpenModalManufacturer] =
     useState(false)
+  const [stateListWarehouse, setStateListWarehouse] =
+    useState<WarehouseType[]>()
+  const [stateOrganization, setStateOrganization] =
+    useState<OrganizationType[]>()
   const handleCloseModalAddBrand = () => setStateOpenModalAddBrand(false)
   const handleOpenModalAddBrand = () => setStateOpenModalAddBrand(true)
   const handleCloseModalAddManufacturer = () =>
@@ -138,6 +146,7 @@ const CreateProduct: NextPageWithLayout = () => {
     control,
     setValue,
     getValues,
+    trigger,
     watch,
     register,
     reset,
@@ -156,7 +165,7 @@ const CreateProduct: NextPageWithLayout = () => {
   //   mode: 'all',
   // })
 
-  const onSubmit = (values: CreateProductDataType) => {
+  const onSubmit = (values: AddFormInput) => {
     console.log('here', values)
 
     const addProduct: CreateProductDataType = {
@@ -164,13 +173,14 @@ const CreateProduct: NextPageWithLayout = () => {
       brand: values.brand,
       manufacturer: values.manufacturer,
       unit_type: values.unit_type,
-      longDescription: values.longDescription,
-      price: values.price,
       description: values.description,
+      price: values.price,
+      quantity: values.quantity,
       category: values.category,
-      // child_category: values.child_category,
-      thumbnail:
-        'https://develop-bizbookly.s3.ap-southeast-1.amazonaws.com/images/2022/8/9/Combo_91__36775.png',
+      thumbnail: values.thumbnail,
+      images: values.images,
+      warehouse: stateListWarehouse ? stateListWarehouse[0].id : 0,
+      distribution_channel: stateOrganization ? stateOrganization[0].id : 0,
     }
     console.log(
       '🚀 ~ file: index.page.tsx:140 ~ onSubmit ~ addProduct',
@@ -242,14 +252,53 @@ const CreateProduct: NextPageWithLayout = () => {
   // }
 
   useEffect(() => {
-    register('longDescription', { required: true, minLength: 11 })
-  })
+    getWareHouse()
+      .then((res) => {
+        const { data } = res.data
+        setStateListWarehouse(data)
+        // console.log(data)
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Success',
+          })
+        )
+      })
+      .catch(() => {
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Error',
+            type: 'error',
+          })
+        )
+      })
+    getOrganization()
+      .then((res) => {
+        const { data } = res.data
+        setStateOrganization(data)
+        console.log(data)
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Success',
+          })
+        )
+      })
+      .catch(() => {
+        dispatch(
+          notificationActions.doNotification({
+            message: 'Error',
+            type: 'error',
+          })
+        )
+      })
 
-  const editorContent = watch('longDescription')
+    register('description', { required: true, minLength: 11 })
+  }, [])
+
+  const editorContent = watch('description')
   const onEditorStateChange = (value: string) => {
     // console.log(value)
-    setValue('longDescription', value)
-    console.log(getValues('longDescription'))
+    setValue('description', value)
+    console.log(getValues('description'))
   }
 
   useEffect(() => {
@@ -323,7 +372,7 @@ const CreateProduct: NextPageWithLayout = () => {
   return (
     <>
       <TypographyH2 variant="h2" sx={{ textAlign: 'center' }} mb={4}>
-        Add new product
+        Create
       </TypographyH2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CustomStack direction="row" spacing={2}>
@@ -335,7 +384,21 @@ const CreateProduct: NextPageWithLayout = () => {
               {' '}
               Add Thumbnail Product
             </Typography>
-            <CustomImageBox></CustomImageBox>
+            <UploadImage
+              fileList={undefined}
+              onFileSelectSuccess={(file: any) => {
+                setValue('thumbnail', file)
+                trigger('thumbnail')
+              }}
+              onFileSelectError={() => {
+                return
+              }}
+              onFileSelectDelete={() => {
+                setValue('thumbnail', '')
+                trigger('thumbnail')
+              }}
+            />
+            {/* <CustomImageBox></CustomImageBox> */}
           </Stack>
           <Stack
             spacing={1}
@@ -344,7 +407,21 @@ const CreateProduct: NextPageWithLayout = () => {
             <Typography sx={{ width: '165px', textAlign: 'center' }}>
               Add Product Images
             </Typography>
-            <CustomImageBox></CustomImageBox>
+            <UploadImage
+              fileList={undefined}
+              onFileSelectSuccess={(file: string) => {
+                setValue('images', [file])
+                trigger('images')
+              }}
+              onFileSelectError={() => {
+                return
+              }}
+              onFileSelectDelete={() => {
+                setValue('images', [''])
+                trigger('images')
+              }}
+            />
+            {/* <CustomImageBox></CustomImageBox> */}
           </Stack>
         </CustomStack>
         <CustomStack spacing={2}>
@@ -356,12 +433,15 @@ const CreateProduct: NextPageWithLayout = () => {
                   name="name"
                   render={({ field }) => (
                     <>
-                      <InputLabelCustom
-                        htmlFor="product_name"
-                        error={!!errors.name}
-                      >
-                        Product name
-                      </InputLabelCustom>
+                      <Stack direction="row" alignItems="center" height={38}>
+                        <InputLabelCustom
+                          htmlFor="product_name"
+                          error={!!errors.name}
+                        >
+                          Product name
+                        </InputLabelCustom>
+                      </Stack>
+
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="product_name"
@@ -559,6 +639,40 @@ const CreateProduct: NextPageWithLayout = () => {
               <Grid xs={6}>
                 <Controller
                   control={control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <>
+                      <InputLabelCustom
+                        htmlFor="quantity"
+                        error={!!errors.price}
+                      >
+                        Quantity
+                      </InputLabelCustom>
+                      <FormControl fullWidth>
+                        <TextFieldCustom
+                          id="quantity"
+                          placeholder="Enter quantity"
+                          type="number"
+                          error={!!errors.price}
+                          className={classes['input-number']}
+                          onKeyPress={(event) => {
+                            if (hasSpecialCharacter(event.key)) {
+                              event.preventDefault()
+                            }
+                          }}
+                          {...field}
+                        />
+                        <FormHelperText error={!!errors.quantity}>
+                          {errors.quantity && `${errors.quantity.message}`}
+                        </FormHelperText>
+                      </FormControl>
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid xs={6}>
+                <Controller
+                  control={control}
                   name="price"
                   render={({ field }) => (
                     <>
@@ -602,7 +716,7 @@ const CreateProduct: NextPageWithLayout = () => {
                           htmlFor="category"
                           error={!!errors.category}
                         >
-                          Parent category
+                          Category
                         </InputLabelCustom>
                         <FormControl fullWidth>
                           <SelectCustom
@@ -667,61 +781,34 @@ const CreateProduct: NextPageWithLayout = () => {
           </CustomBox>
           <CustomBox>
             <Grid container columnSpacing={3}>
-              <Grid xs={4}>
+              <Grid xs={12}>
                 <Box>
                   <Controller
                     control={control}
                     name="description"
-                    render={({ field }) => (
+                    render={() => (
                       <>
                         <InputLabelCustom
                           htmlFor="description"
                           error={!!errors.description}
                         >
-                          Short description
-                        </InputLabelCustom>
-                        <FormControl fullWidth>
-                          <TextFieldCustom
-                            id="description"
-                            multiline
-                            minRows={5}
-                            placeholder="Enter short description"
-                            error={!!errors.description}
-                            {...field}
-                          />
-                          <FormHelperText error={!!errors.description}>
-                            {errors.description &&
-                              `${errors.description.message}`}
-                          </FormHelperText>
-                        </FormControl>
-                      </>
-                    )}
-                  />
-                </Box>
-              </Grid>
-              <Grid xs={8}>
-                <Box>
-                  <Controller
-                    control={control}
-                    name="longDescription"
-                    render={() => (
-                      <>
-                        <InputLabelCustom
-                          htmlFor="longDescription"
-                          error={!!errors.longDescription}
-                        >
                           Overview
                         </InputLabelCustom>
-                        <FormControl fullWidth>
+                        <FormControl
+                          fullWidth
+                          style={{
+                            height: '300px',
+                          }}
+                        >
                           <ReactQuill
-                            style={{ height: '80px' }}
+                            style={{ height: 'calc(100% - 42px)' }}
                             theme="snow"
                             value={editorContent}
                             onChange={onEditorStateChange}
                           />
-                          <FormHelperText error={!!errors.longDescription}>
-                            {errors.longDescription &&
-                              `${errors.longDescription.message}`}
+                          <FormHelperText error={!!errors.description}>
+                            {errors.description &&
+                              `${errors.description.message}`}
                           </FormHelperText>
                         </FormControl>
                       </>

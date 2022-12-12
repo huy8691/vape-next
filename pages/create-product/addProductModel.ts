@@ -10,10 +10,11 @@ export interface AddFormInput {
   manufacturer: number
   unit_type: string
   price: number
+  quantity: number
   category: number
 
   description: string
-  longDescription: string
+  images: string[]
   thumbnail: string
 }
 
@@ -23,11 +24,13 @@ export interface CreateProductDataType {
   manufacturer: number
   unit_type: string
   price: number
+  quantity: number
   category: number
-
   description: string
-  longDescription: string
   thumbnail: string
+  images: string[]
+  warehouse: number
+  distribution_channel: number
 }
 
 export interface RegisterResponseType {
@@ -38,15 +41,33 @@ export interface ProductCategoryType {
   id: number
   name: string
   is_displayed: boolean
-
   indeterminate?: boolean
   child_category: ProductCategoryType[]
   parent_category: ProductCategoryType
 }
 
+export interface WarehouseType {
+  id: number
+  name: string
+  code: string
+}
+export interface WarehouseResponseType {
+  data: WarehouseType[]
+  errors?: any
+}
+export interface OrganizationType {
+  id: number
+  name: string
+  is_active: boolean
+  address: string
+}
+export interface OrganizationResponseType {
+  data: OrganizationType[]
+  errors?: any
+}
+
 export interface ProductCategoryResponseType {
   data?: ProductCategoryType[]
-
   errors?: any
 }
 

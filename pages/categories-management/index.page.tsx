@@ -9,7 +9,14 @@ import {
   FormHelperText,
   IconButton,
   Modal,
+  Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 
   // Popover,
@@ -59,6 +66,28 @@ const ModalBoxCustom = styled(Box)(() => ({
   background: '#FFF',
   borderRadius: '10px',
   padding: '15px',
+}))
+
+const TableRowCustom = styled(TableRow)(({ theme }) => ({
+  cursor: 'pointer',
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#F8F9FC',
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}))
+
+const TableCellHeadingTextCustom = styled(TableCell)(({ theme }) => ({
+  fontSize: '1.4rem',
+  fontWeight: 400,
+  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+}))
+const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
+  fontSize: '1.4rem',
+  fontWeight: 500,
+  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
 }))
 // const TableCellCustomeHeadingTextCustom = styled(TableCellCustome)(({ theme }) => ({
 //   fontSize: '1.4rem',
@@ -150,15 +179,77 @@ const SupplierCategories: NextPageWithLayout = () => {
 
   return (
     <>
-      <TypographyH2>Categories Management</TypographyH2>
-      <Grid container spacing={2}>
-        <Grid xs={4}>
+      <TypographyH2 sx={{ marginBottom: '15px' }}>
+        Categories Management
+      </TypographyH2>
+      <Grid container spacing={2} sx={{ marginBottom: '15px' }}>
+        <Grid xs={3}>
           <ButtonCustom onClick={handleOpenModal} variant="contained" fullWidth>
             Add new categories
           </ButtonCustom>
         </Grid>
       </Grid>
+      <TableContainer
+        component={Paper}
+        elevation={0}
+        style={{ marginBottom: '20px', border: '1px solid #E1E6EF' }}
+      >
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCellHeadingTextCustom align="center">
+                ID
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Name
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Child category
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Parent category
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Is display
+              </TableCellHeadingTextCustom>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {stateCategoryList?.map((row) => (
+              <TableRowCustom
+                hover
+                key={row.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCellBodyTextCustom
+                  align="center"
+                  component="th"
+                  scope="row"
+                >
+                  {row.id}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom
+                  align="center"
+                  component="th"
+                  scope="row"
+                >
+                  {row.name}
+                </TableCellBodyTextCustom>
 
+                <TableCellBodyTextCustom align="center">
+                  null
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  null
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  {row.is_displayed.toString()}
+                </TableCellBodyTextCustom>
+              </TableRowCustom>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Modal
         open={stateOpenModal}
         onClose={handleCloseModal}
