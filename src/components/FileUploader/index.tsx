@@ -137,7 +137,9 @@ const ComponentFileUploader = ({
               })
             )
           })
-          .catch(() => {
+          .catch((error) => {
+            console.log('🚀 ~ error', error)
+
             dispatch(loadingActions.doLoadingFailure())
             dispatch(
               notificationActions.doNotification({

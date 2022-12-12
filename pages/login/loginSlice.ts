@@ -32,7 +32,7 @@ const loginSlice = createSlice({
       if (state.data) {
         state.data.access_token = data.access_token
       }
-      setAuthToken(data.access_token)
+      setAuthToken(data.access_token, data.refresh_token)
     },
     doLoginFailure(state: initialLoginStateType) {
       state.data.access_token = ''
