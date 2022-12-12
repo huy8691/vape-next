@@ -251,14 +251,6 @@ const OrderManageMent: NextPageWithLayout = () => {
         .then((res) => {
           const data = res.data
           setNextPage(data.nextPage)
-          // if (data.data.length === 0) {
-          //   dispatch(
-          //     notificationActions.doNotification({
-          //       message: 'There are no orders at this time',
-          //       type: 'error',
-          //     })
-          //   )
-          // }
           setValue('content', '')
           setDataOrders(data)
           dispatch(loadingActions.doLoadingSuccess())
@@ -267,11 +259,6 @@ const OrderManageMent: NextPageWithLayout = () => {
           setRowsPerPage(10)
         })
         .catch(() => {
-          // const data = error.response?.data
-          // console.log(
-          //   '🚀 ~ file: index.page.tsx ~ line 386 ~ useEffect ~ data',
-          //   data
-          // )
           dispatch(loadingActions.doLoadingFailure())
           dispatch(
             notificationActions.doNotification({
