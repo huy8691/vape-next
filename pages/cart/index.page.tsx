@@ -499,7 +499,7 @@ const Cart: NextPageWithLayout = () => {
         .catch((error) => {
           const { data } = error.response.data
           const invalidListItem: Array<number> = []
-          Array.from(data).forEach((item: invalidCartItemType) => {
+          data.forEach((item: invalidCartItemType) => {
             invalidListItem.push(item.productId)
             console.log(item.productId)
           })

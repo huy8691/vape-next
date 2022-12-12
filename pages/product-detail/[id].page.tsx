@@ -334,10 +334,9 @@ const ProductDetail: NextPageWithLayout = () => {
   // wishlist
   const handleWishList = () => {
     dispatch(loadingActions.doLoading())
-    postWishList({ product: router?.query?.id })
+    postWishList({ product: Number(router.query.id) })
       .then((res) => {
         const { data } = res
-        console.log('dd', data)
         dispatch(loadingActions.doLoadingSuccess())
         dispatch(
           notificationActions.doNotification({
@@ -433,7 +432,9 @@ const ProductDetail: NextPageWithLayout = () => {
             <StickyWrapper>
               <CardCustom>
                 <CardContent>
-                  <Box mb={2}>{renderSlides1()}</Box>
+                  <Box mb={2} style={{ minHeight: '300px' }}>
+                    {renderSlides1()}
+                  </Box>
                   <BoxSlick />
                   <Box className={classes['product-detail__slick-carousel']}>
                     {renderSlides2()}

@@ -116,7 +116,7 @@ const chart3 = {
       width: 380,
       type: 'pie',
     },
-    labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+    labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'],
     responsive: [
       {
         breakpoint: 480,

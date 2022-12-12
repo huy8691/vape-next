@@ -13,7 +13,7 @@ const getProductDetail = (
 ): Promise<AxiosResponse<ProductDetailResponseType>> => {
   console.log('6666', productId)
   return callAPIWithToken({
-    url: `/api/customer/products/${productId}`,
+    url: `/api/products/${productId}`,
     method: 'get',
   })
 }
@@ -22,16 +22,16 @@ const getRelatedProduct = (
   params: string | string[]
 ): Promise<AxiosResponse<ProductListDataResponseType>> => {
   return callAPIWithToken({
-    url: `api/customer/products/${params}/related/?limit=6`,
+    url: `api/merchant/products/${params}/related/?limit=6`,
     method: 'get',
   })
 }
 
-const postWishList = (
-  data: any
-): Promise<AxiosResponse<WishListResponseType>> => {
+const postWishList = (data: {
+  product: number
+}): Promise<AxiosResponse<WishListResponseType>> => {
   return callAPIWithToken({
-    url: `/api/customer/products/mark-favorite/`,
+    url: `/api/merchant/products/mark-favorite/`,
     method: 'post',
     data: data,
   })

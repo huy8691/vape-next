@@ -221,8 +221,8 @@ const Login: NextPageWithLayout = () => {
                           console.log('e', e.target.value)
                           setValue('platform', e.target.value)
                           if (e.target.value === 'MERCHANT') {
-                            setValue('email', 'khoaanh4920@gmail.com')
-                            setValue('password', 'dev1234!@#')
+                            setValue('email', 'merchant@exnodes.vn')
+                            setValue('password', '12345678')
                           } else {
                             setValue('email', 'supplier@exnodes.vn')
                             setValue('password', '12345678')
