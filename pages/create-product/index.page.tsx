@@ -403,12 +403,15 @@ const CreateProduct: NextPageWithLayout = () => {
                   name="name"
                   render={({ field }) => (
                     <>
-                      <InputLabelCustom
-                        htmlFor="product_name"
-                        error={!!errors.name}
-                      >
-                        Product name
-                      </InputLabelCustom>
+                      <Stack direction="row" alignItems="center" height={38}>
+                        <InputLabelCustom
+                          htmlFor="product_name"
+                          error={!!errors.name}
+                        >
+                          Product name
+                        </InputLabelCustom>
+                      </Stack>
+
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="product_name"
@@ -761,9 +764,14 @@ const CreateProduct: NextPageWithLayout = () => {
                         >
                           Overview
                         </InputLabelCustom>
-                        <FormControl fullWidth>
+                        <FormControl
+                          fullWidth
+                          style={{
+                            height: '300px',
+                          }}
+                        >
                           <ReactQuill
-                            style={{ height: '80px' }}
+                            style={{ height: 'calc(100% - 42px)' }}
                             theme="snow"
                             value={editorContent}
                             onChange={onEditorStateChange}
