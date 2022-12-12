@@ -5,7 +5,7 @@ let urlApi = 'https://cms.theweedsupplies.com'
 
 const env = process.env.ENV
 if (env === 'prod') {
-  urlApi = 'http://cms.theweedsupplies.com'
+  urlApi = 'https://cms.theweedsupplies.com'
 }
 
 const token = Cookies.get('token')

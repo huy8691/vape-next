@@ -7,7 +7,7 @@ import { styled, Theme, CSSObject } from '@mui/material/styles'
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MuiDrawer from '@mui/material/Drawer'
@@ -36,7 +36,7 @@ import RequireAuth from './requireAuth'
 // import classes from './styles.module.scss'
 
 // redux
-import { useAppSelector } from 'src/store/hooks'
+// import { useAppSelector } from 'src/store/hooks'
 
 // import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 type Props = {

@@ -56,11 +56,11 @@ const Menu = [
 const SideBar = ({ open }: Props) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  // const cart = useAppSelector((state) => state.cart)
+  const cart = useAppSelector((state) => state.cart)
   const userInfo = useAppSelector((state) => state.userInfo)
   const [openCollapse, setOpenCollapse] = useState<boolean>(true)
   const [openCollapse2, setOpenCollapse2] = useState<boolean>(true)
-  // const [stateItemCart, setStateItemCart] = useState<number>(0)
+  const [stateItemCart, setStateItemCart] = useState<number>(0)
 
   const handleClick = () => {
     setOpenCollapse(!openCollapse)
@@ -76,11 +76,12 @@ const SideBar = ({ open }: Props) => {
     }
   }, [dispatch, userInfo.data.user_type])
 
-  // useEffect(() => {
-  //   // if (cart?.data?.amountItems) {
-  //   setStateItemCart(cart.data.amountItems)
-  //   // }
-  // }, [cart])
+  useEffect(() => {
+    // if (cart?.data?.amountItems) {
+    setStateItemCart(cart.data.amountItems)
+    console.log(stateItemCart)
+    // }
+  }, [cart])
 
   return (
     <>

@@ -10,7 +10,7 @@ const schema = Yup.object().shape({
     .required('Last name is a required field')
     .min(2, 'Last name must be at least 2 characters')
     .max(50, 'Last name must be at most 50 characters'),
-
+  dob: Yup.string().required('Dob is a required field'),
   gender: Yup.string().required('Gender is a required field'),
   address: Yup.string().required('Address is a required field'),
 })
