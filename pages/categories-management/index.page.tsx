@@ -164,6 +164,25 @@ const SupplierCategories: NextPageWithLayout = () => {
             message: 'Success',
           })
         )
+        getListCategories(router.query)
+          .then((res) => {
+            const { data } = res.data
+            setStateCategoryList(data)
+            dispatch(loadingActions.doLoadingSuccess())
+            console.log('data', data)
+          })
+          .catch((error: any) => {
+            const data = error.response?.data
+            console.log(data)
+            dispatch(loadingActions.doLoadingFailure())
+            dispatch(
+              notificationActions.doNotification({
+                message: 'Something went wrongs with the server',
+                type: 'error',
+              })
+            )
+          })
+        handleCloseModal()
       })
       .catch(() => {
         dispatch(loadingActions.doLoadingFailure())
