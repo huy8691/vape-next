@@ -499,10 +499,11 @@ const Cart: NextPageWithLayout = () => {
         .catch((error) => {
           const { data } = error.response.data
           const invalidListItem: Array<number> = []
-          data.forEach((item: invalidCartItemType) => {
-            invalidListItem.push(item.productId)
-            console.log(item.productId)
-          })
+          data &&
+            data.forEach((item: invalidCartItemType) => {
+              invalidListItem.push(item.productId)
+              console.log(item.productId)
+            })
           setTempInvalid(invalidListItem)
           dispatch(loadingActions.doLoadingFailure())
           dispatch(
