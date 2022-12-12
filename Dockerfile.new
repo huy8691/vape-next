@@ -53,8 +53,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/build/static ./build/static
 
 USER nextjs
 
-EXPOSE 80
+EXPOSE 3000
 
-ENV PORT 80
+ENV PORT 3000
 
-CMD ["pm2", "start", "server.js"]
+CMD ["node", "server.js"]
