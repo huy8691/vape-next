@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 
 import dynamic from 'next/dynamic'
-import { ApexOptions } from 'apexcharts'
+// import { ApexOptions } from 'apexcharts'
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
