@@ -24,7 +24,7 @@ const getProductCategory = (): Promise<
   AxiosResponse<ProductCategoryResponseType>
 > => {
   return callAPIWithToken({
-    url: `/api/category/`,
+    url: `/api/categories/`,
     method: 'get',
   })
 }
@@ -41,7 +41,7 @@ const getProductManufacturer = (): Promise<
   AxiosResponse<ProductBrandResponseType>
 > => {
   return callAPIWithToken({
-    url: `/api/manufacturer/`,
+    url: `/api/manufacturers/`,
     method: 'get',
   })
 }

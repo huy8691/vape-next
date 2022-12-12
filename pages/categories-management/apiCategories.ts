@@ -9,7 +9,7 @@ const getListCategories = (
   params?: object
 ): Promise<AxiosResponse<categoryListResponseType>> => {
   return callAPIWithToken({
-    url: `/api/supplier/category/`,
+    url: `/api/categories/`,
     method: 'GET',
     params: {
       ...params,
@@ -20,7 +20,7 @@ const addCategories = (
   values: AddCategoryType
 ): Promise<AxiosResponse<categoryListResponseType>> => {
   return callAPIWithToken({
-    url: `/api/supplier/category/`,
+    url: `/api/categories/`,
     method: 'POST',
     data: values,
   })

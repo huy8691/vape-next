@@ -7,7 +7,7 @@ const getOrderDetail = (
 ): Promise<AxiosResponse<OrderDetailTypeResponseType>> => {
   console.log('6666', orderId)
   return callAPIWithToken({
-    url: `/api/customer/order-detail/${orderId}`,
+    url: `/api/merchant/order-detail/${orderId}`,
     method: 'get',
   })
 }

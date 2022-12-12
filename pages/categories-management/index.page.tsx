@@ -179,8 +179,10 @@ const SupplierCategories: NextPageWithLayout = () => {
 
   return (
     <>
-      <TypographyH2>Categories Management</TypographyH2>
-      <Grid container spacing={2}>
+      <TypographyH2 sx={{ marginBottom: '15px' }}>
+        Categories Management
+      </TypographyH2>
+      <Grid container spacing={2} sx={{ marginBottom: '15px' }}>
         <Grid xs={3}>
           <ButtonCustom onClick={handleOpenModal} variant="contained" fullWidth>
             Add new categories
@@ -196,26 +198,19 @@ const SupplierCategories: NextPageWithLayout = () => {
           <TableHead>
             <TableRow>
               <TableCellHeadingTextCustom align="center">
-                Order No
+                ID
               </TableCellHeadingTextCustom>
               <TableCellHeadingTextCustom align="center">
-                Order Date
+                Name
               </TableCellHeadingTextCustom>
               <TableCellHeadingTextCustom align="center">
-                Total Billing
+                Child category
               </TableCellHeadingTextCustom>
               <TableCellHeadingTextCustom align="center">
-                Order Status
-              </TableCellHeadingTextCustom>
-              {/* <TableCellHeadingTextCustom align="center">Payment Method</TableCellHeadingTextCustom> */}
-              <TableCellHeadingTextCustom align="center">
-                Payment Status
+                Parent category
               </TableCellHeadingTextCustom>
               <TableCellHeadingTextCustom align="center">
-                Receiver
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Deliver Address
+                Is display
               </TableCellHeadingTextCustom>
             </TableRow>
           </TableHead>
@@ -231,14 +226,25 @@ const SupplierCategories: NextPageWithLayout = () => {
                   component="th"
                   scope="row"
                 >
+                  {row.id}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom
+                  align="center"
+                  component="th"
+                  scope="row"
+                >
                   {row.name}
                 </TableCellBodyTextCustom>
-                {/* <TableCellBodyTextCustom align="center">
-                {row.parent_category}
-                </TableCellBodyTextCustom> */}
-                <TableCellBodyTextCustom align="center"></TableCellBodyTextCustom>
 
-                {/* <TableCellBodyTextCustom align="center">{row.paymentMethod}</TableCellBodyTextCustom> */}
+                <TableCellBodyTextCustom align="center">
+                  null
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  null
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  {row.is_displayed.toString()}
+                </TableCellBodyTextCustom>
               </TableRowCustom>
             ))}
           </TableBody>

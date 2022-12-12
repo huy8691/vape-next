@@ -33,6 +33,7 @@ import {
   TextFieldCustom,
 } from 'src/components'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import EditIcon from '@mui/icons-material/Edit'
 
 import { AccountDataType } from './accountModel'
 // mui
@@ -188,7 +189,8 @@ const Account: NextPageWithLayout = () => {
           <Box mb={2}>
             <ButtonCustom
               variant="outlined"
-              size="medium"
+              size="small"
+              startIcon={<EditIcon />}
               onClick={() => {
                 setStateDisable(!stateDisable)
               }}
@@ -365,11 +367,14 @@ const Account: NextPageWithLayout = () => {
                 )}
               />
             </Box>
-            {!stateDisable && (
-              <ButtonCustom variant="contained" size="large" type="submit">
-                Submit
-              </ButtonCustom>
-            )}
+            <ButtonCustom
+              variant="contained"
+              size="large"
+              type="submit"
+              disabled={stateDisable}
+            >
+              Submit
+            </ButtonCustom>
           </form>
         </CardContentCustom>
       </CardPage>

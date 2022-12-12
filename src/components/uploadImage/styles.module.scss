@@ -1,0 +1,38 @@
+.image-wrapper {
+  display: flex;
+  gap: 10px;
+  .image-item {
+    position: relative;
+    width: 162px;
+    height: 162px;
+    object-fit: cover;
+    svg {
+      position: absolute;
+      top: 0;
+      right: 0;
+      cursor: pointer;
+    }
+    img {
+      border-radius: 5px;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .upload-wrapper {
+    width: 162px;
+    height: 162px;
+    border: 1px dashed #bababa;
+    background: #f1f3f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    gap: 15px;
+    .label-image {
+      font-size: 14px;
+      font-weight: 400;
+      color: #49516f;
+    }
+  }
+}

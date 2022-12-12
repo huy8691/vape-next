@@ -2,6 +2,10 @@ export interface ListProductDataType {
   data: ProductData[]
   totalPages?: number
   errors?: any
+  totalItems: number
+  currentPage: number
+  previousPage: number | null
+  nextPage: number | null
 }
 
 export interface ProductData {
