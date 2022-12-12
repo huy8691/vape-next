@@ -7,6 +7,7 @@ import { styled, Theme, CSSObject } from '@mui/material/styles'
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MuiDrawer from '@mui/material/Drawer'
@@ -33,6 +34,9 @@ import {
 
 import RequireAuth from './requireAuth'
 // import classes from './styles.module.scss'
+
+// redux
+import { useAppSelector } from 'src/store/hooks'
 
 // import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 type Props = {
@@ -194,10 +198,21 @@ const Drawer = styled(MuiDrawer, {
 
 const NestedLayout: React.FC<Props> = ({ children }: Props) => {
   const [open, setOpen] = React.useState(true)
-
   const handleDrawer = () => {
     setOpen(!open)
   }
+
+  // const userInfo = useAppSelector((state) => state.userInfo)
+  // const router = useRouter()
+
+  // const role = userInfo.data.user_type
+  // let allowed = true
+  // if (router.pathname.startsWith('/cart') && role !== 'MERCHANT') {
+  //   allowed = false
+  // }
+  // if (router.pathname.startsWith('/customer') && role !== 'SUPPLIER') {
+  //   allowed = false
+  // }
   return (
     <WrapLayout>
       <RequireAuth>
@@ -225,7 +240,6 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
                       </a>
                     </Link>
                   )}
-
                   <IconButton
                     color="inherit"
                     aria-label="open drawer"

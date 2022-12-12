@@ -22,7 +22,7 @@ import { useRouter } from 'next/router'
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { useAppSelector } from 'src/store/hooks'
-// import { cartActions } from 'src/store/cart/cartSlice'
+import { cartActions } from 'src/store/cart/cartSlice'
 
 // import classes from './styles.module.scss'
 
@@ -57,9 +57,10 @@ const SideBar = ({ open }: Props) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   // const cart = useAppSelector((state) => state.cart)
+  const userInfo = useAppSelector((state) => state.userInfo)
   const [openCollapse, setOpenCollapse] = useState<boolean>(true)
   const [openCollapse2, setOpenCollapse2] = useState<boolean>(true)
-  const [stateItemCart, setStateItemCart] = useState<number>(0)
+  // const [stateItemCart, setStateItemCart] = useState<number>(0)
 
   const handleClick = () => {
     setOpenCollapse(!openCollapse)
@@ -70,8 +71,10 @@ const SideBar = ({ open }: Props) => {
   }
 
   useEffect(() => {
-    // dispatch(cartActions.doCart())
-  }, [dispatch])
+    if (userInfo.data.user_type === 'MERCHANT') {
+      dispatch(cartActions.doCart())
+    }
+  }, [dispatch, userInfo.data.user_type])
 
   // useEffect(() => {
   //   // if (cart?.data?.amountItems) {
@@ -199,6 +202,22 @@ const SideBar = ({ open }: Props) => {
                 </ListItemButton>
               </a>
             </Link>
+            <Link href="/product-management">
+              <a>
+                <ListItemButton
+                  sx={{ pl: 3 }}
+                  selected={router.pathname === '/product-management'}
+                >
+                  {open ? (
+                    <ListItemText primary="Product management" />
+                  ) : (
+                    <ListItemIcon>
+                      <FileSearch />
+                    </ListItemIcon>
+                  )}
+                </ListItemButton>
+              </a>
+            </Link>
           </List>
         </Collapse>
         <ListItem disablePadding sx={{ display: 'block' }}>
@@ -239,7 +258,7 @@ const SideBar = ({ open }: Props) => {
                       <ListItemText primary="Cart" />
                       <IconButton>
                         <Badge
-                          badgeContent={stateItemCart}
+                          // badgeContent={stateItemCart}
                           color="primary"
                         ></Badge>
                       </IconButton>
