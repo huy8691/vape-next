@@ -57,13 +57,14 @@ const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
   color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
 }))
-const ModalBoxCustom = styled(Box)(() => ({
+const ModalBoxCustom = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 600,
-  background: '#FFF',
+  // background: '#FFF',
+  backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#fff',
   borderRadius: '10px',
   padding: '15px',
 }))
