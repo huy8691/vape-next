@@ -1,7 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-// let urlApi = 'https://2f82-115-73-215-16.ap.ngrok.io'
-// let urlApi = 'https://385c-115-73-215-16.ap.ngrok.io'
+// let urlApi = 'https://9e24-115-73-215-16.ap.ngrok.io'
 let urlApi = 'https://cms.theweedsupplies.com'
 
 const env = process.env.ENV

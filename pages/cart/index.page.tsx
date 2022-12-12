@@ -181,17 +181,17 @@ const Cart: NextPageWithLayout = () => {
   //state for instock
   const [instock, setInstock] = useState<number>()
   // state use for checkbox
-  const [isCheckedListItem, setIsCheckedListItem] = useState<{
+  const [stateIsCheckedListItem, setStateIsCheckedListItem] = useState<{
     [key: number]: boolean
   }>({})
-  const [isCheckAll, setIsCheckAll] = useState(false)
+  const [stateIsCheckAll, setStateIsCheckAll] = useState(false)
   const [stateCartCheck, setStateCartCheck] = useState<CartType['items']>()
-  const [flagUpdate, setFlagUpdate] = useState(false)
+  const [stateFlagUpdate, setStateFlagUpdate] = useState(false)
   //state use for modal
   const [currentProduct, setCurrentProduct] = useState<CartItem>()
   //state use for total
   const [total, setTotal] = useState<number>(0)
-  // state use for popper
+  // state use for popper from material ui
   const [anchorEl, setAnchorEl] = useState(null)
   // state use for temporary quantity
   const [tempQuantity, setTempQuantity] = useState<number>(0)
@@ -208,16 +208,15 @@ const Cart: NextPageWithLayout = () => {
 
   useEffect(() => {
     // if (cart.data.items.length === 0) return
-
-    if (flagUpdate) {
+    if (stateFlagUpdate) {
       // return
       const newArr = cart?.data?.items?.map((item) => {
         return {
           ...item,
-          isCheck: isCheckedListItem[item.cartItemId],
+          isCheck: stateIsCheckedListItem[item.cartItemId],
         }
       })
-      console.log('second')
+
       // if (newArr?.every((item) => item.isCheck == true)) {
       //   setIsCheckAll(true)
       // }
@@ -236,7 +235,7 @@ const Cart: NextPageWithLayout = () => {
       calculateTotal(newArr)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cart, flagUpdate])
+  }, [cart, stateFlagUpdate])
 
   const handleClickCheckbox = (value: CartItem, e: any) => {
     const newState = stateCartCheck?.map((item) => {
@@ -251,13 +250,13 @@ const Cart: NextPageWithLayout = () => {
       }
     })
     if (newState?.every((arr) => arr.isCheck === true)) {
-      setIsCheckAll(true)
+      setStateIsCheckAll(true)
     } else {
-      setIsCheckAll(false)
+      setStateIsCheckAll(false)
     }
     setStateCartCheck(newState)
-    setIsCheckedListItem({
-      ...isCheckedListItem,
+    setStateIsCheckedListItem({
+      ...stateIsCheckedListItem,
       [value.cartItemId]: e.target.checked,
     })
     calculateTotal(newState)
@@ -283,7 +282,7 @@ const Cart: NextPageWithLayout = () => {
     dispatch(loadingActions.doLoading())
     deleteCartItem(arrNumber)
       .then(() => {
-        setFlagUpdate(true)
+        setStateFlagUpdate(true)
         dispatch(cartActions.doCart())
         dispatch(
           notificationActions.doNotification({
@@ -311,7 +310,7 @@ const Cart: NextPageWithLayout = () => {
     deleteCartItem(arrNumber)
       .then(() => {
         handleClosePopover()
-        setFlagUpdate(true)
+        setStateFlagUpdate(true)
         dispatch(cartActions.doCart())
         dispatch(
           notificationActions.doNotification({
@@ -344,14 +343,14 @@ const Cart: NextPageWithLayout = () => {
           itemNew = { ...itemNew, [item.cartItemId]: true }
         })
 
-        setIsCheckedListItem({
-          ...isCheckedListItem,
+        setStateIsCheckedListItem({
+          ...stateIsCheckedListItem,
           ...itemNew,
         })
       }
       setTotal(Number(cart?.data?.totalPrice))
       setStateCartCheck(newArr)
-      setIsCheckAll(!isCheckAll)
+      setStateIsCheckAll(!stateIsCheckAll)
     } else {
       const newArr = stateCartCheck?.map((item) => {
         return { ...item, isCheck: false }
@@ -361,14 +360,14 @@ const Cart: NextPageWithLayout = () => {
         newArr.forEach((item) => {
           itemNew = { ...itemNew, [item.cartItemId]: false }
         })
-        setIsCheckedListItem({
-          ...isCheckedListItem,
+        setStateIsCheckedListItem({
+          ...stateIsCheckedListItem,
           ...itemNew,
         })
       }
       setStateCartCheck(newArr)
       setTotal(0)
-      setIsCheckAll(!isCheckAll)
+      setStateIsCheckAll(!stateIsCheckAll)
     }
   }
   // calculate total
@@ -427,7 +426,7 @@ const Cart: NextPageWithLayout = () => {
               message: 'Update successfully',
             })
           )
-          setFlagUpdate(true)
+          setStateFlagUpdate(true)
           handleCloseModal()
         })
         .catch((error) => {
@@ -500,7 +499,7 @@ const Cart: NextPageWithLayout = () => {
         .catch((error) => {
           const { data } = error.response.data
           const invalidListItem: Array<number> = []
-          data.forEach((item: invalidCartItemType) => {
+          Array.from(data).forEach((item: invalidCartItemType) => {
             invalidListItem.push(item.productId)
             console.log(item.productId)
           })
@@ -921,7 +920,7 @@ const Cart: NextPageWithLayout = () => {
             <Stack direction="row" spacing={2} alignItems="center">
               <Checkbox
                 onChange={(e) => handleSelectAllCheckBox(e)}
-                checked={isCheckAll}
+                checked={stateIsCheckAll}
               />
               <Typography>Select all product on cart</Typography>
             </Stack>

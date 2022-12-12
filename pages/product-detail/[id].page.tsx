@@ -294,6 +294,7 @@ const ProductDetail: NextPageWithLayout = () => {
         .then((res) => {
           const { data } = res.data
           setStateProductDetail(data)
+          console.log(data)
           setIsAddWishList(data?.is_favorite ? data?.is_favorite : false)
           dispatch(loadingActions.doLoadingSuccess())
         })
@@ -327,6 +328,7 @@ const ProductDetail: NextPageWithLayout = () => {
           )
         })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, dispatch])
 
   // wishlist
@@ -359,16 +361,6 @@ const ProductDetail: NextPageWithLayout = () => {
     if (stateProductDetail?.price) {
       setTotal(e * stateProductDetail.price)
     }
-    // if (Number(e) > Number(stateProductDetail?.inStock)) {
-    //   dispatch(
-    //     notificationActions.doNotification({
-    //       message: `Only ${stateProductDetail?.inStock} products left in stock`,
-    //       type: 'error',
-    //     })
-    //   )
-    //   // setValue('number', stateProductDetail?.inStock)
-    //   return
-    // }
   }
   const renderSlides1 = () => {
     if (!stateProductDetail?.images) {
@@ -428,154 +420,33 @@ const ProductDetail: NextPageWithLayout = () => {
       </Slider>
     )
   }
+
   //
   return (
-    <div className={classes['product-detail']}>
-      <Head>
-        <title>{stateProductDetail?.name} | VAPE</title>
-      </Head>
-      <Grid container spacing={3} mb={5}>
-        <Grid xs>
-          <StickyWrapper>
-            <CardCustom>
-              <CardContent>
-                <Box mb={2}>{renderSlides1()}</Box>
-                <BoxSlick />
-                <Box className={classes['product-detail__slick-carousel']}>
-                  {renderSlides2()}
-                </Box>
-              </CardContent>
-            </CardCustom>
-          </StickyWrapper>
-        </Grid>
-        <Grid xs={6}>
-          {stateProductDetail ? (
-            <TypographyH2 variant="h2" mb={1}>
-              Product details
-            </TypographyH2>
-          ) : (
-            <Box mb={1}>
-              <Skeleton
-                animation="wave"
-                variant="text"
-                sx={{ fontSize: '3rem' }}
-                width={400}
-              />
-            </Box>
-          )}
-          <Box mb={3}>
+    <>
+      <div className={classes['product-detail']}>
+        <Head>
+          <title>{stateProductDetail?.name} | VAPE</title>
+        </Head>
+        <Grid container spacing={3} mb={5}>
+          <Grid xs>
+            <StickyWrapper>
+              <CardCustom>
+                <CardContent>
+                  <Box mb={2}>{renderSlides1()}</Box>
+                  <BoxSlick />
+                  <Box className={classes['product-detail__slick-carousel']}>
+                    {renderSlides2()}
+                  </Box>
+                </CardContent>
+              </CardCustom>
+            </StickyWrapper>
+          </Grid>
+          <Grid xs={6}>
             {stateProductDetail ? (
-              <Breadcrumbs separator=">" aria-label="breadcrumb">
-                <Link href="/browse-products">
-                  <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>Home</a>
-                </Link>
-                {stateProductDetail?.category?.parent_category?.name && (
-                  <Link
-                    href={`/browse-products?page=1&category=${stateProductDetail.category.parent_category.id}&`}
-                  >
-                    <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>
-                      {stateProductDetail?.category?.parent_category?.name}
-                    </a>
-                  </Link>
-                )}
-                <Link
-                  href={`/browse-products?page=1&category=${stateProductDetail?.category?.id}&`}
-                >
-                  <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>
-                    {stateProductDetail?.category?.name}
-                  </a>
-                </Link>
-                <Link
-                  href={`/product-detail/${stateProductDetail?.id}`}
-                  style={{ fontSize: '1.4rem' }}
-                >
-                  <>{stateProductDetail?.name}</>
-                </Link>
-              </Breadcrumbs>
-            ) : (
-              <Skeleton
-                animation="wave"
-                variant="text"
-                sx={{ fontSize: '1.4rem' }}
-              />
-            )}
-          </Box>
-          <Box mb={3}>
-            {stateProductDetail ? (
-              <TypographyH1 variant="h1">
-                {stateProductDetail?.name}
-              </TypographyH1>
-            ) : (
-              <Skeleton
-                animation="wave"
-                variant="text"
-                sx={{ fontSize: '3.2rem' }}
-              />
-            )}
-          </Box>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={2}
-            mb={2}
-          >
-            {stateProductDetail ? (
-              <Typography
-                component="div"
-                sx={{ fontWeight: 'bold', fontSize: '18px' }}
-              >
-                {stateProductDetail?.code}
-              </Typography>
-            ) : (
-              <Skeleton
-                animation="wave"
-                variant="text"
-                sx={{ fontSize: '1.6rem' }}
-                width="100%"
-              />
-            )}
-            {stateProductDetail ? (
-              <TypographyColor className={classes['product-detail__priceUnit']}>
-                <span>{formatMoney(stateProductDetail?.price)}</span>
-                <span className={classes['product-detail__priceUnit__unit']}>
-                  /{stateProductDetail?.unit_types}
-                </span>
-              </TypographyColor>
-            ) : (
-              <Skeleton
-                animation="wave"
-                variant="text"
-                sx={{ fontSize: '1.6rem' }}
-                width="100%"
-              />
-            )}
-          </Stack>
-          {stateProductDetail ? (
-            <Typography variant="body2" mb={2}>
-              Short description: {stateProductDetail?.description}
-            </Typography>
-          ) : (
-            <Skeleton
-              animation="wave"
-              variant="text"
-              sx={{ fontSize: '1.4rem' }}
-            />
-          )}
-          <Box>
-            {stateProductDetail ? (
-              <StyledTabs
-                value={valueTab}
-                onChange={handleChangeTab}
-                aria-label="basic tabs example"
-                TabIndicatorProps={{
-                  children: <span className="MuiTabs-indicatorSpan" />,
-                }}
-              >
-                <Tab label="Overview" {...a11yProps(0)} />
-                <Tab label="Specification" {...a11yProps(1)} />
-                <Tab label="Reviews" {...a11yProps(2)} />
-              </StyledTabs>
+              <TypographyH2 variant="h2" mb={1}>
+                Product details
+              </TypographyH2>
             ) : (
               <Box mb={1}>
                 <Skeleton
@@ -586,7 +457,145 @@ const ProductDetail: NextPageWithLayout = () => {
                 />
               </Box>
             )}
+
+            <Box mb={3}>
+              {stateProductDetail ? (
+                <Breadcrumbs separator=">" aria-label="breadcrumb">
+                  <Link href="/browse-products">
+                    <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>Home</a>
+                  </Link>
+                  {stateProductDetail?.category?.parent_category?.name && (
+                    <Link
+                      href={`/browse-products?page=1&category=${stateProductDetail.category.parent_category.id}&`}
+                    >
+                      <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>
+                        {stateProductDetail?.category?.parent_category?.name}
+                      </a>
+                    </Link>
+                  )}
+                  <Link
+                    href={`/browse-products?page=1&category=${stateProductDetail?.category?.id}&`}
+                  >
+                    <a style={{ color: '#2F6FED', fontSize: '1.4rem' }}>
+                      {stateProductDetail?.category?.name}
+                    </a>
+                  </Link>
+                  <Link
+                    href={`/product-detail/${stateProductDetail?.id}`}
+                    style={{ fontSize: '1.4rem' }}
+                  >
+                    <>{stateProductDetail?.name}</>
+                  </Link>
+                </Breadcrumbs>
+              ) : (
+                <Skeleton
+                  animation="wave"
+                  variant="text"
+                  sx={{ fontSize: '1.4rem' }}
+                />
+              )}
+            </Box>
+            <Box mb={3}>
+              {stateProductDetail ? (
+                <TypographyH1 variant="h1">
+                  {stateProductDetail?.name}
+                </TypographyH1>
+              ) : (
+                <Skeleton
+                  animation="wave"
+                  variant="text"
+                  sx={{ fontSize: '3.2rem' }}
+                />
+              )}
+            </Box>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={2}
+              mb={2}
+            >
+              {stateProductDetail ? (
+                <Typography
+                  component="div"
+                  sx={{ fontWeight: 'bold', fontSize: '18px' }}
+                >
+                  {stateProductDetail?.code}
+                </Typography>
+              ) : (
+                <Skeleton
+                  animation="wave"
+                  variant="text"
+                  sx={{ fontSize: '1.6rem' }}
+                  width="100%"
+                />
+              )}
+              {stateProductDetail ? (
+                <TypographyColor
+                  className={classes['product-detail__priceUnit']}
+                >
+                  <span>{formatMoney(stateProductDetail?.price)}</span>
+                  <span className={classes['product-detail__priceUnit__unit']}>
+                    /{stateProductDetail?.unit_types}
+                  </span>
+                </TypographyColor>
+              ) : (
+                <Skeleton
+                  animation="wave"
+                  variant="text"
+                  sx={{ fontSize: '1.6rem' }}
+                  width="100%"
+                />
+              )}
+            </Stack>
             {stateProductDetail ? (
+              <Typography variant="body2" mb={2}>
+                Short description: {stateProductDetail?.description}
+              </Typography>
+            ) : (
+              <Skeleton
+                animation="wave"
+                variant="text"
+                sx={{ fontSize: '1.4rem' }}
+              />
+            )}
+            {/* </Stack> */}
+            {stateProductDetail ? (
+              <Typography variant="body2" mb={2}>
+                Short description: {stateProductDetail?.description}
+              </Typography>
+            ) : (
+              <Skeleton
+                animation="wave"
+                variant="text"
+                sx={{ fontSize: '1.4rem' }}
+              />
+            )}
+            <Box>
+              {stateProductDetail ? (
+                <StyledTabs
+                  value={valueTab}
+                  onChange={handleChangeTab}
+                  aria-label="basic tabs example"
+                  TabIndicatorProps={{
+                    children: <span className="MuiTabs-indicatorSpan" />,
+                  }}
+                >
+                  <Tab label="Overview" {...a11yProps(0)} />
+                  <Tab label="Specification" {...a11yProps(1)} />
+                  <Tab label="Reviews" {...a11yProps(2)} />
+                </StyledTabs>
+              ) : (
+                <Box mb={1}>
+                  <Skeleton
+                    animation="wave"
+                    variant="text"
+                    sx={{ fontSize: '3rem' }}
+                    width={400}
+                  />
+                </Box>
+              )}
+              {/* {stateProductDetail ? (
               <>
                 <TabPanel value={valueTab} index={0}>
                   <div
@@ -594,245 +603,262 @@ const ProductDetail: NextPageWithLayout = () => {
                       __html: `${stateProductDetail?.longDescription}`,
                     }}
                   />
-                </TabPanel>
-                <TabPanel value={valueTab} index={1}>
-                  <Stack spacing={2}>
-                    <Box>
-                      <Typography variant="subtitle2">Product name</Typography>
-                      <Item>{stateProductDetail?.name}</Item>
-                    </Box>
-                    <Box>
-                      <Typography variant="subtitle2">Brand</Typography>
-                      <Item>
-                        <Image
-                          alt={stateProductDetail?.brand?.name}
-                          src={stateProductDetail?.brand?.logo}
-                          objectFit="cover"
-                          width="34"
-                          height="34"
-                        />
-                        {stateProductDetail?.brand?.name}
-                      </Item>
-                    </Box>
-                    <Box>
-                      <Typography variant="subtitle2">Manufacturer</Typography>
-                      <Item>
-                        <Image
-                          alt={stateProductDetail?.manufacturer?.name}
-                          src={stateProductDetail?.manufacturer?.logo}
-                          objectFit="cover"
-                          width="34"
-                          height="34"
-                        />
-                        {stateProductDetail?.manufacturer?.name}
-                      </Item>
-                    </Box>
-                    <Box>
-                      <Typography variant="subtitle2">Unit type</Typography>
-                      <Item>{stateProductDetail?.unit_types}</Item>
-                    </Box>
-                    {/* <Box>
+                </Box>
+              )} */}
+              {stateProductDetail ? (
+                <>
+                  <TabPanel value={valueTab} index={0}>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: `${stateProductDetail?.longDescription}`,
+                      }}
+                    />
+                  </TabPanel>
+                  <TabPanel value={valueTab} index={1}>
+                    <Stack spacing={2}>
+                      <Box>
+                        <Typography variant="subtitle2">
+                          Product name
+                        </Typography>
+                        <Item>{stateProductDetail?.name}</Item>
+                      </Box>
+                      <Box>
+                        <Typography variant="subtitle2">Brand</Typography>
+                        <Item>
+                          <Image
+                            alt={stateProductDetail?.brand?.name}
+                            src={stateProductDetail?.brand?.logo}
+                            objectFit="cover"
+                            width="34"
+                            height="34"
+                          />
+                          {stateProductDetail?.brand?.name}
+                        </Item>
+                      </Box>
+                      <Box>
+                        <Typography variant="subtitle2">
+                          Manufacturer
+                        </Typography>
+                        <Item>
+                          <Image
+                            alt={stateProductDetail?.manufacturer?.name}
+                            src={stateProductDetail?.manufacturer?.logo}
+                            objectFit="cover"
+                            width="34"
+                            height="34"
+                          />
+                          {stateProductDetail?.manufacturer?.name}
+                        </Item>
+                      </Box>
+                      <Box>
+                        <Typography variant="subtitle2">Unit type</Typography>
+                        <Item>{stateProductDetail?.unit_types}</Item>
+                      </Box>
+                      {/* <Box>
                       <Typography variant="subtitle2">Unit type</Typography>
                       <Item>{stateProductDetail?.unit_types}</Item>
                     </Box> */}
-                  </Stack>
-                </TabPanel>
-                <TabPanel value={valueTab} index={2}>
-                  Review
-                </TabPanel>
-              </>
-            ) : (
-              <Skeleton variant="rectangular" animation="wave" height={300} />
-            )}
-          </Box>
-        </Grid>
-        <Grid xs>
-          <StickyWrapper>
-            <Box mb={2}>
+                    </Stack>
+                  </TabPanel>
+                  <TabPanel value={valueTab} index={2}>
+                    Review
+                  </TabPanel>
+                </>
+              ) : (
+                <Skeleton variant="rectangular" animation="wave" height={300} />
+              )}
+            </Box>
+          </Grid>
+          <Grid xs>
+            <StickyWrapper>
+              <Box mb={2}>
+                {stateProductDetail ? (
+                  <CardCustom>
+                    <CardContent style={{ paddingBottom: '16px' }}>
+                      <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        spacing={2}
+                      >
+                        <div style={{ fontWeight: '600' }}>Instock</div>
+                        <TypographyColor>
+                          {stateProductDetail?.inStock}
+                        </TypographyColor>
+                      </Stack>
+                    </CardContent>
+                  </CardCustom>
+                ) : (
+                  <Skeleton variant="rounded" animation="wave" height={56} />
+                )}
+              </Box>
               {stateProductDetail ? (
                 <CardCustom>
-                  <CardContent style={{ paddingBottom: '16px' }}>
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      spacing={2}
-                    >
-                      <div style={{ fontWeight: '600' }}>Instock</div>
-                      <TypographyColor>
-                        {stateProductDetail?.inStock}
-                      </TypographyColor>
-                    </Stack>
+                  <CardContent>
+                    <TypographyH2 mb={1}>Order This Product</TypographyH2>
+                    <Typography component="div" sx={{ fontSize: 14 }} mb={2}>
+                      Enter Number of [unit] you want to order
+                    </Typography>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <Box mb={2}>
+                        <Controller
+                          control={control}
+                          name="quantity"
+                          render={({ field }) => (
+                            <>
+                              <FormControl fullWidth>
+                                <ButtonGroup
+                                  variant="outlined"
+                                  aria-label="outlined button group"
+                                >
+                                  <ButtonIncreaseDecrease
+                                    disabled={
+                                      getValues('quantity') < 2 ? true : false
+                                    }
+                                    onClick={() => {
+                                      if (getValues('quantity') > 1) {
+                                        handleChangeQuantityAddToCart(
+                                          Number(getValues('quantity')) - 1
+                                        )
+                                        setValue(
+                                          'quantity',
+                                          Number(getValues('quantity')) - 1
+                                        )
+                                        trigger('quantity')
+                                      }
+                                    }}
+                                  >
+                                    -
+                                  </ButtonIncreaseDecrease>
+                                  <TextFieldAddToCart
+                                    className={
+                                      classes['text-field-add-to-cart']
+                                    }
+                                    type="quantity"
+                                    id="quantity"
+                                    placeholder="Ex:100"
+                                    error={!!errors.quantity}
+                                    fullWidth
+                                    onKeyPress={(event) => {
+                                      if (
+                                        event?.key === '-' ||
+                                        event?.key === '+' ||
+                                        event?.key === ',' ||
+                                        event?.key === '.' ||
+                                        event?.key === 'e'
+                                      ) {
+                                        event.preventDefault()
+                                      }
+                                    }}
+                                    {...field}
+                                    inputProps={{ min: 0, max: 1000000 }}
+                                    onChange={(event: any) => {
+                                      if (event.target.value < 1000001) {
+                                        setValue('quantity', event.target.value)
+                                        trigger('quantity')
+                                        handleChangeQuantityAddToCart(
+                                          event.target.value
+                                        )
+                                      }
+                                    }}
+                                  />
+                                  <ButtonIncreaseDecrease
+                                    onClick={() => {
+                                      if (
+                                        Number(getValues('quantity')) < 1000000
+                                      ) {
+                                        handleChangeQuantityAddToCart(
+                                          Number(getValues('quantity')) + 1
+                                        )
+                                        setValue(
+                                          'quantity',
+                                          Number(getValues('quantity')) + 1
+                                        )
+                                        trigger('quantity')
+                                      }
+                                    }}
+                                  >
+                                    +
+                                  </ButtonIncreaseDecrease>
+                                </ButtonGroup>
+                              </FormControl>
+                            </>
+                          )}
+                        />
+                      </Box>
+                      <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        spacing={2}
+                        mb={1}
+                      >
+                        <div style={{ fontSize: '12px' }}>Total:</div>
+                        <TypographyColor sx={{ fontSize: 24 }}>
+                          <span>{formatMoney(total)}</span>
+                        </TypographyColor>
+                      </Stack>
+                      <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        spacing={2}
+                      >
+                        <IconButtonFavorite
+                          onClick={handleWishList}
+                          variant={isAddWistList ? `text` : `outlined`}
+                        >
+                          <Image
+                            alt="icon-favorite"
+                            src={isAddWistList ? iconFavorited : iconFavorite}
+                            objectFit="contain"
+                            width="20"
+                            height="20"
+                          />
+                        </IconButtonFavorite>
+                        <LoadingButtonCustom
+                          style={{ paddingTop: '11px', paddingBottom: '11px' }}
+                          variant="contained"
+                          size="large"
+                          type="submit"
+                          loading={stateLoadingAddToCart}
+                          loadingPosition="start"
+                          fullWidth
+                          disabled={errors.number ? true : false}
+                          startIcon={<ShoppingCart />}
+                        >
+                          Add To Cart
+                        </LoadingButtonCustom>
+                      </Stack>
+                    </form>
                   </CardContent>
                 </CardCustom>
               ) : (
-                <Skeleton variant="rounded" animation="wave" height={56} />
+                <Skeleton variant="rounded" animation="wave" height={265} />
               )}
-            </Box>
-            {stateProductDetail ? (
-              <CardCustom>
-                <CardContent>
-                  <TypographyH2 mb={1}>Order This Product</TypographyH2>
-                  <Typography component="div" sx={{ fontSize: 14 }} mb={2}>
-                    Enter Number of [unit] you want to order
-                  </Typography>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <Box mb={2}>
-                      <Controller
-                        control={control}
-                        name="quantity"
-                        render={({ field }) => (
-                          <>
-                            <FormControl fullWidth>
-                              <ButtonGroup
-                                variant="outlined"
-                                aria-label="outlined button group"
-                              >
-                                <ButtonIncreaseDecrease
-                                  disabled={
-                                    getValues('quantity') < 2 ? true : false
-                                  }
-                                  onClick={() => {
-                                    if (getValues('quantity') > 1) {
-                                      handleChangeQuantityAddToCart(
-                                        Number(getValues('quantity')) - 1
-                                      )
-                                      setValue(
-                                        'quantity',
-                                        Number(getValues('quantity')) - 1
-                                      )
-                                      trigger('quantity')
-                                    }
-                                  }}
-                                >
-                                  -
-                                </ButtonIncreaseDecrease>
-                                <TextFieldAddToCart
-                                  className={classes['text-field-add-to-cart']}
-                                  type="quantity"
-                                  id="quantity"
-                                  placeholder="Ex:100"
-                                  error={!!errors.quantity}
-                                  fullWidth
-                                  onKeyPress={(event) => {
-                                    if (
-                                      event?.key === '-' ||
-                                      event?.key === '+' ||
-                                      event?.key === ',' ||
-                                      event?.key === '.' ||
-                                      event?.key === 'e'
-                                    ) {
-                                      event.preventDefault()
-                                    }
-                                  }}
-                                  {...field}
-                                  inputProps={{ min: 0, max: 1000000 }}
-                                  onChange={(event: any) => {
-                                    if (event.target.value < 1000001) {
-                                      setValue('quantity', event.target.value)
-                                      trigger('quantity')
-                                      handleChangeQuantityAddToCart(
-                                        event.target.value
-                                      )
-                                    }
-                                  }}
-                                />
-                                <ButtonIncreaseDecrease
-                                  onClick={() => {
-                                    if (
-                                      Number(getValues('quantity')) < 1000000
-                                    ) {
-                                      handleChangeQuantityAddToCart(
-                                        Number(getValues('quantity')) + 1
-                                      )
-                                      setValue(
-                                        'quantity',
-                                        Number(getValues('quantity')) + 1
-                                      )
-                                      trigger('quantity')
-                                    }
-                                  }}
-                                >
-                                  +
-                                </ButtonIncreaseDecrease>
-                              </ButtonGroup>
-                            </FormControl>
-                          </>
-                        )}
-                      />
-                    </Box>
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      spacing={2}
-                      mb={1}
-                    >
-                      <div style={{ fontSize: '12px' }}>Total:</div>
-                      <TypographyColor sx={{ fontSize: 24 }}>
-                        <span>{formatMoney(total)}</span>
-                      </TypographyColor>
-                    </Stack>
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      spacing={2}
-                    >
-                      <IconButtonFavorite
-                        onClick={handleWishList}
-                        variant={isAddWistList ? `text` : `outlined`}
-                      >
-                        <Image
-                          alt="icon-favorite"
-                          src={isAddWistList ? iconFavorited : iconFavorite}
-                          objectFit="contain"
-                          width="20"
-                          height="20"
-                        />
-                      </IconButtonFavorite>
-                      <LoadingButtonCustom
-                        style={{ paddingTop: '11px', paddingBottom: '11px' }}
-                        variant="contained"
-                        size="large"
-                        type="submit"
-                        loading={stateLoadingAddToCart}
-                        loadingPosition="start"
-                        fullWidth
-                        disabled={errors.number ? true : false}
-                        startIcon={<ShoppingCart />}
-                      >
-                        Add To Cart
-                      </LoadingButtonCustom>
-                    </Stack>
-                  </form>
-                </CardContent>
-              </CardCustom>
-            ) : (
-              <Skeleton variant="rounded" animation="wave" height={265} />
-            )}
-          </StickyWrapper>
+            </StickyWrapper>
+          </Grid>
         </Grid>
-      </Grid>
-      <Box>
-        {stateProductDetail ? (
-          <TypographyH2 variant="h2" mb={2}>
-            Related Products
-          </TypographyH2>
-        ) : (
-          <Box mb={1}>
-            <Skeleton
-              animation="wave"
-              variant="text"
-              sx={{ fontSize: '2rem' }}
-              width={200}
-            />
-          </Box>
-        )}
+        <Box>
+          {stateProductDetail ? (
+            <TypographyH2 variant="h2" mb={2}>
+              Related Products
+            </TypographyH2>
+          ) : (
+            <Box mb={1}>
+              <Skeleton
+                animation="wave"
+                variant="text"
+                sx={{ fontSize: '2rem' }}
+                width={200}
+              />
+            </Box>
+          )}
 
-        <RelatedProduct relatedProducts={relatedProducts} />
-      </Box>
-    </div>
+          <RelatedProduct relatedProducts={relatedProducts} />
+        </Box>
+      </div>
+    </>
   )
 }
 
