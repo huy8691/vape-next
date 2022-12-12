@@ -48,7 +48,7 @@ import Image from 'next/image'
 import { TextFieldCustom } from 'src/components'
 
 const schema = yup.object({
-  content: yup.string().matches(
+  search: yup.string().matches(
     // /^[aA-zZ\s]+$/,
     /^[\w-_.]*$/,
     'Special character are not allowed for this field '
@@ -107,10 +107,6 @@ const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
 }))
 
-// const TableRowPaginationnCustom = styled(TableRow)(({ theme }) => ({
-//   backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#F8F9FC',
-// }))
-
 const StatusFilterType: {
   [key: string]: number
 } = {
@@ -145,7 +141,7 @@ const Status = [
 ]
 
 interface SearchFormInput {
-  content: string
+  search: string
 }
 
 const OrderManageMent: NextPageWithLayout = () => {
@@ -157,9 +153,6 @@ const OrderManageMent: NextPageWithLayout = () => {
   const [dataOrders, setDataOrders] = useState<OrderListDataResponseType>()
   const router = useRouter()
   const dispatch = useAppDispatch()
-  // state use for store next page is null or <number></number>
-  const [nextPage, setNextPage] = useState<number | null>()
-  // const [page, setPage] = useState(0)
 
   //state use for tab
   const [tabDisabled, setTabDisabled] = useState<boolean>(false)
@@ -202,7 +195,7 @@ const OrderManageMent: NextPageWithLayout = () => {
       getOrders(router.query)
         .then((res) => {
           const data = res.data
-          setNextPage(data.nextPage)
+
           console.log(
             '🚀 ~ file: index.page.tsx ~ line 259 ~ getOrders ~ data',
             data
@@ -212,7 +205,7 @@ const OrderManageMent: NextPageWithLayout = () => {
               asPath.indexOf('code=') + 5, //position start
               asPath.indexOf('&', asPath.indexOf('code=')) // position end
             )
-            setValue('content', sliceAsPathCodeSearch)
+            setValue('search', sliceAsPathCodeSearch)
           }
           if (asPath.indexOf('status=') !== -1) {
             const sliceAsPathStatusFilter: string = asPath.slice(
@@ -250,8 +243,7 @@ const OrderManageMent: NextPageWithLayout = () => {
       getOrders({ page: 1 })
         .then((res) => {
           const data = res.data
-          setNextPage(data.nextPage)
-          setValue('content', '')
+          setValue('search', '')
           setDataOrders(data)
           dispatch(loadingActions.doLoadingSuccess())
           setTabDisabled(false)
@@ -271,11 +263,11 @@ const OrderManageMent: NextPageWithLayout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, router.query])
   // check if input has white space
-  function hasWhiteSpace(s: string) {
+  const hasWhiteSpace = (s: string) => {
     return /^\s+$/g.test(s)
   }
 
-  function hasSpecialCharacter(input: string) {
+  const hasSpecialCharacter = (input: string) => {
     // eslint-disable-next-line no-useless-escape
     return /[\!\@\#\$\%\^\&\*\)\(\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\/\\?\,]+$/g.test(
       input
@@ -283,10 +275,10 @@ const OrderManageMent: NextPageWithLayout = () => {
   }
 
   const onSubmit = (data: SearchFormInput) => {
-    console.log(getValues('content'))
+    console.log(getValues('search'))
     console.log('data', data)
     setTabDisabled(true)
-    if (hasWhiteSpace(getValues('content'))) {
+    if (hasWhiteSpace(getValues('search'))) {
       dispatch(
         notificationActions.doNotification({
           message: 'Error',
@@ -295,7 +287,7 @@ const OrderManageMent: NextPageWithLayout = () => {
       )
       setDataOrders(undefined)
     }
-    if (hasSpecialCharacter(getValues('content'))) {
+    if (hasSpecialCharacter(getValues('search'))) {
       dispatch(
         notificationActions.doNotification({
           message: 'Error',
@@ -306,7 +298,7 @@ const OrderManageMent: NextPageWithLayout = () => {
       router.replace({
         search: `${objToStringParam({
           ...router.query,
-          code: getValues('content'),
+          code: getValues('search'),
           page: 1,
         })}`,
       })
@@ -375,7 +367,7 @@ const OrderManageMent: NextPageWithLayout = () => {
             <div className={classes[`form-search`]}>
               <Controller
                 control={control}
-                name="content"
+                name="search"
                 render={({ field }) => (
                   <>
                     <FormControl fullWidth>
@@ -383,8 +375,8 @@ const OrderManageMent: NextPageWithLayout = () => {
                         // sx={{
                         //   padding: '10px',
                         // }}
-                        id="content"
-                        error={!!errors.content}
+                        id="search"
+                        error={!!errors.search}
                         placeholder="Search by order no..."
                         onKeyPress={(event) => {
                           if (hasSpecialCharacter(event.key)) {
@@ -418,7 +410,7 @@ const OrderManageMent: NextPageWithLayout = () => {
             </ButtonCustom> */}
           </Grid>
         </Grid>
-        <FormHelperText error>{errors.content?.message}</FormHelperText>
+        <FormHelperText error>{errors.search?.message}</FormHelperText>
       </form>
       {dataOrders?.data.length === 0 ? (
         <>
@@ -439,13 +431,6 @@ const OrderManageMent: NextPageWithLayout = () => {
                 <Typography variant="h6" sx={{ marginTop: '0' }}>
                   You don’t have any order
                 </Typography>
-                {/* <Link href="/browse-products">
-                  <ButtonCustom variant="contained" style={{ padding: '15px' }}>
-                    <Typography style={{ fontWeight: '600' }}>
-                      Back to home
-                    </Typography>
-                  </ButtonCustom>
-                </Link> */}
               </Stack>
             </Grid>
           </Grid>
@@ -593,7 +578,7 @@ const OrderManageMent: NextPageWithLayout = () => {
                         page={props.page}
                         rowsPerPage={props.rowsPerPage}
                         // onPageChange={props.onPageChange}
-                        nextIsNull={Number(nextPage)}
+                        nextIsNull={Number(dataOrders?.nextPage)}
                       />
                     )
                   }}

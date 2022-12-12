@@ -14,7 +14,7 @@ const verifyCartItem = (value: VerifyArrayCartItem): Promise<AxiosResponse> => {
 
 const createOrderItem = (value: CreateOrderType): Promise<AxiosResponse> => {
   return callAPIWithToken({
-    url: `/api/customer/order/`,
+    url: `/api/merchant/order/`,
     method: 'post',
     data: value,
   })
@@ -24,7 +24,7 @@ const getItemForCheckout = (
   value: VerifyArrayCartItem
 ): Promise<AxiosResponse> => {
   return callAPIWithToken({
-    url: `/api/customer/items-checkout/`,
+    url: `/api/merchant/items-checkout/`,
     method: 'post',
     data: {
       cardItemIds: value,
@@ -36,7 +36,7 @@ const calculateOrderTotal = (
   value: VerifyArrayCartItem
 ): Promise<AxiosResponse> => {
   return callAPIWithToken({
-    url: `/api/customer/total-bill-order/`,
+    url: `/api/merchant/total-bill-order/`,
     method: 'post',
     data: {
       cardItemIds: value,
