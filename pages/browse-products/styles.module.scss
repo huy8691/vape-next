@@ -3,7 +3,7 @@
 .form-search {
   position: relative;
   &__button {
-    position: absolute;
+    position: absolute !important;
     right: 5px;
     top: 50%;
     transform: translateY(-50%);
