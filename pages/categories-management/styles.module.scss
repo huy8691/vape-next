@@ -4,7 +4,7 @@
   border: 1px solid #e1e6ef;
   border-radius: 8px;
   &__button {
-    position: absolute;
+    position: absolute !important;
     right: 5px;
     top: 50%;
     transform: translateY(-50%);
