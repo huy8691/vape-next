@@ -57,13 +57,14 @@ const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontWeight: 'bold',
   color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
 }))
-const ModalBoxCustom = styled(Box)(() => ({
+const ModalBoxCustom = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 600,
-  background: '#FFF',
+  // background: '#FFF',
+  backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#fff',
   borderRadius: '10px',
   padding: '15px',
 }))
@@ -164,6 +165,25 @@ const SupplierCategories: NextPageWithLayout = () => {
             message: 'Success',
           })
         )
+        getListCategories(router.query)
+          .then((res) => {
+            const { data } = res.data
+            setStateCategoryList(data)
+            dispatch(loadingActions.doLoadingSuccess())
+            console.log('data', data)
+          })
+          .catch((error: any) => {
+            const data = error.response?.data
+            console.log(data)
+            dispatch(loadingActions.doLoadingFailure())
+            dispatch(
+              notificationActions.doNotification({
+                message: 'Something went wrongs with the server',
+                type: 'error',
+              })
+            )
+          })
+        handleCloseModal()
       })
       .catch(() => {
         dispatch(loadingActions.doLoadingFailure())
