@@ -9,7 +9,14 @@ import {
   FormHelperText,
   IconButton,
   Modal,
+  Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 
   // Popover,
@@ -59,6 +66,28 @@ const ModalBoxCustom = styled(Box)(() => ({
   background: '#FFF',
   borderRadius: '10px',
   padding: '15px',
+}))
+
+const TableRowCustom = styled(TableRow)(({ theme }) => ({
+  cursor: 'pointer',
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#F8F9FC',
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}))
+
+const TableCellHeadingTextCustom = styled(TableCell)(({ theme }) => ({
+  fontSize: '1.4rem',
+  fontWeight: 400,
+  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+}))
+const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
+  fontSize: '1.4rem',
+  fontWeight: 500,
+  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
 }))
 // const TableCellCustomeHeadingTextCustom = styled(TableCellCustome)(({ theme }) => ({
 //   fontSize: '1.4rem',
@@ -152,13 +181,69 @@ const SupplierCategories: NextPageWithLayout = () => {
     <>
       <TypographyH2>Categories Management</TypographyH2>
       <Grid container spacing={2}>
-        <Grid xs={4}>
+        <Grid xs={3}>
           <ButtonCustom onClick={handleOpenModal} variant="contained" fullWidth>
             Add new categories
           </ButtonCustom>
         </Grid>
       </Grid>
+      <TableContainer
+        component={Paper}
+        elevation={0}
+        style={{ marginBottom: '20px', border: '1px solid #E1E6EF' }}
+      >
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCellHeadingTextCustom align="center">
+                Order No
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Order Date
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Total Billing
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Order Status
+              </TableCellHeadingTextCustom>
+              {/* <TableCellHeadingTextCustom align="center">Payment Method</TableCellHeadingTextCustom> */}
+              <TableCellHeadingTextCustom align="center">
+                Payment Status
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Receiver
+              </TableCellHeadingTextCustom>
+              <TableCellHeadingTextCustom align="center">
+                Deliver Address
+              </TableCellHeadingTextCustom>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {stateCategoryList?.map((row) => (
+              <TableRowCustom
+                hover
+                key={row.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCellBodyTextCustom
+                  align="center"
+                  component="th"
+                  scope="row"
+                >
+                  {row.name}
+                </TableCellBodyTextCustom>
+                {/* <TableCellBodyTextCustom align="center">
+                {row.parent_category}
+                </TableCellBodyTextCustom> */}
+                <TableCellBodyTextCustom align="center"></TableCellBodyTextCustom>
 
+                {/* <TableCellBodyTextCustom align="center">{row.paymentMethod}</TableCellBodyTextCustom> */}
+              </TableRowCustom>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Modal
         open={stateOpenModal}
         onClose={handleCloseModal}
