@@ -131,7 +131,7 @@ const Login: NextPageWithLayout = () => {
     })
       .then((response) => {
         const { data } = response.data
-        setAuthToken(data?.access_token)
+        setAuthToken(data.access_token, data.refresh_token)
         dispatch(loadingActions.doLoadingSuccess())
         // router.push('/')
         // if (values.remember) {

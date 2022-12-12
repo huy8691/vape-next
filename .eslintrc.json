@@ -21,7 +21,9 @@
     "no-unused-vars": "error",
     "autofix/no-debugger": "error",
     "react-hooks/rules-of-hooks": "error", // Kiểm tra rule của Hook
-    "react-hooks/exhaustive-deps": "warn" // Kiểm tra effect dependency
+    "react-hooks/exhaustive-deps": "warn", // Kiểm tra effect dependency
+    // Other rules
+    "@next/next/no-img-element": "off"
     // "@typescript-eslint/rule-name": "error"
   },
   // "plugins": ["@typescript-eslint"]

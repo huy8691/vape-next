@@ -42,7 +42,7 @@ const Menu = [
   },
   {
     icon: <Cube size={24} />,
-    text: 'Browse-products',
+    text: 'Browse products',
     link: '/browse-products',
   },
   {
