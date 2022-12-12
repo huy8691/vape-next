@@ -7,6 +7,7 @@ export interface LoginType {
 export interface LoginResponseType {
   data: {
     access_token: string
+    refresh_token: string
   }
   message: string
 }
