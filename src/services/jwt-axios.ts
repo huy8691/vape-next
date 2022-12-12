@@ -8,7 +8,20 @@ if (env === 'prod') {
   urlApi = 'https://cms.theweedsupplies.com'
 }
 
-const token = Cookies.get('token')
+let isRefreshing = false
+let failedQueue: any = []
+
+const processQueue = (error: any, token = null) => {
+  failedQueue.forEach((prom: any) => {
+    if (error) {
+      prom.reject(error)
+    } else {
+      prom.resolve(token)
+    }
+  })
+
+  failedQueue = []
+}
 
 const callAPI = axios.create({
   baseURL: urlApi, // YOUR_API_URL HERE
@@ -37,26 +50,88 @@ const callAPIWithToken = axios.create({
   baseURL: urlApi,
   timeout: 10000,
   timeoutErrorMessage: 'Timeout error',
-  headers: {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'ngrok-skip-browser-warning': '69420',
-    Authorization: `Bearer ${token}`,
-  },
+  // headers: {
+  //   'Content-Type': 'application/json',
+  //   'Access-Control-Allow-Origin': '*',
+  //   'ngrok-skip-browser-warning': '69420',
+  //   Authorization: `Bearer ${token}`,
+  // },
 })
 
+callAPIWithToken.interceptors.request.use(
+  (req) => {
+    const token = Cookies.get('token')
+    req.headers = {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'ngrok-skip-browser-warning': '69420',
+      Authorization: `Bearer ${token}`,
+    }
+    return req
+  },
+  (error) => {
+    // Do something with request error
+    return Promise.reject(error)
+  },
+  { synchronous: true }
+)
+
 callAPIWithToken.interceptors.response.use(
-  (res: any) => {
+  (res) => {
     return res
   },
   (err: any) => {
-    if (err.response && err.response.status === 401) {
-      window.location.href = '/login'
-      Cookies.remove('token')
-    }
+    const originalConfig = err.config
+
+    // if (err.response && err.response.status === 401) {
+    //   window.location.href = '/login'
+    //   Cookies.remove('token')
+    // }
     if (err.response && err.response.status === 403) {
       window.location.href = '/403'
       // Cookies.remove('token')
+    }
+
+    if (err.response.status === 401 && !originalConfig._retry) {
+      if (isRefreshing) {
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject })
+        })
+          .then((token) => {
+            originalConfig.headers['Authorization'] = 'Bearer ' + token
+            return axios(originalConfig)
+          })
+          .catch((err) => {
+            return Promise.reject(err)
+          })
+      }
+
+      originalConfig._retry = true
+      isRefreshing = true
+      const refreshToken = Cookies.get('refreshToken')
+
+      return new Promise(function (resolve, reject) {
+        axios
+          .post(`${urlApi}/api/token/refresh/`, { refreshToken })
+          .then(({ data }) => {
+            const { newAccessToken, newRefreshToken } = data.data
+            Cookies.set('token', newAccessToken)
+            Cookies.set('refreshToken', newRefreshToken)
+            originalConfig.headers['Authorization'] = 'Bearer ' + newAccessToken
+            processQueue(null, newAccessToken)
+            resolve(callAPIWithToken(originalConfig))
+          })
+          .catch((err) => {
+            processQueue(err, null)
+            reject(err)
+            Cookies.remove('token')
+            Cookies.remove('refreshToken')
+            window.location.href = '/login'
+          })
+          .finally(() => {
+            isRefreshing = false
+          })
+      })
     }
     return Promise.reject(err)
   }
@@ -82,13 +157,15 @@ callAPIUpLoad.interceptors.response.use(
     if (err.response && err.response.status === 403) {
       // window.location.href = '/403'
     }
+
     return Promise.reject(err)
   }
 )
 
-export const setAuthToken = (_token: string) => {
+export const setAuthToken = (_token: string, _tokenRefresh: string) => {
   if (_token) {
     Cookies.set('token', _token)
+    Cookies.set('refreshToken', _tokenRefresh)
   } else {
     Cookies.remove('token')
   }

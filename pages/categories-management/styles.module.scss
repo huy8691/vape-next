@@ -1,0 +1,12 @@
+.form-search {
+  position: relative;
+  width: 100%;
+  border: 1px solid #e1e6ef;
+  border-radius: 8px;
+  &__button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
