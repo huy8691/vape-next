@@ -67,16 +67,20 @@ const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontWeight: '600',
   color: theme.palette.mode === 'dark' ? '#ddd' : '#1B1F27',
 }))
-const CustomBox = styled(Box)(() => ({
+const CustomBox = styled(Box)(({ theme }) => ({
   padding: '15px',
   background: '#FFFF',
   borderRadius: '10px',
+  backgroundColor:
+    theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.12)' : '#fff',
 }))
 
-const CustomStack = styled(Stack)(() => ({
-  background: '#F8F9FC',
+const CustomStack = styled(Stack)(({ theme }) => ({
+  // background: '#F8F9FC',
   padding: '15px',
   borderRadius: '10px',
+  backgroundColor:
+    theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
 }))
 
 // const CustomImageBox = styled(Box)(() => ({
@@ -375,7 +379,7 @@ const CreateProduct: NextPageWithLayout = () => {
         Create
       </TypographyH2>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <CustomStack direction="row" spacing={2}>
+        <CustomStack direction="row" spacing={2} mb={2}>
           <Stack
             spacing={1}
             sx={{ background: 'white', padding: '15px', borderRadius: '10px' }}
