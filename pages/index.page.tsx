@@ -138,7 +138,7 @@ const Home: NextPageWithLayout = () => {
                     spacing={2}
                   >
                     <Box>
-                      <Typography variant="h5">3694$</Typography>
+                      <Typography variant="h5">$3694</Typography>
                       <Typography variant="subtitle1">Total revenue</Typography>
                     </Box>
                     <Fab size="small" color="primary" aria-label="add">
