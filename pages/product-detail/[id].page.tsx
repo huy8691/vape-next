@@ -6,7 +6,7 @@ import RelatedProduct from './parts/relatedProduct'
 
 import {
   getProductDetail,
-  postWishList,
+  // postWishList,
   getRelatedProduct,
   addToCard,
 } from './apiProductDetail'
@@ -46,8 +46,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './validations'
 
 // icon wishlist
-import iconFavorite from './parts/icon/icon-favorite.svg'
-import iconFavorited from './parts/icon/icon-favorited.svg'
+// import iconFavorite from './parts/icon/icon-favorite.svg'
+// import iconFavorited from './parts/icon/icon-favorited.svg'
 //slick
 import Slider from 'react-slick'
 
@@ -144,11 +144,11 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 const ImageWrapper = styled('div')(() => ({
   background: 'white',
 }))
-const IconButtonFavorite = styled(Button)(() => ({
-  padding: '14px',
-  borderRadius: '10px',
-  minWidth: '50px',
-}))
+// const IconButtonFavorite = styled(Button)(() => ({
+//   padding: '14px',
+//   borderRadius: '10px',
+//   minWidth: '50px',
+// }))
 const TextFieldAddToCart = styled(TextFieldCustom)(() => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: '0px',
@@ -178,7 +178,7 @@ const ProductDetail: NextPageWithLayout = () => {
     useState<ProductDetailType>()
   const [relatedProducts, setRelatedProducts] =
     useState<ProductListDataResponseType>()
-  const [isAddWistList, setIsAddWishList] = useState(false)
+  // const [isAddWistList, setIsAddWishList] = useState(false)
   const [total, setTotal] = useState(0)
   const [stateLoadingAddToCart, setStateLoadingAddToCart] = useState(false)
 
@@ -295,7 +295,7 @@ const ProductDetail: NextPageWithLayout = () => {
           const { data } = res.data
           setStateProductDetail(data)
           console.log(data)
-          setIsAddWishList(data?.is_favorite ? data?.is_favorite : false)
+          // setIsAddWishList(data?.is_favorite ? data?.is_favorite : false)
           dispatch(loadingActions.doLoadingSuccess())
         })
         .catch((error) => {
@@ -332,30 +332,30 @@ const ProductDetail: NextPageWithLayout = () => {
   }, [router, dispatch])
 
   // wishlist
-  const handleWishList = () => {
-    dispatch(loadingActions.doLoading())
-    postWishList({ product: Number(router.query.id) })
-      .then((res) => {
-        const { data } = res
-        dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Success',
-          })
-        )
-        setIsAddWishList(!isAddWistList)
-      })
-      .catch((error) => {
-        const data = error.response?.data
-        dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
-      })
-  }
+  // const handleWishList = () => {
+  //   dispatch(loadingActions.doLoading())
+  //   postWishList({ product: Number(router.query.id) })
+  //     .then((res) => {
+  //       const { data } = res
+  //       dispatch(loadingActions.doLoadingSuccess())
+  //       dispatch(
+  //         notificationActions.doNotification({
+  //           message: data?.message ? data?.message : 'Success',
+  //         })
+  //       )
+  //       setIsAddWishList(!isAddWistList)
+  //     })
+  //     .catch((error) => {
+  //       const data = error.response?.data
+  //       dispatch(loadingActions.doLoadingFailure())
+  //       dispatch(
+  //         notificationActions.doNotification({
+  //           message: data?.message ? data?.message : 'Error',
+  //           type: 'error',
+  //         })
+  //       )
+  //     })
+  // }
   const handleChangeQuantityAddToCart = (e: any) => {
     if (stateProductDetail?.price) {
       setTotal(e * stateProductDetail.price)
@@ -549,17 +549,7 @@ const ProductDetail: NextPageWithLayout = () => {
                 />
               )}
             </Stack>
-            {stateProductDetail ? (
-              <Typography variant="body2" mb={2}>
-                Short description: {stateProductDetail?.description}
-              </Typography>
-            ) : (
-              <Skeleton
-                animation="wave"
-                variant="text"
-                sx={{ fontSize: '1.4rem' }}
-              />
-            )}
+
             {/* </Stack> */}
             {stateProductDetail ? (
               <Typography variant="body2" mb={2}>
@@ -805,7 +795,7 @@ const ProductDetail: NextPageWithLayout = () => {
                         alignItems="center"
                         spacing={2}
                       >
-                        <IconButtonFavorite
+                        {/* <IconButtonFavorite
                           onClick={handleWishList}
                           variant={isAddWistList ? `text` : `outlined`}
                         >
@@ -816,7 +806,7 @@ const ProductDetail: NextPageWithLayout = () => {
                             width="20"
                             height="20"
                           />
-                        </IconButtonFavorite>
+                        </IconButtonFavorite> */}
                         <LoadingButtonCustom
                           style={{ paddingTop: '11px', paddingBottom: '11px' }}
                           variant="contained"
