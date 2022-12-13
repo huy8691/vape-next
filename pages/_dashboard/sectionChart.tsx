@@ -43,7 +43,7 @@ const chart1 = {
   ],
 }
 
-const chart2 = {
+const chart2: any = {
   series: [
     {
       name: 'Net Profit',
@@ -109,7 +109,7 @@ const chart2 = {
   },
 }
 
-const chart3 = {
+const chart3: any = {
   series: [44, 55, 13, 43, 22],
   options: {
     chart: {
@@ -133,7 +133,7 @@ const chart3 = {
   },
 }
 
-const chart4 = {
+const chart4: any = {
   series: [
     {
       name: 'Males',
@@ -260,14 +260,11 @@ const SectionChart = () => {
       <Grid item xs={3}>
         <CardCustom variant="outlined">
           <CardContent>
-            <Chart options={chart2.options} series={chart2.series} type="bar" />
-          </CardContent>
-        </CardCustom>
-      </Grid>
-      <Grid item xs={3}>
-        <CardCustom variant="outlined">
-          <CardContent>
-            <Chart options={chart3.options} series={chart3.series} type="pie" />
+            <Chart
+              options={chart2 ? chart2.options : undefined}
+              series={chart2.series}
+              type="bar"
+            />
           </CardContent>
         </CardCustom>
       </Grid>
@@ -275,7 +272,18 @@ const SectionChart = () => {
         <CardCustom variant="outlined">
           <CardContent>
             <Chart
-              options={chart4.options}
+              options={chart3 ? chart3.options : undefined}
+              series={chart3.series}
+              type="pie"
+            />
+          </CardContent>
+        </CardCustom>
+      </Grid>
+      <Grid item xs={3}>
+        <CardCustom variant="outlined">
+          <CardContent>
+            <Chart
+              options={chart4 ? chart4.options : undefined}
               series={chart4.series}
               type="bar"
               height={350}
