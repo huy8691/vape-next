@@ -46,23 +46,23 @@ export interface ProductCategoryType {
   parent_category: ProductCategoryType
 }
 
-export interface WarehouseType {
+export interface DistributionType {
   id: number
   name: string
   code: string
 }
-export interface WarehouseResponseType {
-  data: WarehouseType[]
+export interface DistributionResponseType {
+  data: DistributionType[]
   errors?: any
 }
-export interface OrganizationType {
+export interface WarehouseType {
   id: number
   name: string
   is_active: boolean
   address: string
 }
-export interface OrganizationResponseType {
-  data: OrganizationType[]
+export interface WarehouseResponseType {
+  data: WarehouseType[]
   errors?: any
 }
 
