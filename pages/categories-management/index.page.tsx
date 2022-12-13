@@ -8,6 +8,7 @@ import {
   FormControl,
   FormHelperText,
   IconButton,
+  InputBase,
   Modal,
   Paper,
   Stack,
@@ -30,6 +31,8 @@ import {
 // import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 // import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 // import Checkbox from '@mui/material/Checkbox'
+import SettingsIcon from '@mui/icons-material/Settings'
+import SearchIcon from '@mui/icons-material/Search'
 
 import { AddCategoryType, categoryTypeData } from './modelProductCategories'
 import { useRouter } from 'next/router'
@@ -79,17 +82,33 @@ const TableRowCustom = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }))
-
-const TableCellHeadingTextCustom = styled(TableCell)(({ theme }) => ({
-  fontSize: '1.4rem',
-  fontWeight: 400,
-  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+const TableCellCustome = styled(TableCell)(() => ({
+  '&.MuiTableCell-body': {
+    width: '33.3%',
+  },
 }))
-const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
-  fontSize: '1.4rem',
-  fontWeight: 500,
-  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+const TableCellPadding = styled(TableCell)(() => ({
+  '&.MuiTableCell-body': {
+    padding: '0',
+    width: '33.3%',
+  },
 }))
+const TableCellCustomeChild = styled(TableCell)(() => ({
+  '&.MuiTableCell-body': {
+    padding: '0 0 0 64px',
+    width: '33.3%',
+  },
+}))
+const IconSetting = styled(SettingsIcon)(({ theme }) => ({
+  '&.MuiSvgIcon-fontSizeMedium': {
+    color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
+  },
+}))
+// const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
+//   fontSize: '1.4rem',
+//   fontWeight: 500,
+//   color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+// }))
 // const TableCellCustomeHeadingTextCustom = styled(TableCellCustome)(({ theme }) => ({
 //   fontSize: '1.4rem',
 //   fontWeight: 400,
@@ -203,70 +222,107 @@ const SupplierCategories: NextPageWithLayout = () => {
         Categories Management
       </TypographyH2>
       <Grid container spacing={2} sx={{ marginBottom: '15px' }}>
-        <Grid xs={3}>
-          <ButtonCustom onClick={handleOpenModal} variant="contained" fullWidth>
+        <Grid xs={10}>
+          <Paper
+            component="form"
+            sx={{
+              p: '2px 4px',
+              display: 'flex',
+              alignItems: 'center',
+              border: '1px solid #E1E6EF',
+              borderRadius: '8px',
+            }}
+          >
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              placeholder="Search by category name"
+              inputProps={{ 'aria-label': 'search google maps' }}
+            />
+            <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+              <SearchIcon />
+            </IconButton>
+          </Paper>
+        </Grid>
+        <Grid xs={2}>
+          <ButtonCustom
+            onClick={handleOpenModal}
+            variant="contained"
+            fullWidth
+            style={{ height: '100%' }}
+          >
             Add new categories
           </ButtonCustom>
         </Grid>
       </Grid>
-      <TableContainer
-        component={Paper}
-        elevation={0}
-        style={{ marginBottom: '20px', border: '1px solid #E1E6EF' }}
-      >
+      <TableContainer component={Paper} elevation={0}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCellHeadingTextCustom align="center">
-                ID
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Name
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Child category
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Parent category
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Is display
-              </TableCellHeadingTextCustom>
+              <TableCellCustome align="left">Category Name</TableCellCustome>
+              <TableCellCustome align="center">Acction</TableCellCustome>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {stateCategoryList?.map((row) => (
-              <TableRowCustom
-                hover
-                key={row.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCellBodyTextCustom
-                  align="center"
-                  component="th"
-                  scope="row"
-                >
-                  {row.id}
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom
-                  align="center"
-                  component="th"
-                  scope="row"
-                >
-                  {row.name}
-                </TableCellBodyTextCustom>
 
-                <TableCellBodyTextCustom align="center">
-                  null
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom align="center">
-                  null
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom align="center">
-                  {row.is_displayed.toString()}
-                </TableCellBodyTextCustom>
-              </TableRowCustom>
-            ))}
+          <TableBody>
+            {stateCategoryList?.map((item) => {
+              return (
+                <>
+                  <TableRowCustom key={item.id}>
+                    {/* <TableCellCustome>
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        key={item.id}
+                        onClick={() => handleShowChild(item)}
+                      >
+                        {open && item.id === idCheck ? (
+                          <KeyboardArrowUpIcon />
+                        ) : (
+                          <KeyboardArrowDownIcon />
+                        )}
+                      </IconButton>
+                    </TableCellCustome> */}
+                    <TableCellCustome align="left">
+                      {item.name}
+                    </TableCellCustome>
+                    <TableCellCustome align="center">
+                      {/* <Button onClick={(e) => handleShowPopover(e, item)}> */}
+
+                      <IconSetting />
+                    </TableCellCustome>
+                  </TableRowCustom>
+                  {item.child_category.length > 0 && (
+                    <>
+                      <TableRow>
+                        <TableCellPadding colSpan={2}>
+                          <Table size="small" aria-label="purchases">
+                            <TableBody>
+                              {item.child_category.map((dataChild) => {
+                                console.log('dataChild: ', dataChild)
+                                return (
+                                  <>
+                                    <TableRowCustom key={dataChild.id}>
+                                      <TableCellCustomeChild align="left">
+                                        {dataChild.name}
+                                      </TableCellCustomeChild>
+
+                                      <TableCellCustome align="center">
+                                        <IconSetting />
+                                      </TableCellCustome>
+                                    </TableRowCustom>
+                                  </>
+                                )
+                              })}
+                              {/* ))} */}
+                            </TableBody>
+                          </Table>
+                        </TableCellPadding>
+                      </TableRow>
+                    </>
+                  )}
+                </>
+              )
+            })}
           </TableBody>
         </Table>
       </TableContainer>
