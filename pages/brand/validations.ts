@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+
 const schema = Yup.object().shape({
   name: Yup.string()
     .required('Category name is a required field')
@@ -8,6 +9,10 @@ const schema = Yup.object().shape({
 })
 
 const schemaSearch = Yup.object({
-  search: Yup.string().required(),
+  search: Yup.string().matches(
+    /^[\w-_.]*$/,
+    'Special character are not allowed for this field '
+  ),
 })
+
 export { schema, schemaSearch }

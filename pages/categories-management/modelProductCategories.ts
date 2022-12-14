@@ -3,7 +3,7 @@ export interface categoryTypeData {
   name: string
   is_displayed: boolean
   child_category: childCategoryTypeData[]
-  parent_category: parentCategoryTypeData[]
+  parent_category: parentCategoryTypeData
 }
 
 export interface childCategoryTypeData {
@@ -11,7 +11,7 @@ export interface childCategoryTypeData {
   name: string
   is_displayed: boolean
   child_category: childCategoryTypeData[]
-  parent_category: parentCategoryTypeData[]
+  parent_category: parentCategoryTypeData
 }
 
 export interface parentCategoryTypeData {

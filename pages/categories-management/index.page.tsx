@@ -1,16 +1,12 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
+import classes from './styles.module.scss'
 import { styled } from '@mui/system'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { NextPageWithLayout } from 'pages/_app.page'
 import {
-  Box,
   FormControl,
-  FormHelperText,
   IconButton,
-  Modal,
   Paper,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -18,55 +14,28 @@ import {
   TableHead,
   TableRow,
   Typography,
-
-  // Popover,
-  // Box,
-  // Stack,
-  // Modal,
-  // IconButton,
-  // Collapse,
 } from '@mui/material'
-
-// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-// import Checkbox from '@mui/material/Checkbox'
-
+import SettingsIcon from '@mui/icons-material/Settings'
 import { AddCategoryType, categoryTypeData } from './modelProductCategories'
 import { useRouter } from 'next/router'
-import { addCategories, getListCategories } from './apiCategories'
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
 import { notificationActions } from 'src/store/notification/notificationSlice'
-import {
-  ButtonCustom,
-  InputLabelCustom,
-  MenuItemSelectCustom,
-  PlaceholderSelect,
-  SelectCustom,
-  TextFieldCustom,
-} from 'src/components'
+import { ButtonCustom, TextFieldCustom } from 'src/components'
 
-import { X } from 'phosphor-react'
+import { MagnifyingGlass } from 'phosphor-react'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { schema } from './validations'
+import { schema, schemaSearch } from './validations'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
+import { objToStringParam } from 'src/utils/global.utils'
+import { getListCategories } from './apiCategories'
+import Link from 'next/link'
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '2rem',
   fontWeight: 'bold',
   color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
-}))
-const ModalBoxCustom = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  // background: '#FFF',
-  backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#fff',
-  borderRadius: '10px',
-  padding: '15px',
 }))
 
 const TableRowCustom = styled(TableRow)(({ theme }) => ({
@@ -74,33 +43,48 @@ const TableRowCustom = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#F8F9FC',
   },
-  // hide last border
   '&:last-child td, &:last-child th': {
     border: 0,
   },
 }))
-
-const TableCellHeadingTextCustom = styled(TableCell)(({ theme }) => ({
-  fontSize: '1.4rem',
-  fontWeight: 400,
-  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+const TableCellCustome = styled(TableCell)(() => ({
+  '&.MuiTableCell-body': {
+    width: '33.3%',
+  },
 }))
-const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
-  fontSize: '1.4rem',
-  fontWeight: 500,
-  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+const TableCellPadding = styled(TableCell)(() => ({
+  '&.MuiTableCell-body': {
+    padding: '0',
+    width: '33.3%',
+  },
 }))
-// const TableCellCustomeHeadingTextCustom = styled(TableCellCustome)(({ theme }) => ({
-//   fontSize: '1.4rem',
-//   fontWeight: 400,
-//   color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
-// }))
+const TableCellCustomeChild = styled(TableCell)(() => ({
+  '&.MuiTableCell-body': {
+    padding: '0 0 0 64px',
+    width: '33.3%',
+  },
+}))
+const TableCellCustomeAction = styled(TableCell)(() => ({
+  '&.MuiTableCell-body': {
+    padding: '0 0 0 0',
+    width: '10.3%',
+  },
+}))
+const IconSetting = styled(SettingsIcon)(({ theme }) => ({
+  '&.MuiSvgIcon-fontSizeMedium': {
+    color: theme.palette.mode === 'dark' ? '#ddd' : '##49516F',
+  },
+}))
+const TextFieldSearchCustom = styled(TextFieldCustom)(({ theme }) => ({
+  '& .MuiInputBase-input': {
+    padding: '10px 45px 10px 15px',
+    textOverflow: 'ellipsis',
+    backgroundColor:
+      theme.palette.mode === 'light' ? '#ffffff' : theme.palette.action.hover,
+  },
+}))
 
 const SupplierCategories: NextPageWithLayout = () => {
-  // const [showModalChild, setShowModalChild] = useState(false)
-  const [stateOpenModal, setStateOpenModal] = React.useState(false)
-  const handleOpenModal = () => setStateOpenModal(true)
-  const handleCloseModal = () => setStateOpenModal(false)
   // state use for list cata
   const [stateCategoryList, setStateCategoryList] =
     useState<categoryTypeData[]>()
@@ -128,73 +112,25 @@ const SupplierCategories: NextPageWithLayout = () => {
           })
         )
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [dispatch, router.query])
 
   const {
-    control,
-    handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<AddCategoryType>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
 
-  // const {
-  //   control: controlSearch,
-  //   handleSubmit: handleSubmitSearch,
-  //   setValue: setValueSearch,
-  //   formState: { errors: errorsSearch },
-  // } = useForm({
-  //   resolver: yupResolver(schema),
-  //   mode: 'all',
-  // })
+  const { handleSubmit: handleSubmitSearch, control: controlSearch } = useForm({
+    resolver: yupResolver(schemaSearch),
+    mode: 'all',
+  })
 
-  const OnSubmit = (values: AddCategoryType) => {
-    const createCategory: AddCategoryType = {
-      name: values.name,
-      parent_category: values.parent_category,
-    }
-    dispatch(loadingActions.doLoading())
-    addCategories(createCategory)
-      .then(() => {
-        dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: 'Success',
-          })
-        )
-        getListCategories(router.query)
-          .then((res) => {
-            const { data } = res.data
-            setStateCategoryList(data)
-            dispatch(loadingActions.doLoadingSuccess())
-            console.log('data', data)
-          })
-          .catch((error: any) => {
-            const data = error.response?.data
-            console.log(data)
-            dispatch(loadingActions.doLoadingFailure())
-            dispatch(
-              notificationActions.doNotification({
-                message: 'Something went wrongs with the server',
-                type: 'error',
-              })
-            )
-          })
-        handleCloseModal()
-      })
-      .catch(() => {
-        dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: 'Error',
-            type: 'error',
-          })
-        )
-      })
-    console.log(values)
+  const onSubmitSearch = (values: any) => {
+    router.replace({
+      search: `${objToStringParam({ name: values.search })}`,
+    })
+    console.log('value', values)
   }
 
   return (
@@ -203,178 +139,103 @@ const SupplierCategories: NextPageWithLayout = () => {
         Categories Management
       </TypographyH2>
       <Grid container spacing={2} sx={{ marginBottom: '15px' }}>
-        <Grid xs={3}>
-          <ButtonCustom onClick={handleOpenModal} variant="contained" fullWidth>
-            Add new categories
-          </ButtonCustom>
+        <Grid xs={10}>
+          <form
+            onSubmit={handleSubmitSearch(onSubmitSearch)}
+            className={classes[`form-search`]}
+          >
+            <Controller
+              control={controlSearch}
+              name="search"
+              render={({ field }) => (
+                <>
+                  <FormControl fullWidth>
+                    <TextFieldSearchCustom
+                      id="search"
+                      error={!!errors.name}
+                      placeholder="Search Categories by name..."
+                      {...field}
+                    />
+                  </FormControl>
+                </>
+              )}
+            />
+            <IconButton
+              aria-label="Search"
+              type="submit"
+              className={classes[`form-search__button`]}
+            >
+              <MagnifyingGlass size={20} />
+            </IconButton>
+          </form>
+        </Grid>
+        <Grid xs={2}>
+          <Link href="/create-categories">
+            <ButtonCustom
+              // onClick={handleOpenModal}
+              variant="contained"
+            >
+              Add new categories
+            </ButtonCustom>
+          </Link>
         </Grid>
       </Grid>
-      <TableContainer
-        component={Paper}
-        elevation={0}
-        style={{ marginBottom: '20px', border: '1px solid #E1E6EF' }}
-      >
+      <TableContainer component={Paper} elevation={0}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCellHeadingTextCustom align="center">
-                ID
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Name
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Child category
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Parent category
-              </TableCellHeadingTextCustom>
-              <TableCellHeadingTextCustom align="center">
-                Is display
-              </TableCellHeadingTextCustom>
+              <TableCellCustome align="left">Category Name</TableCellCustome>
+              <TableCellCustomeAction align="center">
+                Acction
+              </TableCellCustomeAction>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {stateCategoryList?.map((row) => (
-              <TableRowCustom
-                hover
-                key={row.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCellBodyTextCustom
-                  align="center"
-                  component="th"
-                  scope="row"
-                >
-                  {row.id}
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom
-                  align="center"
-                  component="th"
-                  scope="row"
-                >
-                  {row.name}
-                </TableCellBodyTextCustom>
 
-                <TableCellBodyTextCustom align="center">
-                  null
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom align="center">
-                  null
-                </TableCellBodyTextCustom>
-                <TableCellBodyTextCustom align="center">
-                  {row.is_displayed.toString()}
-                </TableCellBodyTextCustom>
-              </TableRowCustom>
-            ))}
+          <TableBody>
+            {stateCategoryList?.map((item) => {
+              return (
+                <React.Fragment key={item.id}>
+                  <TableRowCustom>
+                    <TableCellCustome align="left">
+                      {item.name}
+                    </TableCellCustome>
+                    <TableCellCustomeAction align="center">
+                      {/* <Button onClick={(e) => handleShowPopover(e, item)}> */}
+
+                      <IconSetting />
+                    </TableCellCustomeAction>
+                  </TableRowCustom>
+                  {item.child_category.length > 0 && (
+                    <TableRow>
+                      <TableCellPadding colSpan={2}>
+                        <Table size="small" aria-label="purchases">
+                          <TableBody>
+                            {item.child_category.map((dataChild) => {
+                              // console.log('dataChild: ', dataChild)
+                              return (
+                                <TableRowCustom key={dataChild.id}>
+                                  <TableCellCustomeChild align="left">
+                                    {dataChild.name}
+                                  </TableCellCustomeChild>
+
+                                  <TableCellCustomeAction align="center">
+                                    <IconSetting />
+                                  </TableCellCustomeAction>
+                                </TableRowCustom>
+                              )
+                            })}
+                            {/* ))} */}
+                          </TableBody>
+                        </Table>
+                      </TableCellPadding>
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              )
+            })}
           </TableBody>
         </Table>
       </TableContainer>
-      <Modal
-        open={stateOpenModal}
-        onClose={handleCloseModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <ModalBoxCustom>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create new Categories
-            </Typography>
-            <IconButton onClick={handleCloseModal}>
-              <X size={24} />
-            </IconButton>
-          </Stack>
-
-          <form onSubmit={handleSubmit(OnSubmit)}>
-            <Controller
-              control={control}
-              name="name"
-              render={({ field }) => (
-                <Box mb={2}>
-                  <InputLabelCustom htmlFor="name" error={!!errors.name}>
-                    Category name
-                  </InputLabelCustom>
-                  <FormControl fullWidth>
-                    <TextFieldCustom
-                      id="name"
-                      error={!!errors.name}
-                      placeholder="Input other average monthly sale volume..."
-                      {...field}
-                    />
-                    <FormHelperText error={!!errors.name}>
-                      {errors.name && `${errors.name.message}`}
-                    </FormHelperText>
-                  </FormControl>
-                </Box>
-              )}
-            />
-            <Controller
-              control={control}
-              name="parent_category"
-              render={({ field }) => (
-                <Box mb={2}>
-                  <InputLabelCustom
-                    htmlFor="parent_category"
-                    error={!!errors.parent_category}
-                  >
-                    Parent Category (if have)
-                  </InputLabelCustom>
-                  <FormControl fullWidth>
-                    <SelectCustom
-                      id="parent_category"
-                      displayEmpty
-                      defaultValue=""
-                      IconComponent={() => <KeyboardArrowDownIcon />}
-                      renderValue={(value: any) => {
-                        if (value === '') {
-                          return (
-                            <PlaceholderSelect>
-                              <div> Select category </div>
-                            </PlaceholderSelect>
-                          )
-                        }
-                        return stateCategoryList?.find(
-                          (obj) => obj.id === value
-                        )?.name
-                      }}
-                      {...field}
-                      onChange={(event: any) => {
-                        setValue('parent_category', event.target.value)
-                        // trigger('monthly_purchase')
-                      }}
-                    >
-                      {stateCategoryList?.map((item, index) => {
-                        return (
-                          <MenuItemSelectCustom
-                            value={item.id}
-                            key={index + Math.random()}
-                          >
-                            {item.name}
-                          </MenuItemSelectCustom>
-                        )
-                      })}
-                    </SelectCustom>
-                    <FormHelperText error={!!errors.parent_category}>
-                      {errors.parent_category &&
-                        ` ${errors.parent_category.message} `}
-                    </FormHelperText>
-                  </FormControl>
-                </Box>
-              )}
-            />
-
-            <ButtonCustom
-              variant="contained"
-              size="small"
-              fullWidth
-              type="submit"
-            >
-              Submit
-            </ButtonCustom>
-          </form>
-        </ModalBoxCustom>
-      </Modal>
     </>
   )
 }
