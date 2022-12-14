@@ -14,12 +14,6 @@ import { styled } from '@mui/material/styles'
 // mui
 
 import SectionChart from './_dashboard/sectionChart'
-// import SectionPromotion from './homepage/parts/sectionPromotion'
-// import SectionNewProducts from './homepage/parts/sectionNewProducts'
-// import SectionSellingProducts from './homepage/parts/sectionSellingProducts'
-// import SectionPreOrderProducts from './homepage/parts/sectionPreOrderProducts'
-// import SectionFlashSellProducts from './homepage/parts/sectionFlashSellProducts'
-// import SectionCategoryProduct from './homepage/parts/sectionCategoryProduct'
 
 // layout
 import type { ReactElement } from 'react'

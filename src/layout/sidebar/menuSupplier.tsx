@@ -19,7 +19,7 @@ import {
   Cube,
   FileSearch,
   ListBullets,
-  UsersThree,
+  // UsersThree,
   At,
   Factory,
   ShoppingCart,
@@ -45,11 +45,11 @@ const Menu = [
     text: 'Manufacturer',
     link: '/manufacturer',
   },
-  {
-    icon: <UsersThree size={24} />,
-    text: 'Staff',
-    link: '/staff',
-  },
+  // {
+  //   icon: <UsersThree size={24} />,
+  //   text: 'Staff',
+  //   link: '/staff',
+  // },
   {
     icon: <ShoppingCart size={24} />,
     text: 'Order',

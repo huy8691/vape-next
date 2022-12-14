@@ -7,13 +7,12 @@ import {
   DistributionResponseType,
   ProductBrandResponseType,
   ProductCategoryResponseType,
-  RegisterResponseType,
   WarehouseResponseType,
 } from './addProductModel'
 
 const CreateProductApi = (
   data: CreateProductDataType
-): Promise<AxiosResponse<RegisterResponseType>> => {
+): Promise<AxiosResponse<CreateProductDataType>> => {
   return callAPIWithToken({
     url: '/api/supplier/products/',
     method: 'post',
