@@ -66,6 +66,7 @@ callAPIWithToken.interceptors.request.use(
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
       'ngrok-skip-browser-warning': '69420',
+      withCredentials: true,
       Authorization: `Bearer ${token}`,
     }
     return req
@@ -107,32 +108,40 @@ callAPIWithToken.interceptors.response.use(
           })
       }
 
-      originalConfig._retry = true
-      isRefreshing = true
       const refreshToken = Cookies.get('refreshToken')
 
-      return new Promise(function (resolve, reject) {
-        axios
-          .post(`${urlApi}/api/token/refresh/`, { refreshToken })
-          .then(({ data }) => {
-            const { newAccessToken, newRefreshToken } = data.data
-            Cookies.set('token', newAccessToken)
-            Cookies.set('refreshToken', newRefreshToken)
-            originalConfig.headers['Authorization'] = 'Bearer ' + newAccessToken
-            processQueue(null, newAccessToken)
-            resolve(callAPIWithToken(originalConfig))
-          })
-          .catch((err) => {
-            processQueue(err, null)
-            reject(err)
-            Cookies.remove('token')
-            Cookies.remove('refreshToken')
-            window.location.href = '/login'
-          })
-          .finally(() => {
-            isRefreshing = false
-          })
-      })
+      if (localStorage.getItem('isRemember') === 'true') {
+        originalConfig._retry = true
+        isRefreshing = true
+        return new Promise(function (resolve, reject) {
+          axios
+            .post(`${urlApi}/api/token/refresh/`, { refreshToken })
+            .then(({ data }) => {
+              const { newAccessToken, newRefreshToken } = data.data
+              Cookies.set('token', newAccessToken)
+              Cookies.set('refreshToken', newRefreshToken)
+              originalConfig.headers['Authorization'] =
+                'Bearer ' + newAccessToken
+              processQueue(null, newAccessToken)
+              resolve(callAPIWithToken(originalConfig))
+            })
+            .catch((err) => {
+              processQueue(err, null)
+              reject(err)
+              Cookies.remove('token')
+              Cookies.remove('refreshToken')
+              window.location.href = '/login'
+            })
+            .finally(() => {
+              isRefreshing = false
+            })
+        })
+      } else {
+        isRefreshing = false
+        Cookies.remove('token')
+        Cookies.remove('refreshToken')
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(err)
   }
