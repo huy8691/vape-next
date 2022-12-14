@@ -394,7 +394,6 @@ const Manufacturer: NextPageWithLayout = () => {
             <Box mb={2}>
               <InputLabelCustom htmlFor="text">Images</InputLabelCustom>
               <UploadImage
-                fileList={undefined}
                 onFileSelectSuccess={(file: string) => {
                   setValue('logo', [file])
                   trigger('logo')
