@@ -123,7 +123,6 @@ const CreateBrand: NextPageWithLayout = () => {
                       }}
                     >
                       <UploadImage
-                        fileList={undefined}
                         onFileSelectSuccess={(file: string) => {
                           setValue('logo', file)
                           trigger('logo')
@@ -136,6 +135,19 @@ const CreateBrand: NextPageWithLayout = () => {
                           trigger('logo')
                         }}
                       />
+                      {/* <UploadImage
+                        onFileSelectSuccess={(file: string) => {
+                          setValue('logo', file)
+                          trigger('logo')
+                        }}
+                        onFileSelectError={() => {
+                          return
+                        }}
+                        onFileSelectDelete={() => {
+                          setValue('logo', '')
+                          trigger('logo')
+                        }}
+                      /> */}
                     </Stack>
                     {/* <CustomImageBox></CustomImageBox> */}
                   </Stack>
