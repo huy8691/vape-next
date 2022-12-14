@@ -24,4 +24,3 @@ const addBrand = (
 }
 
 export { getListBrand, addBrand }
-
