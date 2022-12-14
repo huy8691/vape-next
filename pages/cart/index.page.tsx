@@ -276,6 +276,15 @@ const Cart: NextPageWithLayout = () => {
   const handleClosePopover = () => {
     setAnchorEl(null)
   }
+
+  useEffect(() => {
+    if (cart?.data?.items) {
+      const arr: number[] = []
+      cart?.data?.items.forEach((item) => arr.push(item.cartItemId))
+      localStorage.setItem('listCartItemId', JSON.stringify(arr))
+    }
+  }, [cart?.data?.items])
+
   const handleRemoveFromCart = () => {
     const deleteCartItemId = currentProduct?.cartItemId
     const arrNumber = [deleteCartItemId]
@@ -933,7 +942,7 @@ const Cart: NextPageWithLayout = () => {
               <TotalCustom>{formatMoney(total)}</TotalCustom>
               {/* <Link href="/checkout">
                 <a>
-                 
+
                 </a>
               </Link> */}
               <ButtonCustom
