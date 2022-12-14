@@ -1,5 +1,7 @@
-.image-wrapper {
+.list-image-wrapper {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   .image-item {
     position: relative;
@@ -15,7 +17,6 @@
       cursor: pointer;
     }
     img {
-      border-radius: 5px;
       width: 100%;
       height: 100%;
       object-fit: contain;
