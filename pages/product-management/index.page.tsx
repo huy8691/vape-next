@@ -32,6 +32,7 @@ import NestedLayout from 'src/layout/nestedLayout'
 import { isEmptyObject, objToStringParam } from 'src/utils/global.utils'
 import { MenuItemSelectCustom, SelectCustom } from 'src/components'
 import classes from './styles.module.scss'
+import Link from 'next/link'
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '3.2rem',
   fontWeight: '600',
@@ -202,15 +203,17 @@ const ListProduct: NextPageWithLayout = () => {
                 >
                   {' '}
                   <div className={classes['image-wrapper']}>
-                    <Image
-                      alt="icon previous page"
-                      objectFit="contain"
-                      src={item.thumbnail}
-                      width={100}
-                      height={100}
-                    ></Image>
+                    <Link href={`/product-detail/${item.id}`}>
+                      <Image
+                        alt="icon previous page"
+                        objectFit="contain"
+                        src={item.thumbnail}
+                        width={100}
+                        height={100}
+                      ></Image>
+                    </Link>
                   </div>
-                  {item.name}
+                  <Link href={`/product-detail/${item.id}`}>{item.name}</Link>
                 </TableCellBodyTextCustom>
                 <TableCellBodyTextCustom align="center">
                   {item.code}
