@@ -12,13 +12,15 @@ import { getProduct } from './apiProductManagement'
 
 //material
 import {
+  FormControl,
+  Pagination,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   Typography,
 } from '@mui/material'
@@ -28,8 +30,8 @@ import { NextPageWithLayout } from 'pages/_app.page'
 import { ListProductDataType, ProductData } from './modalProductManagement'
 import NestedLayout from 'src/layout/nestedLayout'
 import { isEmptyObject, objToStringParam } from 'src/utils/global.utils'
-import TablePaginationAction from './parts/TablePaginationAction'
-
+import { MenuItemSelectCustom, SelectCustom } from 'src/components'
+import classes from './styles.module.scss'
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '3.2rem',
   fontWeight: '600',
@@ -41,6 +43,23 @@ const TableCellHeadingTextCustom = styled(TableCell)(({ theme }) => ({
   fontWeight: 400,
   color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
 }))
+
+const TableCellBodyTextCustom = styled(TableCell)(({ theme }) => ({
+  fontSize: '1.4rem',
+  fontWeight: 500,
+  color: theme.palette.mode === 'dark' ? '#ddd' : '#49516F',
+}))
+const TableRowCustom = styled(TableRow)(({ theme }) => ({
+  cursor: 'pointer',
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#F8F9FC',
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}))
+
 const ListProduct: NextPageWithLayout = () => {
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -51,11 +70,19 @@ const ListProduct: NextPageWithLayout = () => {
   const [count, setCount] = useState<ListProductDataType>()
 
   useEffect(() => {
+    const asPath = router.asPath
     if (!isEmptyObject(router.query)) {
       dispatch(loadingActions.doLoading())
       getProduct(router.query)
         .then((res) => {
           setCount(res.data)
+          if (asPath.indexOf('limit=') !== -1) {
+            const sliceAsPathCodeSearch = asPath.slice(
+              asPath.indexOf('limit=') + 6, //position start
+              asPath.indexOf('&', asPath.indexOf('limit=')) // position end
+            )
+            setRowsPerPage(Number(sliceAsPathCodeSearch))
+          }
           const { data } = res.data
           setStateListProduct(data)
           dispatch(loadingActions.doLoadingSuccess())
@@ -94,9 +121,16 @@ const ListProduct: NextPageWithLayout = () => {
         })
     }
   }, [dispatch, router.query])
-  //TablePagination
-  const handleChangePage = (event: any) => {
-    console.log(event)
+
+  // handleChangePagination
+  const handleChangePagination = (e: any, page: number) => {
+    console.log('e', e)
+    router.replace({
+      search: `${objToStringParam({
+        ...router.query,
+        page: page,
+      })}`,
+    })
   }
 
   // trigger when change row per page option ( page size )
@@ -111,13 +145,18 @@ const ListProduct: NextPageWithLayout = () => {
       })}`,
     })
   }
+
   return (
     <>
-      <TypographyH2 variant="h2" sx={{ textAlign: 'center' }} mb={4}>
-        List product
+      <TypographyH2 variant="h2" mb={4}>
+        Product management
       </TypographyH2>
 
-      <TableContainer component={Paper}>
+      <TableContainer
+        component={Paper}
+        elevation={0}
+        style={{ border: '1px solid #E1E6EF', marginBottom: '15px' }}
+      >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -142,7 +181,6 @@ const ListProduct: NextPageWithLayout = () => {
               <TableCellHeadingTextCustom align="center">
                 Price
               </TableCellHeadingTextCustom>
-
               <TableCellHeadingTextCustom align="center">
                 Is Active
               </TableCellHeadingTextCustom>
@@ -150,68 +188,83 @@ const ListProduct: NextPageWithLayout = () => {
           </TableHead>
           <TableBody>
             {stateListProduct?.map((item) => (
-              <TableRow
+              <TableRowCustom
                 key={item.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <TableCellBodyTextCustom component="th" scope="row">
                   {item.id}
-                </TableCell>
+                </TableCellBodyTextCustom>
 
-                <TableCell
+                <TableCellBodyTextCustom
                   align="left"
                   sx={{ display: 'flex', alignItems: 'center' }}
                 >
                   {' '}
-                  <Image
-                    alt="icon previous page"
-                    objectFit="contain"
-                    src={item.thumbnail}
-                    width={100}
-                    height={100}
-                  ></Image>
+                  <div className={classes['image-wrapper']}>
+                    <Image
+                      alt="icon previous page"
+                      objectFit="contain"
+                      src={item.thumbnail}
+                      width={100}
+                      height={100}
+                    ></Image>
+                  </div>
                   {item.name}
-                </TableCell>
-                <TableCell align="center">{item.code}</TableCell>
-                <TableCell align="center">{item.manufacturer}</TableCell>
-                <TableCell align="center">{item.brand}</TableCell>
-                <TableCell align="center">{item.category}</TableCell>
-                <TableCell align="center">
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  {item.code}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  {item.manufacturer}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  {item.brand}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
+                  {item.category}
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
                   {item.price}/{item.unit_types}
-                </TableCell>
-
-                <TableCell align="center">
+                </TableCellBodyTextCustom>
+                <TableCellBodyTextCustom align="center">
                   {item.is_active.toString()}
-                </TableCell>
-              </TableRow>
+                </TableCellBodyTextCustom>
+              </TableRowCustom>
             ))}
           </TableBody>
-          <TableRow>
-            <TablePagination
-              sx={{ borderBottom: '0' }}
-              count={count ? count?.totalItems : 0}
-              rowsPerPageOptions={[5, 10, 15, 20]}
-              rowsPerPage={rowsPerPage}
-              page={
-                Number(router.query.page) ? Number(router.query.page) - 1 : 0
-              }
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={(props) => {
-                return (
-                  <TablePaginationAction
-                    count={props.count}
-                    page={props.page}
-                    rowsPerPage={props.rowsPerPage}
-                    // onPageChange={props.onPageChange}
-                    nextIsNull={Number(count ? count?.nextPage : 0)}
-                  />
-                )
-              }}
-            ></TablePagination>
-          </TableRow>
         </Table>
       </TableContainer>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="flex-end"
+        spacing={2}
+      >
+        <Typography>Rows per page</Typography>
+
+        <FormControl sx={{ m: 1 }}>
+          <SelectCustom
+            value={rowsPerPage.toString()}
+            onChange={handleChangeRowsPerPage}
+            displayEmpty
+            inputProps={{ 'aria-label': 'Without label' }}
+          >
+            <MenuItemSelectCustom value={10}>10</MenuItemSelectCustom>
+            <MenuItemSelectCustom value={20}>20</MenuItemSelectCustom>
+            <MenuItemSelectCustom value={30}>30</MenuItemSelectCustom>
+          </SelectCustom>
+        </FormControl>
+        <Pagination
+          color="primary"
+          variant="outlined"
+          shape="rounded"
+          defaultPage={1}
+          page={Number(router.query.page) ? Number(router.query.page) : 1}
+          onChange={(e, page: number) => handleChangePagination(e, page)}
+          count={count ? count?.totalPages : 0}
+        ></Pagination>
+      </Stack>
     </>
   )
 }

@@ -7,6 +7,7 @@ import { styled, Theme, CSSObject } from '@mui/material/styles'
 
 import Link from 'next/link'
 import Image from 'next/image'
+import Logo from 'public/images/logo.svg'
 // import { useRouter } from 'next/router'
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
@@ -133,7 +134,7 @@ interface AppBarProps extends MuiAppBarProps {
 const BoxMain = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
-  width: open ? `calc(100vw - ${drawerWidth}px)` : `calc(100vw - 65px)`,
+  width: open ? `calc(100% - ${drawerWidth}px)` : `calc(100% - 65px)`,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -231,12 +232,7 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
                   {open && (
                     <Link href="/">
                       <a>
-                        <Image
-                          src="/images/logo.svg"
-                          alt="Logo"
-                          width="100"
-                          height="40"
-                        />
+                        <Image src={Logo} alt="Logo" width="100" height="40" />
                       </a>
                     </Link>
                   )}

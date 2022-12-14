@@ -31,8 +31,8 @@ import classes from './styles.module.scss'
 import {
   AddFormInput,
   CreateProductDataType,
+  DistributionType,
   DropdownDataType,
-  OrganizationType,
   ProductBrandType,
   ProductCategoryType,
   ProductManufacturerType,
@@ -50,7 +50,7 @@ import {
   getProductCategory,
   getProductManufacturer,
   getWareHouse,
-  getOrganization,
+  getDistribution,
 } from './apiAddProduct'
 import { loadingActions } from 'src/store/loading/loadingSlice'
 
@@ -63,7 +63,7 @@ import UploadImage from 'src/components/uploadImage'
 // import ModalAddNewBrand from './parts/ModalAddNewBrand'
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
-  fontSize: '3.2rem',
+  fontSize: '2.4rem',
   fontWeight: '600',
   color: theme.palette.mode === 'dark' ? '#ddd' : '#1B1F27',
 }))
@@ -82,13 +82,6 @@ const CustomStack = styled(Stack)(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
 }))
-
-// const CustomImageBox = styled(Box)(() => ({
-//   paddingBottom: '100%',
-//   border: '1px dashed #BABABA',
-//   background: '#F1F3F9',
-//   borderRadius: '10px',
-// }))
 
 const IconButtonCustom = styled(IconButton)(({ theme }) => ({
   border:
@@ -133,7 +126,7 @@ const CreateProduct: NextPageWithLayout = () => {
   const [stateListWarehouse, setStateListWarehouse] =
     useState<WarehouseType[]>()
   const [stateOrganization, setStateOrganization] =
-    useState<OrganizationType[]>()
+    useState<DistributionType[]>()
   const handleCloseModalAddBrand = () => setStateOpenModalAddBrand(false)
   const handleOpenModalAddBrand = () => setStateOpenModalAddBrand(true)
   const handleCloseModalAddManufacturer = () =>
@@ -275,7 +268,7 @@ const CreateProduct: NextPageWithLayout = () => {
           })
         )
       })
-    getOrganization()
+    getDistribution()
       .then((res) => {
         const { data } = res.data
         setStateOrganization(data)
@@ -375,8 +368,8 @@ const CreateProduct: NextPageWithLayout = () => {
 
   return (
     <>
-      <TypographyH2 variant="h2" sx={{ textAlign: 'center' }} mb={4}>
-        Create
+      <TypographyH2 variant="h2" mb={3}>
+        Create New Product
       </TypographyH2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CustomStack direction="row" spacing={2} mb={2}>
@@ -705,10 +698,6 @@ const CreateProduct: NextPageWithLayout = () => {
                   )}
                 />
               </Grid>
-            </Grid>
-          </CustomBox>
-          <CustomBox>
-            <Grid container columnSpacing={3}>
               <Grid xs={6}>
                 <Box>
                   <Controller
@@ -783,6 +772,7 @@ const CreateProduct: NextPageWithLayout = () => {
               </Grid>
             </Grid>
           </CustomBox>
+
           <CustomBox>
             <Grid container columnSpacing={3}>
               <Grid xs={12}>
