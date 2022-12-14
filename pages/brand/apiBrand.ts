@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { callAPIWithToken } from 'src/services/jwt-axios'
-import { brandResponseTypeData } from './brandModel'
+import { AddBrandType, brandResponseTypeData } from './brandModel'
 
 const getListBrand = (
   params?: object
@@ -13,5 +13,14 @@ const getListBrand = (
     },
   })
 }
+const addBrand = (
+  values: AddBrandType
+): Promise<AxiosResponse<brandResponseTypeData>> => {
+  return callAPIWithToken({
+    url: `/api/brands/`,
+    method: 'POST',
+    data: values,
+  })
+}
 
-export default getListBrand
+export { getListBrand, addBrand }

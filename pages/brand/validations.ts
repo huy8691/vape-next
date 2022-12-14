@@ -6,13 +6,11 @@ const schema = Yup.object().shape({
     .min(2, 'Category name must be at least 2 characters')
     .max(50, 'Category name must be at most 50 characters'),
   parent_category: Yup.number().nullable(),
+  logo: Yup.string(),
 })
 
 const schemaSearch = Yup.object({
-  search: Yup.string().matches(
-    /^[\w-_.]*$/,
-    'Special character are not allowed for this field '
-  ),
+  search: Yup.string().required(),
 })
 
 export { schema, schemaSearch }

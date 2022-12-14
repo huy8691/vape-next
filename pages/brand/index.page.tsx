@@ -2,12 +2,11 @@
 import { NextPageWithLayout } from 'pages/_app.page'
 import React, { ReactElement, useEffect, useState } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
-
+import classes from './styles.module.scss'
 import { styled } from '@mui/system'
 import {
   Typography,
   Paper,
-  InputBase,
   IconButton,
   TableContainer,
   Table,
@@ -16,29 +15,30 @@ import {
   TableCell,
   TableBody,
   Avatar,
-  Modal,
-  Stack,
-  Box,
+  // Modal,
+  // Stack,
+  // Box,
   FormControl,
-  FormHelperText,
+  // FormHelperText,
 } from '@mui/material'
 // import SettingsIcon from '@mui/icons-material/Settings'
-import { X } from 'phosphor-react'
-import SearchIcon from '@mui/icons-material/Search'
+import { MagnifyingGlass } from 'phosphor-react'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { ButtonCustom, InputLabelCustom, TextFieldCustom } from 'src/components'
+import { ButtonCustom, TextFieldCustom } from 'src/components'
 import { useRouter } from 'next/router'
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
-import getListBrand from './apiBrand'
+import { getListBrand } from './apiBrand'
 import { notificationActions } from 'src/store/notification/notificationSlice'
 import { brandTypeData } from './brandModel'
 import { Controller, useForm } from 'react-hook-form'
 import { AddBrandType } from 'pages/create-product/addProductModel'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { schema } from './validations'
-import UploadImage from 'src/components/uploadImage'
+import { schema, schemaSearch } from './validations'
+// import UploadImage from 'src/components/uploadImage'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
+import { objToStringParam } from 'src/utils/global.utils'
+import Link from 'next/link'
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '2rem',
@@ -75,22 +75,29 @@ const TableRowCustom = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }))
-const ModalBoxCustom = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  // background: '#FFF',
-  backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#fff',
-  borderRadius: '10px',
-  padding: '15px',
+// const ModalBoxCustom = styled(Box)(({ theme }) => ({
+//   position: 'absolute',
+//   top: '50%',
+//   left: '50%',
+//   transform: 'translate(-50%, -50%)',
+//   width: 600,
+//   // background: '#FFF',
+//   backgroundColor: theme.palette.mode === 'dark' ? '#212125' : '#fff',
+//   borderRadius: '10px',
+//   padding: '15px',
+// }))
+const TextFieldSearchCustom = styled(TextFieldCustom)(({ theme }) => ({
+  '& .MuiInputBase-input': {
+    padding: '10px 45px 10px 15px',
+    textOverflow: 'ellipsis',
+    backgroundColor:
+      theme.palette.mode === 'light' ? '#ffffff' : theme.palette.action.hover,
+  },
 }))
-
 const Brand: NextPageWithLayout = () => {
-  const [stateOpenModal, setStateOpenModal] = React.useState(false)
-  const handleOpenModal = () => setStateOpenModal(true)
-  const handleCloseModal = () => setStateOpenModal(false)
+  // const [stateOpenModal, setStateOpenModal] = React.useState(false)
+  // const handleOpenModal = () => setStateOpenModal(true)
+  // const handleCloseModal = () => setStateOpenModal(false)
   // // state use for list cata
   const [stateBrandList, setStateBrandList] = useState<brandTypeData[]>()
   const router = useRouter()
@@ -117,56 +124,128 @@ const Brand: NextPageWithLayout = () => {
           })
         )
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [dispatch, router.query])
 
   const {
-    control,
+    // control,
+    // reset,
+    // setValue,
+    // trigger,
     // handleSubmit,
-    setValue,
-    trigger,
     formState: { errors },
   } = useForm<AddBrandType>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
+  //search
+  const { handleSubmit: handleSubmitSearch, control: controlSearch } = useForm({
+    resolver: yupResolver(schemaSearch),
+    mode: 'all',
+  })
+
+  const onSubmitSearch = (values: any) => {
+    router.replace({
+      search: `${objToStringParam({ name: values.name })}`,
+    })
+    console.log('value', values)
+  }
+  //
+  //onSubmit create brand
+  // const OnSubmitCreate = (values: AddBrandType) => {
+  //   console.log('dataCreated', values)
+  //   const CreateBrand: AddBrandType = {
+  //     name: values.name,
+  //     logo: values.logo,
+  //   }
+  //   dispatch(loadingActions.doLoading())
+  //   addBrand(CreateBrand)
+  //     .then(() => {
+  //       dispatch(loadingActions.doLoadingSuccess())
+  //       dispatch(
+  //         notificationActions.doNotification({
+  //           message: 'Success',
+  //         })
+  //       )
+  //       reset()
+  //       // console.log('dataAdd', addCategories)
+  //       getListBrand(router.query)
+  //         .then((res) => {
+  //           const { data } = res.data
+  //           setStateBrandList(data)
+  //           dispatch(loadingActions.doLoadingSuccess())
+  //           // console.log('data', data)
+  //         })
+  //         .catch((error: any) => {
+  //           const data = error.response?.data
+  //           console.log(data)
+  //           dispatch(loadingActions.doLoadingFailure())
+  //           dispatch(
+  //             notificationActions.doNotification({
+  //               message: 'Something went wrongs with the server',
+  //               type: 'error',
+  //             })
+  //           )
+  //         })
+
+  //       handleCloseModal()
+  //     })
+  //     .catch(() => {
+  //       dispatch(loadingActions.doLoadingFailure())
+  //       dispatch(
+  //         notificationActions.doNotification({
+  //           message: 'Error',
+  //           type: 'error',
+  //         })
+  //       )
+  //     })
+  //   console.log(values)
+  // }
 
   return (
     <>
       <TypographyH2 variant="h2" sx={{ marginBottom: '15px' }}>
-        Categories Management
+        Brand Management
       </TypographyH2>
       <Grid container spacing={2} sx={{ marginBottom: '15px' }}>
         <Grid xs={10}>
-          <Paper
-            component="form"
-            sx={{
-              p: '2px 4px',
-              display: 'flex',
-              alignItems: 'center',
-              border: '1px solid #E1E6EF',
-              borderRadius: '8px',
-            }}
+          <form
+            onSubmit={handleSubmitSearch(onSubmitSearch)}
+            className={classes[`form-search`]}
           >
-            <InputBase
-              sx={{ ml: 1, flex: 1 }}
-              placeholder="Search by category name"
-              inputProps={{ 'aria-label': 'search google maps' }}
+            <Controller
+              control={controlSearch}
+              name="name"
+              render={({ field }) => (
+                <>
+                  <FormControl fullWidth>
+                    <TextFieldSearchCustom
+                      id="name"
+                      error={!!errors.name}
+                      placeholder="Search Brand by name..."
+                      {...field}
+                    />
+                  </FormControl>
+                </>
+              )}
             />
-            <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-              <SearchIcon />
+            <IconButton
+              aria-label="Search"
+              type="submit"
+              className={classes[`form-search__button`]}
+            >
+              <MagnifyingGlass size={20} />
             </IconButton>
-          </Paper>
+          </form>
         </Grid>
         <Grid xs={2}>
-          <ButtonCustom
-            onClick={handleOpenModal}
-            variant="contained"
-            fullWidth
-            style={{ height: '100%' }}
-          >
-            Add new categories
-          </ButtonCustom>
+          <Link href="/create-brand">
+            <ButtonCustom
+              // onClick={handleOpenModal//
+              variant="contained"
+            >
+              Add new brands
+            </ButtonCustom>
+          </Link>
         </Grid>
       </Grid>
       <TableContainer component={Paper} elevation={0}>
@@ -183,8 +262,8 @@ const Brand: NextPageWithLayout = () => {
           <TableBody>
             {stateBrandList?.map((item, index) => {
               return (
-                <>
-                  <TableRowCustom key={item.id}>
+                <React.Fragment key={item.id}>
+                  <TableRowCustom>
                     <TableCellNo align="left">{index + 1}</TableCellNo>
                     <TableCellLogo align="left">
                       <Avatar alt="Remy Sharp" src={item.logo} />
@@ -196,7 +275,7 @@ const Brand: NextPageWithLayout = () => {
                       <SettingsIcon></SettingsIcon>
                     </TableCellAction>
                   </TableRowCustom>
-                </>
+                </React.Fragment>
               )
             })}
 
@@ -205,7 +284,7 @@ const Brand: NextPageWithLayout = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Modal
+      {/* <Modal
         open={stateOpenModal}
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
@@ -221,8 +300,7 @@ const Brand: NextPageWithLayout = () => {
             </IconButton>
           </Stack>
 
-          {/* <form onSubmit={handleSubmit(OnSubmit)}> */}
-          <form>
+          <form onSubmit={handleSubmit(OnSubmitCreate)}>
             <Controller
               control={control}
               name="name"
@@ -268,7 +346,7 @@ const Brand: NextPageWithLayout = () => {
                       }}
                     />
                     {/* <CustomImageBox></CustomImageBox> */}
-                  </Stack>
+      {/* </Stack>
                 </Box>
               )}
             />
@@ -282,7 +360,7 @@ const Brand: NextPageWithLayout = () => {
             </ButtonCustom>
           </form>
         </ModalBoxCustom>
-      </Modal>
+      </Modal> */}
     </>
   )
 }
