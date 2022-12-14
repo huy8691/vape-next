@@ -60,6 +60,7 @@ import { hasSpecialCharacter } from 'src/utils/global.utils'
 import ModalAddNewBrand from './parts/ModalAddNewBrand'
 import ModalAddManufacturer from './parts/ModalAddManufacturer'
 import UploadImage from 'src/components/uploadImage'
+import UploadList from 'src/components/uploadList'
 // import ModalAddNewBrand from './parts/ModalAddNewBrand'
 
 const TypographyH2 = styled(Typography)(({ theme }) => ({
@@ -179,10 +180,6 @@ const CreateProduct: NextPageWithLayout = () => {
       warehouse: stateListWarehouse ? stateListWarehouse[0].id : 0,
       distribution_channel: stateOrganization ? stateOrganization[0].id : 0,
     }
-    console.log(
-      '🚀 ~ file: index.page.tsx:140 ~ onSubmit ~ addProduct',
-      addProduct
-    )
 
     dispatch(loadingActions.doLoading())
     CreateProductApi(addProduct)
@@ -289,7 +286,7 @@ const CreateProduct: NextPageWithLayout = () => {
       })
 
     register('description', { required: true, minLength: 11 })
-  }, [])
+  }, [dispatch, register])
 
   const editorContent = watch('description')
   const onEditorStateChange = (value: string) => {
@@ -382,8 +379,7 @@ const CreateProduct: NextPageWithLayout = () => {
               Add Thumbnail Product
             </Typography>
             <UploadImage
-              fileList={undefined}
-              onFileSelectSuccess={(file: any) => {
+              onFileSelectSuccess={(file: string) => {
                 setValue('thumbnail', file)
                 trigger('thumbnail')
               }}
@@ -395,7 +391,6 @@ const CreateProduct: NextPageWithLayout = () => {
                 trigger('thumbnail')
               }}
             />
-            {/* <CustomImageBox></CustomImageBox> */}
           </Stack>
           <Stack
             spacing={1}
@@ -404,10 +399,9 @@ const CreateProduct: NextPageWithLayout = () => {
             <Typography sx={{ width: '165px', textAlign: 'center' }}>
               Add Product Images
             </Typography>
-            <UploadImage
-              fileList={undefined}
-              onFileSelectSuccess={(file: string) => {
-                setValue('images', [file])
+            <UploadList
+              onFileSelectSuccess={(file: string[]) => {
+                setValue('images', file)
                 trigger('images')
               }}
               onFileSelectError={() => {
@@ -430,7 +424,7 @@ const CreateProduct: NextPageWithLayout = () => {
                   name="name"
                   render={({ field }) => (
                     <>
-                      <Stack direction="row" alignItems="center" height={38}>
+                      <Stack direction="row" alignItems="center" height={33}>
                         <InputLabelCustom
                           htmlFor="product_name"
                           error={!!errors.name}
@@ -521,7 +515,7 @@ const CreateProduct: NextPageWithLayout = () => {
                   name="manufacturer"
                   render={({ field }) => (
                     <>
-                      <Stack direction="row">
+                      <Stack direction="row" alignItems="center">
                         <InputLabelCustom
                           htmlFor="manufacturer"
                           error={!!errors.manufacturer}
@@ -542,7 +536,7 @@ const CreateProduct: NextPageWithLayout = () => {
                           displayEmpty
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
-                            if (value === '') {
+                            if (!value) {
                               return (
                                 <PlaceholderSelect>
                                   <div>Select manufacturer</div>
@@ -586,19 +580,22 @@ const CreateProduct: NextPageWithLayout = () => {
                   defaultValue=""
                   render={({ field }) => (
                     <>
-                      <InputLabelCustom
-                        htmlFor="unit_type"
-                        error={!!errors.unit_type}
-                      >
-                        Unit type
-                      </InputLabelCustom>
+                      <Stack direction="row" alignItems="center" height={33}>
+                        <InputLabelCustom
+                          htmlFor="unit_type"
+                          error={!!errors.unit_type}
+                        >
+                          Unit type
+                        </InputLabelCustom>
+                      </Stack>
+
                       <FormControl fullWidth>
                         <SelectCustom
                           id="unit_type"
                           displayEmpty
                           IconComponent={() => <KeyboardArrowDownIcon />}
                           renderValue={(value: any) => {
-                            if (value === '') {
+                            if (!value) {
                               return (
                                 <PlaceholderSelect>
                                   <div>Select unit type</div>
@@ -717,6 +714,15 @@ const CreateProduct: NextPageWithLayout = () => {
                             displayEmpty
                             IconComponent={() => <KeyboardArrowDownIcon />}
                             {...field}
+                            renderValue={(value: any) => {
+                              if (!value) {
+                                return (
+                                  <PlaceholderSelect>
+                                    <div>Select category</div>
+                                  </PlaceholderSelect>
+                                )
+                              }
+                            }}
                             onChange={(event: any) => {
                               setValue('category', event.target.value)
                             }}

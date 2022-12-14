@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import classes from './styles.module.scss'
-// import UploadList from './uploadList'
-// import LoadingButton from '@mui/lab/LoadingButton'
-import { getUrlUploadFileApi, uploadFileApi } from './uploadImageAPI'
 import { XCircle } from 'phosphor-react'
+import React, { useState } from 'react'
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
 import { notificationActions } from 'src/store/notification/notificationSlice'
+import {
+  getUrlUploadFileApi,
+  uploadFileApi,
+} from '../uploadImage/uploadImageAPI'
+import classes from './styles.module.scss'
 
 const ButtonCustom = styled<any>(Button)({
   borderRadius: '10px',
@@ -17,13 +18,13 @@ const ButtonCustom = styled<any>(Button)({
   fontWeight: '600',
 })
 
-const UploadImage: React.FC<{
-  onFileSelectSuccess: (value: any) => void
+const UploadList: React.FC<{
+  onFileSelectSuccess: (value: string[]) => void
   onFileSelectError: () => void
   onFileSelectDelete: () => void
 }> = (props) => {
-  const [image, setImage] = useState('')
   const dispatch = useAppDispatch()
+  const [imageList, setImageList] = useState<string[]>([])
 
   const beforeUpload = (file: any) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
@@ -40,9 +41,9 @@ const UploadImage: React.FC<{
     }
     return isJpgOrPng && isLt2M
   }
+
   const handleUploadImage = async (event: any) => {
     const objImage = event.target.files[0]
-
     try {
       beforeUpload(objImage)
       handleGetUrlUpload(objImage)
@@ -77,8 +78,13 @@ const UploadImage: React.FC<{
           formData: formData,
         })
           .then(() => {
-            setImage(data.newUrl)
-            props.onFileSelectSuccess(data.newUrl)
+            setImageList((prev) => {
+              const clone = [...prev]
+              clone.push(data.newUrl)
+              props.onFileSelectSuccess(clone)
+
+              return clone
+            })
             dispatch(loadingActions.doLoadingSuccess())
             dispatch(
               notificationActions.doNotification({
@@ -106,40 +112,44 @@ const UploadImage: React.FC<{
         )
       })
   }
+
   return (
-    <>
-      <div className={classes['image-wrapper']}>
-        {image && (
-          <div className={classes['image-item']}>
-            <XCircle
-              size={28}
-              weight="fill"
-              color="#fff"
-              onClick={() => {
-                setImage('')
-                props.onFileSelectDelete()
-              }}
+    <div className={classes['list-image-wrapper']}>
+      {imageList.map((item, index) => (
+        <div key={`${item}-${index}`} className={classes['image-item']}>
+          <XCircle
+            size={28}
+            weight="fill"
+            color="#fff"
+            onClick={() => {
+              setImageList((prev) => {
+                const clone = [...prev]
+                clone.splice(index, 1)
+                return clone
+              })
+              props.onFileSelectDelete()
+            }}
+          />
+          <img src={`${item}`} srcSet={`${item}`} alt={''} loading="lazy" />
+        </div>
+      ))}
+
+      {imageList.length <= 10 && (
+        <div className={classes['upload-wrapper']}>
+          <div className={classes['label-image']}>Choose a image</div>
+          <ButtonCustom variant="contained" component="label">
+            Select file
+            <input
+              hidden
+              accept="image/*"
+              type="file"
+              onChange={handleUploadImage}
             />
-            <img src={image} alt={''} loading="lazy" />
-          </div>
-        )}
-        {!image && (
-          <div className={classes['upload-wrapper']}>
-            <div className={classes['label-image']}>Choose a image</div>
-            <ButtonCustom variant="contained" component="label">
-              Select file
-              <input
-                hidden
-                accept="image/*"
-                type="file"
-                onChange={handleUploadImage}
-              />
-            </ButtonCustom>
-          </div>
-        )}
-      </div>
-    </>
+          </ButtonCustom>
+        </div>
+      )}
+    </div>
   )
 }
 
-export default UploadImage
+export default UploadList
