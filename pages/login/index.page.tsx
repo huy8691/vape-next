@@ -120,7 +120,7 @@ const Login: NextPageWithLayout = () => {
   })
   const dispatch = useAppDispatch()
   const [isRemember, setIsRemember] = useState<string>(
-    localStorage.getItem('isRemember')
+    localStorage.getItem('isRemember') || ''
   )
 
   const onSubmit = (values: any) => {
@@ -140,7 +140,7 @@ const Login: NextPageWithLayout = () => {
         const { data } = response.data
         setAuthToken(data.access_token, data.refresh_token)
         dispatch(loadingActions.doLoadingSuccess())
-        localStorage.setItem('isRemember', isRemember)
+        localStorage.setItem('isRemember', isRemember || '')
         // router.push('/')
         // if (values.remember) {
         //   localStorage.setItem('email', values.email)
