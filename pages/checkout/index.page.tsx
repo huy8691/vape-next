@@ -198,7 +198,6 @@ const Checkout: NextPageWithLayout = () => {
   stateInventoryList?.forEach((item: CartItem) => {
     listCartId.push(item.cartItemId)
   })
-  console.log('list', listCartId)
 
   const objectOrder: CreateOrderType = {
     // default values for this phase
