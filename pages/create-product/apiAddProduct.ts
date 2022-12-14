@@ -4,16 +4,15 @@ import {
   AddBrandType,
   AddManufacturerType,
   CreateProductDataType,
-  OrganizationResponseType,
+  DistributionResponseType,
   ProductBrandResponseType,
   ProductCategoryResponseType,
-  RegisterResponseType,
   WarehouseResponseType,
 } from './addProductModel'
 
 const CreateProductApi = (
   data: CreateProductDataType
-): Promise<AxiosResponse<RegisterResponseType>> => {
+): Promise<AxiosResponse<CreateProductDataType>> => {
   return callAPIWithToken({
     url: '/api/supplier/products/',
     method: 'post',
@@ -71,8 +70,8 @@ const getWareHouse = (): Promise<AxiosResponse<WarehouseResponseType>> => {
     method: 'get',
   })
 }
-const getOrganization = (): Promise<
-  AxiosResponse<OrganizationResponseType>
+const getDistribution = (): Promise<
+  AxiosResponse<DistributionResponseType>
 > => {
   return callAPIWithToken({
     url: `/api/supplier/distribution_channel/`,
@@ -88,5 +87,5 @@ export {
   getProductManufacturer,
   createManufacturer,
   getWareHouse,
-  getOrganization,
+  getDistribution,
 }

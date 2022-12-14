@@ -12,6 +12,7 @@ type Props = {
 
 const SideBar = ({ open }: Props) => {
   const userInfo = useAppSelector((state) => state.userInfo)
+  console.log(userInfo.data.user_type)
   return (
     <>
       {userInfo.data.user_type === 'MERCHANT' && <MenuMerchant open={open} />}

@@ -1310,6 +1310,7 @@ export async function getStaticProps() {
   const dataFindUsOver = await getFindUsOverApi()
     .then((response) => {
       const { data } = response.data
+      console.log('🚀 ~ file: index.page.tsx:1313 ~ .then ~ data', data)
       return data
     })
     .catch(() => {

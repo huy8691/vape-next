@@ -3,10 +3,10 @@ import Image from 'next/image'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import RelatedProduct from './parts/relatedProduct'
-
+import defaultLogo from 'public/images/logo.svg'
 import {
   getProductDetail,
-  postWishList,
+  // postWishList,
   getRelatedProduct,
   addToCard,
 } from './apiProductDetail'
@@ -46,8 +46,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { schema } from './validations'
 
 // icon wishlist
-import iconFavorite from './parts/icon/icon-favorite.svg'
-import iconFavorited from './parts/icon/icon-favorited.svg'
+// import iconFavorite from './parts/icon/icon-favorite.svg'
+// import iconFavorited from './parts/icon/icon-favorited.svg'
 //slick
 import Slider from 'react-slick'
 
@@ -56,6 +56,7 @@ import Link from 'next/link'
 import { ShoppingCart } from 'phosphor-react'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import { useAppSelector } from 'src/store/hooks'
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
@@ -144,11 +145,11 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 const ImageWrapper = styled('div')(() => ({
   background: 'white',
 }))
-const IconButtonFavorite = styled(Button)(() => ({
-  padding: '14px',
-  borderRadius: '10px',
-  minWidth: '50px',
-}))
+// const IconButtonFavorite = styled(Button)(() => ({
+//   padding: '14px',
+//   borderRadius: '10px',
+//   minWidth: '50px',
+// }))
 const TextFieldAddToCart = styled(TextFieldCustom)(() => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: '0px',
@@ -171,6 +172,8 @@ const LoadingButtonCustom = styled(LoadingButton)({
 const ProductDetail: NextPageWithLayout = () => {
   const router = useRouter()
   const dispatch = useAppDispatch()
+  const userInfo = useAppSelector((state) => state.userInfo)
+
   const [nav1, setNav1] = useState()
   const [nav2, setNav2] = useState()
   const [valueTab, setValueTab] = useState(0)
@@ -178,7 +181,7 @@ const ProductDetail: NextPageWithLayout = () => {
     useState<ProductDetailType>()
   const [relatedProducts, setRelatedProducts] =
     useState<ProductListDataResponseType>()
-  const [isAddWistList, setIsAddWishList] = useState(false)
+  // const [isAddWistList, setIsAddWishList] = useState(false)
   const [total, setTotal] = useState(0)
   const [stateLoadingAddToCart, setStateLoadingAddToCart] = useState(false)
 
@@ -295,7 +298,7 @@ const ProductDetail: NextPageWithLayout = () => {
           const { data } = res.data
           setStateProductDetail(data)
           console.log(data)
-          setIsAddWishList(data?.is_favorite ? data?.is_favorite : false)
+          // setIsAddWishList(data?.is_favorite ? data?.is_favorite : false)
           dispatch(loadingActions.doLoadingSuccess())
         })
         .catch((error) => {
@@ -309,53 +312,54 @@ const ProductDetail: NextPageWithLayout = () => {
           )
         })
 
-      //
-      setRelatedProducts(undefined)
-      getRelatedProduct(router?.query?.id)
-        .then((res) => {
-          const data = res.data
-          setRelatedProducts(data)
-          dispatch(loadingActions.doLoadingSuccess())
-        })
-        .catch((error) => {
-          const data = error.response?.data
-          dispatch(loadingActions.doLoadingFailure())
-          dispatch(
-            notificationActions.doNotification({
-              message: data?.message ? data?.message : 'Error',
-              type: 'error',
-            })
-          )
-        })
+      if (userInfo.data.user_type === 'MERCHANT') {
+        setRelatedProducts(undefined)
+        getRelatedProduct(router?.query?.id)
+          .then((res) => {
+            const data = res.data
+            setRelatedProducts(data)
+            dispatch(loadingActions.doLoadingSuccess())
+          })
+          .catch((error) => {
+            const data = error.response?.data
+            dispatch(loadingActions.doLoadingFailure())
+            dispatch(
+              notificationActions.doNotification({
+                message: data?.message ? data?.message : 'Error',
+                type: 'error',
+              })
+            )
+          })
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, dispatch])
 
   // wishlist
-  const handleWishList = () => {
-    dispatch(loadingActions.doLoading())
-    postWishList({ product: Number(router.query.id) })
-      .then((res) => {
-        const { data } = res
-        dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Success',
-          })
-        )
-        setIsAddWishList(!isAddWistList)
-      })
-      .catch((error) => {
-        const data = error.response?.data
-        dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
-      })
-  }
+  // const handleWishList = () => {
+  //   dispatch(loadingActions.doLoading())
+  //   postWishList({ product: Number(router.query.id) })
+  //     .then((res) => {
+  //       const { data } = res
+  //       dispatch(loadingActions.doLoadingSuccess())
+  //       dispatch(
+  //         notificationActions.doNotification({
+  //           message: data?.message ? data?.message : 'Success',
+  //         })
+  //       )
+  //       setIsAddWishList(!isAddWistList)
+  //     })
+  //     .catch((error) => {
+  //       const data = error.response?.data
+  //       dispatch(loadingActions.doLoadingFailure())
+  //       dispatch(
+  //         notificationActions.doNotification({
+  //           message: data?.message ? data?.message : 'Error',
+  //           type: 'error',
+  //         })
+  //       )
+  //     })
+  // }
   const handleChangeQuantityAddToCart = (e: any) => {
     if (stateProductDetail?.price) {
       setTotal(e * stateProductDetail.price)
@@ -443,7 +447,7 @@ const ProductDetail: NextPageWithLayout = () => {
               </CardCustom>
             </StickyWrapper>
           </Grid>
-          <Grid xs={6}>
+          <Grid xs={userInfo.data.user_type === 'MERCHANT' ? 6 : 9}>
             {stateProductDetail ? (
               <TypographyH2 variant="h2" mb={1}>
                 Product details
@@ -549,17 +553,7 @@ const ProductDetail: NextPageWithLayout = () => {
                 />
               )}
             </Stack>
-            {stateProductDetail ? (
-              <Typography variant="body2" mb={2}>
-                Short description: {stateProductDetail?.description}
-              </Typography>
-            ) : (
-              <Skeleton
-                animation="wave"
-                variant="text"
-                sx={{ fontSize: '1.4rem' }}
-              />
-            )}
+
             {/* </Stack> */}
             {stateProductDetail ? (
               <Typography variant="body2" mb={2}>
@@ -628,8 +622,12 @@ const ProductDetail: NextPageWithLayout = () => {
                         <Item>
                           <Image
                             alt={stateProductDetail?.brand?.name}
-                            src={stateProductDetail?.brand?.logo}
-                            objectFit="cover"
+                            src={
+                              stateProductDetail.brand.logo
+                                ? stateProductDetail.brand.logo
+                                : defaultLogo
+                            }
+                            objectFit="contain"
                             width="34"
                             height="34"
                           />
@@ -643,8 +641,12 @@ const ProductDetail: NextPageWithLayout = () => {
                         <Item>
                           <Image
                             alt={stateProductDetail?.manufacturer?.name}
-                            src={stateProductDetail?.manufacturer?.logo}
-                            objectFit="cover"
+                            src={
+                              stateProductDetail.manufacturer.logo
+                                ? stateProductDetail.manufacturer.logo
+                                : defaultLogo
+                            }
+                            objectFit="contain"
                             width="34"
                             height="34"
                           />
@@ -670,142 +672,147 @@ const ProductDetail: NextPageWithLayout = () => {
               )}
             </Box>
           </Grid>
-          <Grid xs>
-            <StickyWrapper>
-              <Box mb={2}>
+          {userInfo.data.user_type === 'MERCHANT' && (
+            <Grid xs>
+              <StickyWrapper>
+                <Box mb={2}>
+                  {stateProductDetail ? (
+                    <CardCustom>
+                      <CardContent style={{ paddingBottom: '16px' }}>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          spacing={2}
+                        >
+                          <div style={{ fontWeight: '600' }}>Instock</div>
+                          <TypographyColor>
+                            {stateProductDetail?.inStock}
+                          </TypographyColor>
+                        </Stack>
+                      </CardContent>
+                    </CardCustom>
+                  ) : (
+                    <Skeleton variant="rounded" animation="wave" height={56} />
+                  )}
+                </Box>
                 {stateProductDetail ? (
                   <CardCustom>
-                    <CardContent style={{ paddingBottom: '16px' }}>
-                      <Stack
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        spacing={2}
-                      >
-                        <div style={{ fontWeight: '600' }}>Instock</div>
-                        <TypographyColor>
-                          {stateProductDetail?.inStock}
-                        </TypographyColor>
-                      </Stack>
-                    </CardContent>
-                  </CardCustom>
-                ) : (
-                  <Skeleton variant="rounded" animation="wave" height={56} />
-                )}
-              </Box>
-              {stateProductDetail ? (
-                <CardCustom>
-                  <CardContent>
-                    <TypographyH2 mb={1}>Order This Product</TypographyH2>
-                    <Typography component="div" sx={{ fontSize: 14 }} mb={2}>
-                      Enter Number of [unit] you want to order
-                    </Typography>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                      <Box mb={2}>
-                        <Controller
-                          control={control}
-                          name="quantity"
-                          render={({ field }) => (
-                            <>
-                              <FormControl fullWidth>
-                                <ButtonGroup
-                                  variant="outlined"
-                                  aria-label="outlined button group"
-                                >
-                                  <ButtonIncreaseDecrease
-                                    disabled={
-                                      getValues('quantity') < 2 ? true : false
-                                    }
-                                    onClick={() => {
-                                      if (getValues('quantity') > 1) {
-                                        handleChangeQuantityAddToCart(
-                                          Number(getValues('quantity')) - 1
-                                        )
-                                        setValue(
-                                          'quantity',
-                                          Number(getValues('quantity')) - 1
-                                        )
-                                        trigger('quantity')
-                                      }
-                                    }}
+                    <CardContent>
+                      <TypographyH2 mb={1}>Order This Product</TypographyH2>
+                      <Typography component="div" sx={{ fontSize: 14 }} mb={2}>
+                        Enter Number of [unit] you want to order
+                      </Typography>
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <Box mb={2}>
+                          <Controller
+                            control={control}
+                            name="quantity"
+                            render={({ field }) => (
+                              <>
+                                <FormControl fullWidth>
+                                  <ButtonGroup
+                                    variant="outlined"
+                                    aria-label="outlined button group"
                                   >
-                                    -
-                                  </ButtonIncreaseDecrease>
-                                  <TextFieldAddToCart
-                                    className={
-                                      classes['text-field-add-to-cart']
-                                    }
-                                    type="quantity"
-                                    id="quantity"
-                                    placeholder="Ex:100"
-                                    error={!!errors.quantity}
-                                    fullWidth
-                                    onKeyPress={(event) => {
-                                      if (
-                                        event?.key === '-' ||
-                                        event?.key === '+' ||
-                                        event?.key === ',' ||
-                                        event?.key === '.' ||
-                                        event?.key === 'e'
-                                      ) {
-                                        event.preventDefault()
+                                    <ButtonIncreaseDecrease
+                                      disabled={
+                                        getValues('quantity') < 2 ? true : false
                                       }
-                                    }}
-                                    {...field}
-                                    inputProps={{ min: 0, max: 1000000 }}
-                                    onChange={(event: any) => {
-                                      if (event.target.value < 1000001) {
-                                        setValue('quantity', event.target.value)
-                                        trigger('quantity')
-                                        handleChangeQuantityAddToCart(
-                                          event.target.value
-                                        )
+                                      onClick={() => {
+                                        if (getValues('quantity') > 1) {
+                                          handleChangeQuantityAddToCart(
+                                            Number(getValues('quantity')) - 1
+                                          )
+                                          setValue(
+                                            'quantity',
+                                            Number(getValues('quantity')) - 1
+                                          )
+                                          trigger('quantity')
+                                        }
+                                      }}
+                                    >
+                                      -
+                                    </ButtonIncreaseDecrease>
+                                    <TextFieldAddToCart
+                                      className={
+                                        classes['text-field-add-to-cart']
                                       }
-                                    }}
-                                  />
-                                  <ButtonIncreaseDecrease
-                                    onClick={() => {
-                                      if (
-                                        Number(getValues('quantity')) < 1000000
-                                      ) {
-                                        handleChangeQuantityAddToCart(
-                                          Number(getValues('quantity')) + 1
-                                        )
-                                        setValue(
-                                          'quantity',
-                                          Number(getValues('quantity')) + 1
-                                        )
-                                        trigger('quantity')
-                                      }
-                                    }}
-                                  >
-                                    +
-                                  </ButtonIncreaseDecrease>
-                                </ButtonGroup>
-                              </FormControl>
-                            </>
-                          )}
-                        />
-                      </Box>
-                      <Stack
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        spacing={2}
-                        mb={1}
-                      >
-                        <div style={{ fontSize: '12px' }}>Total:</div>
-                        <TypographyColor sx={{ fontSize: 24 }}>
-                          <span>{formatMoney(total)}</span>
-                        </TypographyColor>
-                      </Stack>
-                      <Stack
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        spacing={2}
-                      >
-                        <IconButtonFavorite
+                                      type="quantity"
+                                      id="quantity"
+                                      placeholder="Ex:100"
+                                      error={!!errors.quantity}
+                                      fullWidth
+                                      onKeyPress={(event) => {
+                                        if (
+                                          event?.key === '-' ||
+                                          event?.key === '+' ||
+                                          event?.key === ',' ||
+                                          event?.key === '.' ||
+                                          event?.key === 'e'
+                                        ) {
+                                          event.preventDefault()
+                                        }
+                                      }}
+                                      {...field}
+                                      inputProps={{ min: 0, max: 1000000 }}
+                                      onChange={(event: any) => {
+                                        if (event.target.value < 1000001) {
+                                          setValue(
+                                            'quantity',
+                                            event.target.value
+                                          )
+                                          trigger('quantity')
+                                          handleChangeQuantityAddToCart(
+                                            event.target.value
+                                          )
+                                        }
+                                      }}
+                                    />
+                                    <ButtonIncreaseDecrease
+                                      onClick={() => {
+                                        if (
+                                          Number(getValues('quantity')) <
+                                          1000000
+                                        ) {
+                                          handleChangeQuantityAddToCart(
+                                            Number(getValues('quantity')) + 1
+                                          )
+                                          setValue(
+                                            'quantity',
+                                            Number(getValues('quantity')) + 1
+                                          )
+                                          trigger('quantity')
+                                        }
+                                      }}
+                                    >
+                                      +
+                                    </ButtonIncreaseDecrease>
+                                  </ButtonGroup>
+                                </FormControl>
+                              </>
+                            )}
+                          />
+                        </Box>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          spacing={2}
+                          mb={1}
+                        >
+                          <div style={{ fontSize: '12px' }}>Total:</div>
+                          <TypographyColor sx={{ fontSize: 24 }}>
+                            <span>{formatMoney(total)}</span>
+                          </TypographyColor>
+                        </Stack>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          spacing={2}
+                        >
+                          {/* <IconButtonFavorite
                           onClick={handleWishList}
                           variant={isAddWistList ? `text` : `outlined`}
                         >
@@ -816,48 +823,54 @@ const ProductDetail: NextPageWithLayout = () => {
                             width="20"
                             height="20"
                           />
-                        </IconButtonFavorite>
-                        <LoadingButtonCustom
-                          style={{ paddingTop: '11px', paddingBottom: '11px' }}
-                          variant="contained"
-                          size="large"
-                          type="submit"
-                          loading={stateLoadingAddToCart}
-                          loadingPosition="start"
-                          fullWidth
-                          disabled={errors.number ? true : false}
-                          startIcon={<ShoppingCart />}
-                        >
-                          Add To Cart
-                        </LoadingButtonCustom>
-                      </Stack>
-                    </form>
-                  </CardContent>
-                </CardCustom>
-              ) : (
-                <Skeleton variant="rounded" animation="wave" height={265} />
-              )}
-            </StickyWrapper>
-          </Grid>
-        </Grid>
-        <Box>
-          {stateProductDetail ? (
-            <TypographyH2 variant="h2" mb={2}>
-              Related Products
-            </TypographyH2>
-          ) : (
-            <Box mb={1}>
-              <Skeleton
-                animation="wave"
-                variant="text"
-                sx={{ fontSize: '2rem' }}
-                width={200}
-              />
-            </Box>
+                        </IconButtonFavorite> */}
+                          <LoadingButtonCustom
+                            style={{
+                              paddingTop: '11px',
+                              paddingBottom: '11px',
+                            }}
+                            variant="contained"
+                            size="large"
+                            type="submit"
+                            loading={stateLoadingAddToCart}
+                            loadingPosition="start"
+                            fullWidth
+                            disabled={errors.number ? true : false}
+                            startIcon={<ShoppingCart />}
+                          >
+                            Add To Cart
+                          </LoadingButtonCustom>
+                        </Stack>
+                      </form>
+                    </CardContent>
+                  </CardCustom>
+                ) : (
+                  <Skeleton variant="rounded" animation="wave" height={265} />
+                )}
+              </StickyWrapper>
+            </Grid>
           )}
+        </Grid>
+        {userInfo.data.user_type === 'MERCHANT' && (
+          <Box>
+            {stateProductDetail ? (
+              <TypographyH2 variant="h2" mb={2}>
+                Related Products
+              </TypographyH2>
+            ) : (
+              <Box mb={1}>
+                <Skeleton
+                  animation="wave"
+                  variant="text"
+                  sx={{ fontSize: '2rem' }}
+                  width={200}
+                />
+              </Box>
+            )}
 
-          <RelatedProduct relatedProducts={relatedProducts} />
-        </Box>
+            <RelatedProduct relatedProducts={relatedProducts} />
+          </Box>
+        )}
       </div>
     </>
   )

@@ -75,6 +75,9 @@ const Item = styled(Paper)(({ theme }) => ({
   width: '50px',
   fontSize: '24px',
   cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 }))
 const TypographyH1Custom = styled(Typography)({
   fontSize: '24px',
@@ -116,6 +119,9 @@ const Login: NextPageWithLayout = () => {
     resolver: yupResolver(schema),
   })
   const dispatch = useAppDispatch()
+  const [isRemember, setIsRemember] = useState<string>(
+    localStorage.getItem('isRemember') || ''
+  )
 
   const onSubmit = (values: any) => {
     console.log('4444', values)
@@ -126,6 +132,7 @@ const Login: NextPageWithLayout = () => {
     //   })
     // )
     dispatch(loadingActions.doLoading())
+
     loginAPI({
       ...values,
     })
@@ -133,6 +140,7 @@ const Login: NextPageWithLayout = () => {
         const { data } = response.data
         setAuthToken(data.access_token, data.refresh_token)
         dispatch(loadingActions.doLoadingSuccess())
+        localStorage.setItem('isRemember', isRemember || '')
         // router.push('/')
         // if (values.remember) {
         //   localStorage.setItem('email', values.email)
@@ -319,7 +327,16 @@ const Login: NextPageWithLayout = () => {
                   <Controller
                     name="remember"
                     control={control}
-                    render={({ field }) => <Checkbox {...field} />}
+                    render={({ field }) => (
+                      <Checkbox
+                        {...field}
+                        checked={isRemember === 'true' ? true : false}
+                        onChange={(event: any) => {
+                          setIsRemember(String(event.target.checked))
+                          setValue('remember', event.target.checked)
+                        }}
+                      />
+                    )}
                   />
                 }
                 label="Remember me"

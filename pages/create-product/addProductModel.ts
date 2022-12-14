@@ -4,19 +4,19 @@ export interface DropdownDataType {
   //   logo: string
 }
 
-export interface AddFormInput {
-  name: string
-  brand: number
-  manufacturer: number
-  unit_type: string
-  price: number
-  quantity: number
-  category: number
+// export interface AddFormInput {
+//   name: string
+//   brand: number
+//   manufacturer: number
+//   unit_type: string
+//   price: number
+//   quantity: number
+//   category: number
 
-  description: string
-  images: string[]
-  thumbnail: string
-}
+//   description: string
+//   images: string[]
+//   thumbnail: string
+// }
 
 export interface CreateProductDataType {
   name: string
@@ -27,15 +27,16 @@ export interface CreateProductDataType {
   quantity: number
   category: number
   description: string
+  longDescription: string
   thumbnail: string
   images: string[]
   warehouse: number
   distribution_channel: number
 }
 
-export interface RegisterResponseType {
-  data: AddFormInput
-}
+// export interface RegisterResponseType {
+//   data: AddFormInput
+// }
 
 export interface ProductCategoryType {
   id: number
@@ -46,23 +47,23 @@ export interface ProductCategoryType {
   parent_category: ProductCategoryType
 }
 
-export interface WarehouseType {
+export interface DistributionType {
   id: number
   name: string
   code: string
 }
-export interface WarehouseResponseType {
-  data: WarehouseType[]
+export interface DistributionResponseType {
+  data: DistributionType[]
   errors?: any
 }
-export interface OrganizationType {
+export interface WarehouseType {
   id: number
   name: string
   is_active: boolean
   address: string
 }
-export interface OrganizationResponseType {
-  data: OrganizationType[]
+export interface WarehouseResponseType {
+  data: WarehouseType[]
   errors?: any
 }
 
