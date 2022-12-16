@@ -120,7 +120,7 @@ const Login: NextPageWithLayout = () => {
   })
   const dispatch = useAppDispatch()
   const [isRemember, setIsRemember] = useState<string>(
-    localStorage.getItem('isRemember') || ''
+    localStorage.getItem('isRemember') as string
   )
 
   const onSubmit = (values: any) => {
