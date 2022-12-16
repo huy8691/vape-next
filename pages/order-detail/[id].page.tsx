@@ -228,6 +228,8 @@ const OrderDetail: NextPageWithLayout = () => {
   const handleConfirmUpdateStatus = () => {
     try {
       dispatch(loadingActions.doLoading())
+
+      console.log('3333', optionStatus[selectedIndex].text)
       updateOrderDetail(
         router.query?.id as string,
         optionStatus[selectedIndex].text
@@ -240,11 +242,11 @@ const OrderDetail: NextPageWithLayout = () => {
         })
         .catch(() => {
           dispatch(loadingActions.doLoadingFailure())
-          setSelectedIndex(
-            optionStatus.findIndex(
-              (item) => item.text === stateOrderDetail?.status
-            )
-          )
+          // setSelectedIndex(
+          //   optionStatus.findIndex(
+          //     (item) => item.text === stateOrderDetail?.status
+          //   )
+          // )
           dispatch(
             notificationActions.doNotification({
               message: 'Some items in your order were invalid',
