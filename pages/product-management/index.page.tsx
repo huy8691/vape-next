@@ -33,6 +33,10 @@ import { isEmptyObject, objToStringParam } from 'src/utils/global.utils'
 import { MenuItemSelectCustom, SelectCustom } from 'src/components'
 import classes from './styles.module.scss'
 import Link from 'next/link'
+
+// other
+import ImageDefault from 'public/images/logo.svg'
+
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '3.2rem',
   fontWeight: '600',
@@ -207,7 +211,7 @@ const ListProduct: NextPageWithLayout = () => {
                       <Image
                         alt="icon previous page"
                         objectFit="contain"
-                        src={item.thumbnail}
+                        src={item.thumbnail || ImageDefault}
                         width={100}
                         height={100}
                       ></Image>

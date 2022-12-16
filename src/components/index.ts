@@ -8,6 +8,7 @@ import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
+import Typography from '@mui/material/Typography'
 // import LoadingButton from '@mui/lab/LoadingButton'
 
 // import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles'
@@ -105,6 +106,26 @@ const MenuItemSelectCustom = styled(MenuItem)({
   fontSize: '1.4rem',
 })
 
+const TextFieldSearchCustom = styled(TextFieldCustom)(({ theme }) => ({
+  '& .MuiInputBase-input': {
+    padding: '8px 45px 8px 15px',
+    textOverflow: 'ellipsis',
+    backgroundColor:
+      theme.palette.mode === 'light' ? '#ffffff' : theme.palette.action.hover,
+  },
+}))
+
+const TypographyTitlePage = styled(Typography)(() => ({
+  fontSize: '2rem',
+  fontWeight: '500',
+}))
+
+const SelectPaginationCustom = styled(SelectCustom)(() => ({
+  '& .MuiOutlinedInput-input': {
+    padding: '7px 10px',
+  },
+}))
+
 export {
   ActiveLink,
   ButtonCustom,
@@ -116,5 +137,7 @@ export {
   ComponentFileUploader,
   TextFieldPasswordCustom,
   ItemProduct,
-  // LoadingButtonCustom,
+  TextFieldSearchCustom,
+  TypographyTitlePage,
+  SelectPaginationCustom,
 }

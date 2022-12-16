@@ -23,6 +23,7 @@ import {
   At,
   Factory,
   ShoppingCart,
+  GitBranch,
 } from 'phosphor-react'
 // other
 
@@ -54,6 +55,11 @@ const Menu = [
     icon: <ShoppingCart size={24} />,
     text: 'Order',
     link: '/order-management',
+  },
+  {
+    icon: <GitBranch size={24} />,
+    text: 'Distribution channel',
+    link: '/distribution-channel',
   },
 ]
 
