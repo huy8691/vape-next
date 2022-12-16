@@ -46,7 +46,6 @@ const nextConfig = {
       },
     ]
   },
-  distDir: 'build',
   output: 'standalone',
 }
 
