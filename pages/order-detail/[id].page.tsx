@@ -30,6 +30,9 @@ import { formatMoney } from 'src/utils/money.utils'
 import Image from 'next/image'
 import classes from './styles.module.scss'
 
+// other
+import ImageDefault from 'public/images/logo.svg'
+
 const TypographyH2 = styled(Typography)(({ theme }) => ({
   fontSize: '3.2rem',
   fontWeight: '600',
@@ -316,10 +319,10 @@ const OrderDetail: NextPageWithLayout = () => {
                                 <a>
                                   <Image
                                     alt="product-image"
-                                    src={items.thumbnail}
+                                    src={items.thumbnail || ImageDefault}
                                     width={100}
                                     height={100}
-                                  ></Image>
+                                  />
                                 </a>
                               </Link>
                             </div>

@@ -14,7 +14,7 @@ const verifyCartItem = (value: VerifyArrayCartItem): Promise<AxiosResponse> => {
 
 const createOrderItem = (value: CreateOrderType): Promise<AxiosResponse> => {
   return callAPIWithToken({
-    url: `/api/merchant/order/`,
+    url: `/api/order/`,
     method: 'post',
     data: value,
   })

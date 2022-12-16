@@ -81,6 +81,7 @@ const DistributionChannel: NextPageWithLayout = () => {
 
   //pagination
   const handleChangePagination = (e: any, page: number) => {
+    console.log(e)
     router.replace({
       search: `${objToStringParam({
         ...router.query,

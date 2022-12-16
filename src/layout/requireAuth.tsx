@@ -19,6 +19,7 @@ const RequireAuth: React.FC<{
   const refreshToken: string = Cookies.get('refreshToken') || ''
   const [mounted, setMounted] = useState<boolean>(false)
   useEffect(() => {
+    console.log('5555')
     if (!token) {
       router.replace('/login')
     } else {

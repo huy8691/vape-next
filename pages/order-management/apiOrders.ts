@@ -12,7 +12,7 @@ const getOrders = (
 ): Promise<AxiosResponse<OrderListDataResponseType>> => {
   // console.log('🚀 ~ file: apiOrders.ts ~ line 7 ~ params', params)
   return callAPIWithToken({
-    url: `/api/merchant/order/`,
+    url: `/api/order/`,
     method: 'get',
     params: {
       // status: params ? params.status : null,
