@@ -215,9 +215,6 @@ const OrderManageMent: NextPageWithLayout = () => {
             console.log('here', sliceAsPathStatusFilter)
 
             setValueTab(StatusFilterType[sliceAsPathStatusFilter])
-            // if (sliceAsPathStatusFilter === StatusFilterType[1]) {
-            //   setValueTab(1)
-            // }
           } else {
             setValueTab(0)
           }
@@ -240,9 +237,11 @@ const OrderManageMent: NextPageWithLayout = () => {
     }
     if (router.asPath === '/order-management') {
       dispatch(loadingActions.doLoading())
+      setDataOrders(undefined)
       getOrders({ page: 1 })
         .then((res) => {
           const data = res.data
+
           setValue('search', '')
           setDataOrders(data)
           dispatch(loadingActions.doLoadingSuccess())

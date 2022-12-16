@@ -30,8 +30,8 @@ export interface CreateProductDataType {
   longDescription: string
   thumbnail: string
   images: string[]
-  warehouse: number
-  distribution_channel: number
+  warehouse: any
+  distribution_channel: any
 }
 
 // export interface RegisterResponseType {

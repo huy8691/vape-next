@@ -11,11 +11,13 @@ const schema = Yup.object().shape({
   price: Yup.number()
     .required('Price is a required field')
     .positive('Price must be a positive number')
+    .typeError('Price must be a number')
     .min(1)
     .max(10000000),
   quantity: Yup.number()
     .required('Quantity is a required field')
     .positive('Quantity must be a positive number')
+    .typeError('Quantity must be a number')
     .min(1)
     .max(10000000),
   description: Yup.string()
@@ -26,9 +28,10 @@ const schema = Yup.object().shape({
     .required('Long description is a required field')
     .min(20)
     .max(500),
-  category: Yup.number().required(),
-  warehouse: Yup.number().required(),
-  distribution_channel: Yup.number().required(),
+  // warehouse: Yup.number(),
+  // distribution_channel: Yup.number(),
+
+  // distribution_channel: Yup.number().required(),
   // child_category: Yup.number().when('category', {
   //   is: '2',
   //   then: Yup.number().required(),

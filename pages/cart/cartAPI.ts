@@ -12,7 +12,7 @@ const getInstockAPI = (
   params: number
 ): Promise<AxiosResponse<InstockResponseType>> => {
   return callAPIWithToken({
-    url: `/api/customer/stock-item/${params}`,
+    url: `/api/merchant/stock-item/${params}`,
     method: 'get',
   })
 }

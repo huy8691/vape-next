@@ -66,7 +66,8 @@ const createManufacturer = (
 }
 const getWareHouse = (): Promise<AxiosResponse<WarehouseResponseType>> => {
   return callAPIWithToken({
-    url: `api/supplier/warehouse/`,
+    // url: `api/supplier/warehouse/`,
+    url: `api/warehouse/`,
     method: 'get',
   })
 }

@@ -2,6 +2,8 @@ import {
   Box,
   FormControl,
   FormHelperText,
+  InputAdornment,
+
   // IconButton,
   ListSubheader,
   Stack,
@@ -33,11 +35,13 @@ import {
   // AddFormInput,
   CreateProductDataType,
   DistributionType,
+  // DistributionType,
   DropdownDataType,
   ProductBrandType,
   ProductCategoryType,
   ProductManufacturerType,
   WarehouseType,
+  // WarehouseType,
 } from './addProductModel'
 
 //react-quill
@@ -85,24 +89,6 @@ const CustomStack = styled(Stack)(({ theme }) => ({
     theme.palette.mode === 'dark' ? theme.palette.action.hover : '#F8F9FC',
 }))
 
-// const IconButtonCustom = styled(IconButton)(({ theme }) => ({
-//   border:
-//     theme.palette.mode === 'dark'
-//       ? '1px solid rgba(255, 255, 255, 0.23)'
-//       : '1px solid #E1E6EF',
-//   borderRadius: '10px',
-//   padding: '5px',
-//   backgroundColor:
-//     theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : '#fff',
-//   marginBottom: '5px',
-//   marginLeft: '10px',
-//   '& span': {
-//     fontSize: '1.6rem',
-//     color:
-//       theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.23)' : '#49516F',
-//   },
-// }))
-
 const unitTypeArray: DropdownDataType[] = [
   {
     id: 1,
@@ -122,19 +108,12 @@ const CreateProduct: NextPageWithLayout = () => {
   const [stateListBrand, setStateListBrand] = useState<ProductBrandType[]>()
   const [stateListManufacturer, setStateListManufacturer] =
     useState<ProductManufacturerType[]>()
-  // const [stateOpenModalAddBrand, setStateOpenModalAddBrand] = useState(false)
-  // const [stateOpenModalManufacturer, setStateOpenModalManufacturer] =
-  //   useState(false)
-  const [stateListWarehouse, setStateListWarehouse] =
-    useState<WarehouseType[]>()
-  const [stateDistribution, setStateDistribution] =
-    useState<DistributionType[]>()
-  // const handleCloseModalAddBrand = () => setStateOpenModalAddBrand(false)
-  // const handleOpenModalAddBrand = () => setStateOpenModalAddBrand(true)
-  // const handleCloseModalAddManufacturer = () =>
-  //   setStateOpenModalManufacturer(false)
-  // const handleOpenModalAddManufacturer = () =>
-  //   setStateOpenModalManufacturer(true)
+  const [stateListWarehouse, setStateListWarehouse] = useState<WarehouseType[]>(
+    []
+  )
+  const [stateListDistribution, setStateListDistribution] = useState<
+    DistributionType[]
+  >([])
 
   // const router = useRouter()
   const dispatch = useAppDispatch()
@@ -155,18 +134,8 @@ const CreateProduct: NextPageWithLayout = () => {
     mode: 'all',
   })
 
-  // const {
-  //   handleSubmit: handleSubmitBrand,
-  //   control: brandControl,
-  //   formState: { errors: errorsBrand },
-  // } = useForm<AddBrandType>({
-  //   resolver: yupResolver(brandSchema),
-  //   mode: 'all',
-  // })
-
   const onSubmit = (values: CreateProductDataType) => {
     console.log('here', values)
-
     const addProduct: CreateProductDataType = {
       name: values.name,
       brand: values.brand,
@@ -179,8 +148,8 @@ const CreateProduct: NextPageWithLayout = () => {
       category: values.category,
       thumbnail: values.thumbnail,
       images: values.images,
-      warehouse: values.warehouse,
-      distribution_channel: values.distribution_channel,
+      warehouse: stateListWarehouse[0].id,
+      distribution_channel: stateListDistribution[0].id,
     }
 
     dispatch(loadingActions.doLoading())
@@ -192,7 +161,14 @@ const CreateProduct: NextPageWithLayout = () => {
             message: 'Successfully',
           })
         )
-        reset()
+        reset({
+          name: '',
+          description: '',
+          longDescription: '',
+          quantity: 0,
+          thumbnail: '',
+          price: 0,
+        })
       })
       .catch(() => {
         dispatch(loadingActions.doLoadingFailure())
@@ -204,48 +180,6 @@ const CreateProduct: NextPageWithLayout = () => {
         )
       })
   }
-  // const onSubmitBrand = (values: AddBrandType) => {
-  //   console.log(values)
-  //   const addBrand: AddBrandType = {
-  //     name: values.name,
-  //     logo: 'https://vape-test.s3.ap-southeast-1.amazonaws.com/images/2022/9/23/767445.png',
-  //   }
-  //   dispatch(loadingActions.doLoading())
-
-  //   createBrand(addBrand)
-  //     .then(() => {
-  //       dispatch(loadingActions.doLoadingSuccess())
-  //       dispatch(
-  //         notificationActions.doNotification({
-  //           message: 'Successfully',
-  //         })
-  //       )
-
-  //       getProductBrand()
-  //         .then((res) => {
-  //           const { data } = res.data
-  //           setStateListBrand(data)
-  //         })
-  //         .catch((error) => {
-  //           console.log(error)
-  //           dispatch(
-  //             notificationActions.doNotification({
-  //               message: 'Error',
-  //               type: 'error',
-  //             })
-  //           )
-  //         })
-  //     })
-  //     .catch(() => {
-  //       dispatch(loadingActions.doLoadingFailure())
-  //       dispatch(
-  //         notificationActions.doNotification({
-  //           message: 'Error',
-  //           type: 'error',
-  //         })
-  //       )
-  //     })
-  // }
 
   useEffect(() => {
     register('longDescription', { required: true, minLength: 11 })
@@ -260,7 +194,7 @@ const CreateProduct: NextPageWithLayout = () => {
 
   useEffect(() => {
     // dispatch(loadingActions.doLoading())
-
+    setValue('unit_type', 'UNIT')
     getProductCategory()
       .then((res) => {
         const { data } = res.data
@@ -307,7 +241,8 @@ const CreateProduct: NextPageWithLayout = () => {
       .then((res) => {
         const { data } = res.data
         setStateListWarehouse(data)
-        // console.log(data)
+        console.log('data', data)
+        setValue('warehouse', data[0])
         dispatch(
           notificationActions.doNotification({
             message: 'Success',
@@ -325,8 +260,9 @@ const CreateProduct: NextPageWithLayout = () => {
     getDistribution()
       .then((res) => {
         const { data } = res.data
-        setStateDistribution(data)
+        setStateListDistribution(data)
         console.log(data)
+        setValue('distribution_channel', data[0])
         dispatch(
           notificationActions.doNotification({
             message: 'Success',
@@ -343,26 +279,6 @@ const CreateProduct: NextPageWithLayout = () => {
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  // const renderDOM = () => {
-  //   let array = []
-  //   const cloneData = JSON.parse(JSON.stringify(stateListCategory))
-  //   cloneData.forEach((item: any) => {
-  //     if (item.child_category.length > 0) {
-  //       array.push({
-  //         item,
-  //       })
-  //     }
-  //     if (item.parent_category) {
-  //       array.push({
-  //         parent_category: {
-  //           id: 22,
-  //           name: 'Cape',
-  //         },
-  //       })
-  //     }
-  //   })
-  // }
 
   return (
     <>
@@ -418,119 +334,233 @@ const CreateProduct: NextPageWithLayout = () => {
             {/* <CustomImageBox></CustomImageBox> */}
           </Stack>
         </CustomStack>
+
         <CustomStack spacing={2}>
-          <CustomBox>
-            <Grid container columnSpacing={3} rowSpacing={2}>
-              <Grid xs={12}>
-                <Controller
-                  control={control}
-                  name="name"
-                  render={({ field }) => (
-                    <>
-                      <Stack direction="row" alignItems="center" height={33}>
-                        <InputLabelCustom
-                          htmlFor="product_name"
-                          error={!!errors.name}
-                        >
-                          Product name
-                        </InputLabelCustom>
-                      </Stack>
-
-                      <FormControl fullWidth>
-                        <TextFieldCustom
-                          id="product_name"
-                          placeholder="Enter product name"
-                          error={!!errors.name}
-                          {...field}
-                        />
-                        <FormHelperText error={!!errors.name}>
-                          {errors.name && `${errors.name.message}`}
-                        </FormHelperText>
-                      </FormControl>
-                    </>
-                  )}
-                />
-              </Grid>
-
-              <Grid xs={6}>
-                <Box>
-                  <Controller
-                    control={control}
-                    name="category"
-                    render={({ field }) => (
-                      <>
-                        <InputLabelCustom
-                          htmlFor="category"
-                          error={!!errors.category}
-                        >
-                          Category
-                        </InputLabelCustom>
-                        <FormControl fullWidth>
-                          <SelectCustom
-                            id="category"
-                            displayEmpty
-                            IconComponent={() => <KeyboardArrowDownIcon />}
-                            {...field}
-                            renderValue={(value: any) => {
-                              // console.log('aaaa', stateListCategory)
-                              let nameValue = ''
-                              if (!value) {
-                                return (
-                                  <PlaceholderSelect>
-                                    <div>Select category</div>
-                                  </PlaceholderSelect>
-                                )
-                              }
-
-                              const itemSelected = stateListCategory?.find(
-                                (obj) => obj.id === value
-                              )
-
-                              if (itemSelected) {
-                                return itemSelected.name
-                              }
-
-                              stateListCategory?.forEach((item) => {
-                                const foundItem = item.child_category.find(
-                                  (_item) => _item.id === value
-                                )
-                                if (foundItem) {
-                                  nameValue = foundItem.name
-                                  return
-                                }
-                              })
-
-                              return nameValue
-                            }}
-                            onChange={(event: any) => {
-                              setValue('category', event.target.value)
-                            }}
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <CustomBox>
+                <Grid container columnSpacing={3} rowSpacing={2}>
+                  <Grid xs={12}>
+                    <Controller
+                      control={control}
+                      name="name"
+                      defaultValue=""
+                      render={({ field }) => (
+                        <>
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            height={33}
                           >
-                            {stateListCategory?.map((item, index) => {
-                              if (item.child_category.length > 0) {
-                                const listChild = item.child_category.map(
-                                  (childItem) => {
+                            <InputLabelCustom
+                              required
+                              htmlFor="product_name"
+                              error={!!errors.name}
+                            >
+                              Product name
+                            </InputLabelCustom>
+                          </Stack>
+                          <FormControl fullWidth>
+                            <TextFieldCustom
+                              id="product_name"
+                              placeholder="Enter product name"
+                              error={!!errors.name}
+                              {...field}
+                            />
+                            <FormHelperText error={!!errors.name}>
+                              {errors.name && `${errors.name.message}`}
+                            </FormHelperText>
+                          </FormControl>
+                        </>
+                      )}
+                    />
+                  </Grid>
+                  <Grid xs={12}>
+                    <Controller
+                      control={control}
+                      name="price"
+                      defaultValue={0}
+                      render={({ field }) => (
+                        <>
+                          <InputLabelCustom
+                            htmlFor="price"
+                            required
+                            error={!!errors.price}
+                          >
+                            Price
+                          </InputLabelCustom>
+                          <FormControl fullWidth>
+                            <TextFieldCustom
+                              id="price"
+                              placeholder="Enter price"
+                              type="number"
+                              inputProps={{ min: 0, max: 1000000 }}
+                              error={!!errors.price}
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    $
+                                  </InputAdornment>
+                                ),
+                              }}
+                              className={classes['input-number']}
+                              onKeyPress={(event) => {
+                                if (hasSpecialCharacter(event.key)) {
+                                  event.preventDefault()
+                                }
+                              }}
+                              {...field}
+                            />
+
+                            <FormHelperText error={!!errors.price}>
+                              {errors.price && `${errors.price.message}`}
+                            </FormHelperText>
+                          </FormControl>
+                        </>
+                      )}
+                    />
+                  </Grid>
+                  <Grid xs={6}>
+                    <Box>
+                      <Controller
+                        control={control}
+                        name="category"
+                        defaultValue={0}
+                        render={({ field }) => (
+                          <>
+                            <InputLabelCustom
+                              htmlFor="category"
+                              error={!!errors.category}
+                            >
+                              Category
+                            </InputLabelCustom>
+                            <FormControl fullWidth>
+                              <SelectCustom
+                                id="category"
+                                displayEmpty
+                                IconComponent={() => <KeyboardArrowDownIcon />}
+                                {...field}
+                                renderValue={(value: any) => {
+                                  // console.log('aaaa', stateListCategory)
+                                  let nameValue = ''
+                                  if (!value) {
+                                    return (
+                                      <PlaceholderSelect>
+                                        <div>Select category</div>
+                                      </PlaceholderSelect>
+                                    )
+                                  }
+                                  const itemSelected = stateListCategory?.find(
+                                    (obj) => obj.id === value
+                                  )
+                                  if (itemSelected) {
+                                    return itemSelected.name
+                                  }
+                                  stateListCategory?.forEach((item) => {
+                                    const foundItem = item.child_category.find(
+                                      (_item) => _item.id === value
+                                    )
+                                    if (foundItem) {
+                                      nameValue = foundItem.name
+                                      return
+                                    }
+                                  })
+                                  return nameValue
+                                }}
+                                onChange={(event: any) => {
+                                  setValue('category', event.target.value)
+                                }}
+                              >
+                                {stateListCategory?.map((item, index) => {
+                                  if (item.child_category.length > 0) {
+                                    const listChild = item.child_category.map(
+                                      (childItem) => {
+                                        return (
+                                          <MenuItemSelectCustom
+                                            value={childItem.id}
+                                            key={index + Math.random()}
+                                            sx={{ marginLeft: '15px' }}
+                                          >
+                                            {childItem.name}
+                                          </MenuItemSelectCustom>
+                                        )
+                                      }
+                                    )
+                                    return [
+                                      <ListSubheader
+                                        key={index + Math.random()}
+                                        sx={{ fontStyle: 'italic' }}
+                                      >
+                                        {item.name}
+                                      </ListSubheader>,
+                                      listChild,
+                                    ]
+                                  } else {
                                     return (
                                       <MenuItemSelectCustom
-                                        value={childItem.id}
+                                        value={item.id}
                                         key={index + Math.random()}
-                                        sx={{ marginLeft: '15px' }}
                                       >
-                                        {childItem.name}
+                                        {item.name}
                                       </MenuItemSelectCustom>
                                     )
                                   }
-                                )
-                                return [
-                                  <ListSubheader
-                                    key={index + Math.random()}
-                                    sx={{ fontStyle: 'italic' }}
-                                  >
-                                    {item.name}
-                                  </ListSubheader>,
-                                  listChild,
-                                ]
-                              } else {
+                                })}
+                              </SelectCustom>
+                              <FormHelperText error={!!errors.category}>
+                                {errors.category &&
+                                  `${errors.category.message}`}
+                              </FormHelperText>
+                            </FormControl>
+                          </>
+                        )}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid xs={6}>
+                    <Controller
+                      control={control}
+                      name="manufacturer"
+                      defaultValue={0}
+                      render={({ field }) => (
+                        <>
+                          <Stack direction="row" alignItems="center">
+                            <InputLabelCustom
+                              htmlFor="manufacturer"
+                              error={!!errors.manufacturer}
+                            >
+                              Manufacturer
+                            </InputLabelCustom>
+                            {/* <IconButtonCustom
+                              onClick={handleOpenModalAddManufacturer}
+                            >
+                              <span className="icon-icon-edit"></span>
+                            </IconButtonCustom> */}
+                          </Stack>
+                          <FormControl fullWidth>
+                            <SelectCustom
+                              id="manufacturer"
+                              displayEmpty
+                              IconComponent={() => <KeyboardArrowDownIcon />}
+                              renderValue={(value: any) => {
+                                if (!value) {
+                                  return (
+                                    <PlaceholderSelect>
+                                      <div>Select manufacturer</div>
+                                    </PlaceholderSelect>
+                                  )
+                                }
+                                return stateListManufacturer?.find(
+                                  (obj) => obj.id === value
+                                )?.name
+                              }}
+                              {...field}
+                              onChange={(event: any) => {
+                                setValue('manufacturer', event.target.value)
+                                // trigger('monthly_purchase')
+                              }}
+                            >
+                              {stateListManufacturer?.map((item, index) => {
                                 return (
                                   <MenuItemSelectCustom
                                     value={item.id}
@@ -539,407 +569,303 @@ const CreateProduct: NextPageWithLayout = () => {
                                     {item.name}
                                   </MenuItemSelectCustom>
                                 )
-                              }
-                            })}
-                          </SelectCustom>
-                          <FormHelperText error={!!errors.category}>
-                            {errors.category && `${errors.category.message}`}
-                          </FormHelperText>
-                        </FormControl>
-                      </>
-                    )}
-                  />
-                </Box>
-              </Grid>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="manufacturer"
-                  render={({ field }) => (
-                    <>
-                      <Stack direction="row" alignItems="center">
-                        <InputLabelCustom
-                          htmlFor="manufacturer"
-                          error={!!errors.manufacturer}
-                        >
-                          Manufacturer
-                        </InputLabelCustom>
-
-                        {/* <IconButtonCustom
-                          onClick={handleOpenModalAddManufacturer}
-                        >
-                          <span className="icon-icon-edit"></span>
-                        </IconButtonCustom> */}
-                      </Stack>
-
-                      <FormControl fullWidth>
-                        <SelectCustom
-                          id="manufacturer"
-                          displayEmpty
-                          IconComponent={() => <KeyboardArrowDownIcon />}
-                          renderValue={(value: any) => {
-                            if (!value) {
-                              return (
-                                <PlaceholderSelect>
-                                  <div>Select manufacturer</div>
-                                </PlaceholderSelect>
-                              )
-                            }
-                            return stateListManufacturer?.find(
-                              (obj) => obj.id === value
-                            )?.name
-                          }}
-                          {...field}
-                          onChange={(event: any) => {
-                            setValue('manufacturer', event.target.value)
-                            // trigger('monthly_purchase')
-                          }}
-                        >
-                          {stateListManufacturer?.map((item, index) => {
-                            return (
-                              <MenuItemSelectCustom
-                                value={item.id}
-                                key={index + Math.random()}
+                              })}
+                            </SelectCustom>
+                            <FormHelperText error={!!errors.manufacturer}>
+                              {errors.manufacturer &&
+                                `${errors.manufacturer.message}`}
+                            </FormHelperText>
+                          </FormControl>
+                        </>
+                      )}
+                    />
+                  </Grid>
+                  <Grid xs={6}>
+                    <Controller
+                      control={control}
+                      name="brand"
+                      defaultValue={0}
+                      render={({ field }) => (
+                        <>
+                          <Stack direction="row" alignItems="center">
+                            <InputLabelCustom
+                              htmlFor="brand"
+                              error={!!errors.brand}
+                            >
+                              Brand
+                            </InputLabelCustom>
+                            {/* <IconButtonCustom onClick={handleOpenModalAddBrand}>
+                              <span className="icon-icon-edit"></span>
+                            </IconButtonCustom> */}
+                          </Stack>
+                          <FormControl fullWidth>
+                            <SelectCustom
+                              id="brand"
+                              displayEmpty
+                              defaultValue=""
+                              IconComponent={() => <KeyboardArrowDownIcon />}
+                              renderValue={(value: any) => {
+                                if (value === '') {
+                                  return (
+                                    <PlaceholderSelect>
+                                      <div>Select brand</div>
+                                    </PlaceholderSelect>
+                                  )
+                                }
+                                return stateListBrand?.find(
+                                  (obj) => obj.id === value
+                                )?.name
+                              }}
+                              {...field}
+                              onChange={(event: any) => {
+                                setValue('brand', event.target.value)
+                                // trigger('monthly_purchase')
+                              }}
+                            >
+                              {stateListBrand?.map((item, index) => {
+                                return (
+                                  <MenuItemSelectCustom
+                                    value={item.id}
+                                    key={index + Math.random()}
+                                  >
+                                    {item.name}
+                                  </MenuItemSelectCustom>
+                                )
+                              })}
+                            </SelectCustom>
+                            <FormHelperText error={!!errors.brand}>
+                              {errors.brand && `${errors.brand.message}`}
+                            </FormHelperText>
+                          </FormControl>
+                        </>
+                      )}
+                    />
+                  </Grid>
+                  <Grid xs={6}>
+                    <Controller
+                      control={control}
+                      name="unit_type"
+                      defaultValue=""
+                      render={({ field }) => (
+                        <>
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            height={33}
+                          >
+                            <InputLabelCustom
+                              htmlFor="unit_type"
+                              error={!!errors.unit_type}
+                            >
+                              Unit type
+                            </InputLabelCustom>
+                          </Stack>
+                          <FormControl fullWidth>
+                            <SelectCustom
+                              id="unit_type"
+                              displayEmpty
+                              IconComponent={() => <KeyboardArrowDownIcon />}
+                              renderValue={(value: any) => {
+                                console.log('unit_type', value)
+                                if (!value) {
+                                  return (
+                                    <PlaceholderSelect>
+                                      <div>Select unit type</div>
+                                    </PlaceholderSelect>
+                                  )
+                                }
+                                return unitTypeArray?.find(
+                                  (obj) => obj.name === value
+                                )?.name
+                              }}
+                              {...field}
+                              onChange={(event: any) => {
+                                setValue('unit_type', event.target.value)
+                              }}
+                            >
+                              {unitTypeArray?.map((item, index) => {
+                                return (
+                                  <MenuItemSelectCustom
+                                    value={item.name}
+                                    key={index + Math.random()}
+                                  >
+                                    {item.name}
+                                  </MenuItemSelectCustom>
+                                )
+                              })}
+                            </SelectCustom>
+                            <FormHelperText error={!!errors.unit_type}>
+                              {errors.unit_type &&
+                                `${errors.unit_type.message}`}
+                            </FormHelperText>
+                          </FormControl>
+                        </>
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+              </CustomBox>
+            </Grid>
+            <Grid xs={6}>
+              <CustomBox mb={2}>
+                <Grid container spacing={2}>
+                  <Grid xs={6}>
+                    <Controller
+                      control={control}
+                      name="warehouse"
+                      defaultValue=""
+                      render={({ field }) => {
+                        return (
+                          <>
+                            <Stack direction="row" alignItems="center">
+                              <InputLabelCustom
+                                htmlFor="warehouse"
+                                error={!!errors.warehouse}
                               >
-                                {item.name}
-                              </MenuItemSelectCustom>
-                            )
-                          })}
-                        </SelectCustom>
-                        <FormHelperText error={!!errors.manufacturer}>
-                          {errors.manufacturer &&
-                            `${errors.manufacturer.message}`}
-                        </FormHelperText>
-                      </FormControl>
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="brand"
-                  render={({ field }) => (
-                    <>
-                      <Stack direction="row" alignItems="center">
-                        <InputLabelCustom
-                          htmlFor="brand"
-                          error={!!errors.brand}
-                        >
-                          Brand
-                        </InputLabelCustom>
+                                Warehouse
+                              </InputLabelCustom>
+                            </Stack>
+                            <FormControl fullWidth disabled>
+                              <SelectCustom
+                                id="warehouse"
+                                displayEmpty
+                                sx={{ background: '#F6F6F6' }}
+                                IconComponent={() => (
+                                  <KeyboardArrowDownIcon
+                                    sx={{ color: 'transparent' }}
+                                  />
+                                )}
+                                renderValue={(value: any) => {
+                                  return (
+                                    <PlaceholderSelect>
+                                      <div>{value.name}</div>
+                                    </PlaceholderSelect>
+                                  )
+                                }}
+                                {...field}
+                              ></SelectCustom>
 
-                        {/* <IconButtonCustom onClick={handleOpenModalAddBrand}>
-                          <span className="icon-icon-edit"></span>
-                        </IconButtonCustom> */}
-                      </Stack>
-                      <FormControl fullWidth>
-                        <SelectCustom
-                          id="brand"
-                          displayEmpty
-                          defaultValue=""
-                          IconComponent={() => <KeyboardArrowDownIcon />}
-                          renderValue={(value: any) => {
-                            if (value === '') {
-                              return (
-                                <PlaceholderSelect>
-                                  <div>Select brand</div>
-                                </PlaceholderSelect>
-                              )
-                            }
-                            return stateListBrand?.find(
-                              (obj) => obj.id === value
-                            )?.name
-                          }}
-                          {...field}
-                          onChange={(event: any) => {
-                            setValue('brand', event.target.value)
-                            // trigger('monthly_purchase')
-                          }}
-                        >
-                          {stateListBrand?.map((item, index) => {
-                            return (
-                              <MenuItemSelectCustom
-                                value={item.id}
-                                key={index + Math.random()}
+                              <FormHelperText error={!!errors.warehouse}>
+                                {errors.warehouse &&
+                                  `${errors.warehouse.message}`}
+                              </FormHelperText>
+                            </FormControl>
+                          </>
+                        )
+                      }}
+                    />
+                  </Grid>
+                  <Grid xs={6}>
+                    <Controller
+                      control={control}
+                      name="quantity"
+                      defaultValue={0}
+                      render={({ field }) => (
+                        <>
+                          <InputLabelCustom
+                            htmlFor="quantity"
+                            required
+                            error={!!errors.price}
+                          >
+                            Quantity
+                          </InputLabelCustom>
+                          <FormControl fullWidth>
+                            <TextFieldCustom
+                              id="quantity"
+                              placeholder="Enter quantity"
+                              type="number"
+                              error={!!errors.price}
+                              className={classes['input-number']}
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    {watch('unit_type')}
+                                  </InputAdornment>
+                                ),
+                              }}
+                              onKeyPress={(event) => {
+                                if (hasSpecialCharacter(event.key)) {
+                                  event.preventDefault()
+                                }
+                              }}
+                              {...field}
+                            />
+                            <FormHelperText error={!!errors.quantity}>
+                              {errors.quantity && `${errors.quantity.message}`}
+                            </FormHelperText>
+                          </FormControl>
+                        </>
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+              </CustomBox>
+              <CustomBox>
+                <Grid container>
+                  <Grid xs={12}>
+                    <Controller
+                      control={control}
+                      name="distribution_channel"
+                      defaultValue=""
+                      render={({ field }) => {
+                        return (
+                          <>
+                            <Stack direction="row" alignItems="center">
+                              <InputLabelCustom
+                                htmlFor="distribution_channel"
+                                error={!!errors.distribution_channel}
                               >
-                                {item.name}
-                              </MenuItemSelectCustom>
-                            )
-                          })}
-                        </SelectCustom>
-                        <FormHelperText error={!!errors.brand}>
-                          {errors.brand && `${errors.brand.message}`}
-                        </FormHelperText>
-                      </FormControl>
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid xs={6}>
+                                Distribution channel
+                              </InputLabelCustom>
+                            </Stack>
+                            <FormControl fullWidth disabled>
+                              <SelectCustom
+                                {...field}
+                                sx={{ background: '#F6F6F6' }}
+                                IconComponent={() => (
+                                  <KeyboardArrowDownIcon
+                                    sx={{ color: 'transparent' }}
+                                  />
+                                )}
+                                renderValue={(value: any) => {
+                                  console.log('hehehe', value)
+                                  return (
+                                    <PlaceholderSelect>
+                                      <div>{value.name}</div>
+                                    </PlaceholderSelect>
+                                  )
+                                }}
+                              ></SelectCustom>
+
+                              <FormHelperText
+                                error={!!errors.distribution_channel}
+                              >
+                                {errors.distribution_channel &&
+                                  `${errors.distribution_channel.message}`}
+                              </FormHelperText>
+                            </FormControl>
+                          </>
+                        )
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </CustomBox>
+            </Grid>
+          </Grid>
+          <CustomBox>
+            <Grid container columnSpacing={3} rowSpacing={2}>
+              <Grid xs={12}>
                 <Controller
                   control={control}
-                  name="unit_type"
+                  name="description"
                   defaultValue=""
                   render={({ field }) => (
                     <>
                       <Stack direction="row" alignItems="center" height={33}>
                         <InputLabelCustom
-                          htmlFor="unit_type"
-                          error={!!errors.unit_type}
-                        >
-                          Unit type
-                        </InputLabelCustom>
-                      </Stack>
-
-                      <FormControl fullWidth>
-                        <SelectCustom
-                          id="unit_type"
-                          displayEmpty
-                          IconComponent={() => <KeyboardArrowDownIcon />}
-                          renderValue={(value: any) => {
-                            if (!value) {
-                              return (
-                                <PlaceholderSelect>
-                                  <div>Select unit type</div>
-                                </PlaceholderSelect>
-                              )
-                            }
-                            return unitTypeArray?.find(
-                              (obj) => obj.name === value
-                            )?.name
-                          }}
-                          {...field}
-                          onChange={(event: any) => {
-                            setValue('unit_type', event.target.value)
-                          }}
-                        >
-                          {unitTypeArray?.map((item, index) => {
-                            return (
-                              <MenuItemSelectCustom
-                                value={item.name}
-                                key={index + Math.random()}
-                              >
-                                {item.name}
-                              </MenuItemSelectCustom>
-                            )
-                          })}
-                        </SelectCustom>
-                        <FormHelperText error={!!errors.unit_type}>
-                          {errors.unit_type && `${errors.unit_type.message}`}
-                        </FormHelperText>
-                      </FormControl>
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="quantity"
-                  render={({ field }) => (
-                    <>
-                      <InputLabelCustom
-                        htmlFor="quantity"
-                        error={!!errors.price}
-                      >
-                        Quantity
-                      </InputLabelCustom>
-                      <FormControl fullWidth>
-                        <TextFieldCustom
-                          id="quantity"
-                          placeholder="Enter quantity"
-                          type="number"
-                          error={!!errors.price}
-                          className={classes['input-number']}
-                          onKeyPress={(event) => {
-                            if (hasSpecialCharacter(event.key)) {
-                              event.preventDefault()
-                            }
-                          }}
-                          {...field}
-                        />
-                        <FormHelperText error={!!errors.quantity}>
-                          {errors.quantity && `${errors.quantity.message}`}
-                        </FormHelperText>
-                      </FormControl>
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="price"
-                  render={({ field }) => (
-                    <>
-                      <InputLabelCustom htmlFor="price" error={!!errors.price}>
-                        Price
-                      </InputLabelCustom>
-                      <FormControl fullWidth>
-                        <TextFieldCustom
-                          id="price"
-                          placeholder="Enter price"
-                          type="number"
-                          error={!!errors.price}
-                          className={classes['input-number']}
-                          onKeyPress={(event) => {
-                            if (hasSpecialCharacter(event.key)) {
-                              event.preventDefault()
-                            }
-                          }}
-                          {...field}
-                        />
-                        <FormHelperText error={!!errors.price}>
-                          {errors.price && `${errors.price.message}`}
-                        </FormHelperText>
-                      </FormControl>
-                    </>
-                  )}
-                />
-              </Grid>
-            </Grid>
-          </CustomBox>
-          <CustomBox>
-            <Grid xs={6}>
-              <Controller
-                control={control}
-                name="warehouse"
-                render={({ field }) => (
-                  <>
-                    <Stack direction="row" alignItems="center">
-                      <InputLabelCustom
-                        htmlFor="warehouse"
-                        error={!!errors.warehouse}
-                      >
-                        Warehouse
-                      </InputLabelCustom>
-
-                      {/* <IconButtonCustom
-                          onClick={handleOpenModalAddManufacturer}
-                        >
-                          <span className="icon-icon-edit"></span>
-                        </IconButtonCustom> */}
-                    </Stack>
-
-                    <FormControl fullWidth>
-                      <SelectCustom
-                        id="warehouse"
-                        displayEmpty
-                        IconComponent={() => <KeyboardArrowDownIcon />}
-                        renderValue={(value: any) => {
-                          if (!value) {
-                            return (
-                              <PlaceholderSelect>
-                                <div>Select warehouse </div>
-                              </PlaceholderSelect>
-                            )
-                          }
-                          return stateListWarehouse?.find(
-                            (obj) => obj.id === value
-                          )?.name
-                        }}
-                        {...field}
-                        onChange={(event: any) => {
-                          setValue('warehouse', event.target.value)
-                          // trigger('monthly_purchase')
-                        }}
-                      >
-                        {stateListWarehouse?.map((item, index) => {
-                          return (
-                            <MenuItemSelectCustom
-                              value={item.id}
-                              key={index + Math.random()}
-                            >
-                              {item.name}
-                            </MenuItemSelectCustom>
-                          )
-                        })}
-                      </SelectCustom>
-                      <FormHelperText error={!!errors.warehouse}>
-                        {errors.warehouse && `${errors.warehouse.message}`}
-                      </FormHelperText>
-                    </FormControl>
-                  </>
-                )}
-              />
-            </Grid>
-            <Grid xs={6}>
-              <Controller
-                control={control}
-                name="distribution_channel"
-                render={({ field }) => (
-                  <>
-                    <Stack direction="row" alignItems="center">
-                      <InputLabelCustom
-                        htmlFor="distribution_channel"
-                        error={!!errors.distribution_channel}
-                      >
-                        Distribution channel
-                      </InputLabelCustom>
-
-                      {/* <IconButtonCustom
-                          onClick={handleOpenModalAddManufacturer}
-                        >
-                          <span className="icon-icon-edit"></span>
-                        </IconButtonCustom> */}
-                    </Stack>
-
-                    <FormControl fullWidth>
-                      <SelectCustom
-                        id="distribution_channel"
-                        displayEmpty
-                        IconComponent={() => <KeyboardArrowDownIcon />}
-                        renderValue={(value: any) => {
-                          if (!value) {
-                            return (
-                              <PlaceholderSelect>
-                                <div>Select Distribution channel</div>
-                              </PlaceholderSelect>
-                            )
-                          }
-                          return stateDistribution?.find(
-                            (obj) => obj.id === value
-                          )?.name
-                        }}
-                        {...field}
-                        onChange={(event: any) => {
-                          setValue('distribution_channel', event.target.value)
-                          // trigger('monthly_purchase')
-                        }}
-                      >
-                        {stateDistribution?.map((item, index) => {
-                          return (
-                            <MenuItemSelectCustom
-                              value={item.id}
-                              key={index + Math.random()}
-                            >
-                              {item.name}
-                            </MenuItemSelectCustom>
-                          )
-                        })}
-                      </SelectCustom>
-                      <FormHelperText error={!!errors.distribution_channel}>
-                        {errors.distribution_channel &&
-                          `${errors.distribution_channel.message}`}
-                      </FormHelperText>
-                    </FormControl>
-                  </>
-                )}
-              />
-            </Grid>
-          </CustomBox>
-          <CustomBox>
-            <Grid container columnSpacing={3}>
-              <Grid xs={12}>
-                <Controller
-                  control={control}
-                  name="description"
-                  render={({ field }) => (
-                    <>
-                      <Stack direction="row" alignItems="center" height={33}>
-                        <InputLabelCustom
                           htmlFor="description"
+                          required
                           error={!!errors.description}
                         >
                           Short description
@@ -968,13 +894,15 @@ const CreateProduct: NextPageWithLayout = () => {
                   <Controller
                     control={control}
                     name="longDescription"
+                    defaultValue=""
                     render={() => (
                       <>
                         <InputLabelCustom
                           htmlFor="longDescription"
+                          required
                           error={!!errors.longDescription}
                         >
-                          Overview
+                          Long description
                         </InputLabelCustom>
                         <FormControl
                           fullWidth
