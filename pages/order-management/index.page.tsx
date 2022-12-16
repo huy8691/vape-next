@@ -261,6 +261,8 @@ const OrderManageMent: NextPageWithLayout = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, router.query])
+
+  console.log('data', dataOrders)
   // check if input has white space
   const hasWhiteSpace = (s: string) => {
     return /^\s+$/g.test(s)
@@ -469,10 +471,10 @@ const OrderManageMent: NextPageWithLayout = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dataOrders?.data.map((row) => (
+                {dataOrders?.data.map((row, index) => (
                   <TableRowCustom
                     hover
-                    key={row.id}
+                    key={`row-item-${index}`}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     onClick={() => handleRowClick(row.id)}
                   >

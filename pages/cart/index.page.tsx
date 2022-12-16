@@ -229,7 +229,6 @@ const Cart: NextPageWithLayout = () => {
           isCheck: false,
         }
       })
-      console.log('first')
       // setIsCheckAll(true)
       setStateCartCheck(newArr)
       calculateTotal(newArr)
@@ -278,11 +277,12 @@ const Cart: NextPageWithLayout = () => {
   }
 
   useEffect(() => {
-    if (cart?.data?.items) {
-      const arr: number[] = []
-      cart?.data?.items.forEach((item) => arr.push(item.cartItemId))
-      localStorage.setItem('listCartItemId', JSON.stringify(arr))
-    }
+    localStorage.removeItem('order-success')
+    // if (cart?.data?.items) {
+    //   const arr: number[] = []
+    //   cart?.data?.items.forEach((item) => arr.push(item.cartItemId))
+    //   localStorage.setItem('listCartItemId', JSON.stringify(arr))
+    // }
   }, [cart?.data?.items])
 
   const handleRemoveFromCart = () => {

@@ -1,6 +1,9 @@
 import {
   Box,
   Breadcrumbs,
+  Modal,
+  ButtonGroup,
+  Grow,
   Paper,
   Skeleton,
   Stack,
@@ -11,15 +14,23 @@ import {
   TableHead,
   TableRow,
   Typography,
+  IconButton,
 } from '@mui/material'
+import { X } from 'phosphor-react'
+import Popper from '@mui/material/Popper'
+
+import MenuItem from '@mui/material/MenuItem'
+import MenuList from '@mui/material/MenuList'
+
+import ClickAwayListener from '@mui/material/ClickAwayListener'
 import { NextPageWithLayout } from 'pages/_app.page'
 import { CircleWavyCheck, ClockClockwise, Truck } from 'phosphor-react'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState, useMemo } from 'react'
 import NestedLayout from 'src/layout/nestedLayout'
 import { styled } from '@mui/system'
 import Link from 'next/link'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
-import { getOrderDetail } from './apiOrderDetail'
+import { getOrderDetail, updateOrderDetail } from './apiOrderDetail'
 import { useRouter } from 'next/router'
 import { useAppDispatch } from 'src/store/hooks'
 import { loadingActions } from 'src/store/loading/loadingSlice'
@@ -29,6 +40,7 @@ import moment from 'moment'
 import { formatMoney } from 'src/utils/money.utils'
 import Image from 'next/image'
 import classes from './styles.module.scss'
+import { ButtonCustom } from 'src/components'
 
 // other
 import ImageDefault from 'public/images/logo.svg'
@@ -79,45 +91,100 @@ const TableRowCustom = styled(TableRow)(() => ({
   },
 }))
 
-const Status = [
-  {
-    text: 'WAITING FOR APPROVED',
-    icon: <ClockClockwise color="#49516F" size={24} />,
-    color: '#49516F',
-  },
-  {
-    text: 'APPROVED',
-    icon: <CircleWavyCheck color="#1DB46A" size={24} />,
-    color: '#1DB46A',
-  },
-  {
-    text: 'DELIVERING',
-    icon: <Truck color="#2F6FED" size={24} />,
-    color: '#2F6FED',
-  },
-  {
-    text: 'DELIVERED',
-    icon: <ClockClockwise color="#1DB46A" size={24} />,
-    color: '#1DB46A',
-  },
-  {
-    text: 'CANCELLED',
-    icon: <span style={{ color: '#E02D3C' }} className="icon-Package"></span>,
-    color: '#E02D3C',
-  },
-]
+const BoxModalCustom = styled(Box)(() => ({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '400px',
+  background: 'white',
+  border: '1px solid #000',
+  padding: '4px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+}))
 
 const OrderDetail: NextPageWithLayout = () => {
+  const [open, setOpen] = React.useState(false)
+  const anchorRef = React.useRef<HTMLDivElement>(null)
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(1)
   const [stateOrderDetail, setStateOrderDetail] = useState<OrderDetailType>()
+  const [openModal, setOpenModal] = useState(false)
+  const [flagUpdateStatus, setFlagUpdateStatus] = useState<string>('')
   const router = useRouter()
   const dispatch = useAppDispatch()
 
+  const optionStatus = useMemo(
+    () => [
+      {
+        text: 'WAITING FOR APPROVED',
+        icon: <ClockClockwise color="#49516F" size={24} />,
+        color: '#49516F',
+        disabled: false,
+      },
+      {
+        text: 'APPROVED',
+        icon: <CircleWavyCheck color="#1DB46A" size={24} />,
+        color: '#1DB46A',
+        disabled: false,
+      },
+      {
+        text: 'DELIVERING',
+        icon: <Truck color="#2F6FED" size={24} />,
+        color: '#2F6FED',
+        disabled: false,
+      },
+      {
+        text: 'DELIVERED',
+        icon: <ClockClockwise color="#1DB46A" size={24} />,
+        color: '#1DB46A',
+        disabled: false,
+      },
+      {
+        text: 'CANCELLED',
+        icon: (
+          <span style={{ color: '#E02D3C' }} className="icon-Package"></span>
+        ),
+        color: '#E02D3C',
+        disabled: false,
+      },
+    ],
+    []
+  )
+
   useEffect(() => {
     if (router.query.id) {
+      dispatch(loadingActions.doLoading())
       getOrderDetail(router.query.id)
         .then((res) => {
           const { data } = res.data
           setStateOrderDetail(data)
+          optionStatus.forEach((item, index) => {
+            if (data?.status === 'DELIVERED') {
+              return (optionStatus[index].disabled = true)
+            }
+
+            if (data?.status === item.text) {
+              return (optionStatus[index].disabled = true)
+            }
+
+            if (
+              optionStatus.findIndex((item) => item.text === data?.status) ===
+              index - 1
+            ) {
+              return (optionStatus[index].disabled = false)
+            }
+
+            if (index === optionStatus.length - 1) {
+              return (optionStatus[index].disabled = false)
+            }
+
+            return (optionStatus[index].disabled = true)
+          })
+          setSelectedIndex(
+            optionStatus.findIndex((item) => item.text === data?.status)
+          )
           dispatch(loadingActions.doLoadingSuccess())
         })
         .catch((error) => {
@@ -131,7 +198,64 @@ const OrderDetail: NextPageWithLayout = () => {
           )
         })
     }
-  }, [router, dispatch])
+  }, [router, dispatch, optionStatus, flagUpdateStatus])
+
+  const handleMenuItemClick = (
+    _event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    index: number
+  ) => {
+    setSelectedIndex(index)
+    setOpen(false)
+    setOpenModal(true)
+  }
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen)
+  }
+
+  const handleCloseModal = () => setOpenModal(false)
+  const handleClose = (event: Event) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return
+    }
+
+    setOpen(false)
+  }
+
+  const handleConfirmUpdateStatus = () => {
+    try {
+      dispatch(loadingActions.doLoading())
+      updateOrderDetail(
+        router.query?.id as string,
+        optionStatus[selectedIndex].text
+      )
+        .then(() => {
+          dispatch(loadingActions.doLoadingSuccess())
+          setOpen(false)
+          handleCloseModal()
+          setFlagUpdateStatus('update status' + new Date())
+        })
+        .catch(() => {
+          dispatch(loadingActions.doLoadingFailure())
+          setSelectedIndex(
+            optionStatus.findIndex(
+              (item) => item.text === stateOrderDetail?.status
+            )
+          )
+          dispatch(
+            notificationActions.doNotification({
+              message: 'Some items in your order were invalid',
+              type: 'error',
+            })
+          )
+        })
+    } catch (error) {
+      return
+    }
+  }
 
   return (
     <>
@@ -157,48 +281,63 @@ const OrderDetail: NextPageWithLayout = () => {
                   />
                 </Box>
               )}
+
               {stateOrderDetail ? (
-                <Box
-                  sx={{
-                    padding: '10px',
-                    borderRadius: '32px',
-                    backgroundColor: `${
-                      Status.find(
-                        (item) => item.text === stateOrderDetail?.status
-                      )?.color
-                    }`,
-                  }}
-                  display="flex"
-                  alignItems="center"
-                >
-                  <Box
-                    sx={{
-                      backgroundColor: 'white',
-                      borderRadius: '9999px',
-                      padding: '5px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginRight: '10px',
-                    }}
+                <>
+                  <ButtonGroup
+                    variant="outlined"
+                    aria-label="outlined button group"
+                    ref={anchorRef}
                   >
-                    {
-                      Status.find(
-                        (item) => item.text === stateOrderDetail?.status
-                      )?.icon
-                    }
-                    {/* <ClockClockwise size={24} color="#49516F" /> */}
-                  </Box>
-                  <TypographyH3
+                    <ButtonCustom onClick={handleToggle}>
+                      {optionStatus[selectedIndex].text}
+                    </ButtonCustom>
+                  </ButtonGroup>
+                  <Popper
                     sx={{
-                      fontSize: '1.4rem',
-                      color: 'white',
-                      textTransform: 'capitalize',
+                      zIndex: 1,
                     }}
+                    open={open}
+                    anchorEl={anchorRef.current}
+                    role={undefined}
+                    transition
+                    disablePortal
+                    nonce={undefined}
+                    onResize={undefined}
+                    onResizeCapture={undefined}
                   >
-                    {stateOrderDetail?.status.toLowerCase()}
-                  </TypographyH3>
-                </Box>
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                        {...TransitionProps}
+                        style={{
+                          transformOrigin:
+                            placement === 'bottom'
+                              ? 'center top'
+                              : 'center bottom',
+                        }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList id="split-button-menu" autoFocusItem>
+                              {optionStatus.map((option, index) => (
+                                <MenuItem
+                                  key={option.text}
+                                  disabled={option.disabled}
+                                  selected={index === selectedIndex}
+                                  onClick={(event) =>
+                                    handleMenuItemClick(event, index)
+                                  }
+                                >
+                                  {option.text}
+                                </MenuItem>
+                              ))}
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Grow>
+                    )}
+                  </Popper>
+                </>
               ) : (
                 <Skeleton variant="rounded" width={300} height={60} />
               )}
@@ -496,6 +635,53 @@ const OrderDetail: NextPageWithLayout = () => {
           </StickyWrapper>
         </Grid>
       </Grid>
+
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <BoxModalCustom sx={{ border: 'none', borderRadius: '8px' }}>
+          <Box display="flex" justifyContent="flex-end">
+            <IconButton onClick={handleCloseModal}>
+              <X size={24} />
+            </IconButton>
+          </Box>
+
+          <Typography
+            id="modal-modal-description"
+            sx={{ mb: 2, fontSize: '20px' }}
+            alignSelf="center"
+          >
+            Are you sure to update order status?
+          </Typography>
+          <Stack direction="row" justifyContent="center" p={2}>
+            <ButtonCustom
+              variant="contained"
+              size="large"
+              onClick={handleCloseModal}
+              sx={{
+                background: 'white',
+                border: '1px solid #49516F',
+                boxShadow: '0',
+              }}
+            >
+              <Typography variant="body1" sx={{ color: 'black' }}>
+                Cancel
+              </Typography>
+            </ButtonCustom>
+            <ButtonCustom
+              variant="contained"
+              size="large"
+              onClick={handleConfirmUpdateStatus}
+              sx={{ marginLeft: '10px' }}
+            >
+              Confirm
+            </ButtonCustom>
+          </Stack>
+        </BoxModalCustom>
+      </Modal>
     </>
   )
 }

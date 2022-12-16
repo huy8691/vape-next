@@ -215,15 +215,12 @@ const Checkout: NextPageWithLayout = () => {
   const handleCheckout = () => {
     dispatch(loadingActions.doLoading())
     verifyCartItem(listCartId)
-      .then((res) => {
-        const { data } = res.data
-        console.log('data', data)
+      .then(() => {
         dispatch(loadingActions.doLoadingSuccess())
         handleOpen()
       })
       .catch((error) => {
         const { data } = error.response.data
-        console.log('data', data)
         dispatch(loadingActions.doLoadingFailure())
         const invalidListItem: Array<number> = []
         data.forEach((item: invalidCartItemType) => {
@@ -240,7 +237,18 @@ const Checkout: NextPageWithLayout = () => {
       })
   }
   const handleConfimCreateOrder = () => {
-    dispatch(loadingActions.doLoading())
+    // dispatch(loadingActions.doLoading())
+    // const listCartItemId: number[] = JSON.parse(
+    //   localStorage.getItem('listCartItemId') as string
+    // )
+    // const { cardItemIds } = objectOrder
+    // cardItemIds.forEach((item, index) => {
+    //   if (listCartItemId.indexOf(item) >= 0) {
+    //     listCartItemId.splice(index, 1)
+    //   }
+    // })
+    // localStorage.setItem('listCartItemId', JSON.stringify(listCartItemId))
+
     createOrderItem(objectOrder)
       .then(() => {
         dispatch(loadingActions.doLoadingSuccess())
@@ -252,6 +260,8 @@ const Checkout: NextPageWithLayout = () => {
         dispatch(cartActions.doCart())
         // router.push('/order-success')
         setStateCheckoutSuccess(true)
+        localStorage.setItem('order-success', 'true')
+        localStorage.removeItem('listCartItemId')
       })
       .catch((error) => {
         const { data } = error.response.data
@@ -265,19 +275,17 @@ const Checkout: NextPageWithLayout = () => {
         )
       })
   }
-  const onSubmit = (values: any) => {
-    console.log('đ', values)
+  const onSubmit = () => {
     handleCheckout()
   }
 
   useEffect(() => {
-    console.log('first render')
     const cartItem: Array<number | undefined> = JSON.parse(
-      localStorage.getItem('listCartItemId') || '[]'
+      localStorage.getItem('listCartItemId') as string
     )
 
     // check if local storage is empty => redirect to page cart
-    if (cartItem.length === 0) {
+    if (!cartItem || localStorage.getItem('order-success') === 'false') {
       router.push('/cart')
     }
 
@@ -288,12 +296,7 @@ const Checkout: NextPageWithLayout = () => {
         console.log('data')
         dispatch(loadingActions.doLoadingSuccess())
       })
-      .catch((error) => {
-        const { data } = error.response.data
-        console.log(
-          '🚀 ~ file: index.page.tsx ~ line 256 ~ useEffect ~ data',
-          data
-        )
+      .catch(() => {
         dispatch(loadingActions.doLoadingFailure())
       })
     calculateOrderTotal(cartItem)
@@ -308,12 +311,7 @@ const Checkout: NextPageWithLayout = () => {
         //   })
         // )
       })
-      .catch((error) => {
-        const { data } = error.response.data
-        console.log(
-          '🚀 ~ file: index.page.tsx ~ line 256 ~ useEffect ~ data',
-          data
-        )
+      .catch(() => {
         dispatch(loadingActions.doLoadingFailure())
         dispatch(
           notificationActions.doNotification({
@@ -328,12 +326,12 @@ const Checkout: NextPageWithLayout = () => {
       // localStorage.removeItem('listCartItemId')
       console.log('effect')
     }
-  }, [])
+  }, [dispatch, router])
 
   return (
     <>
       {stateCheckoutSuccess ? (
-        <CheckoutSuccess></CheckoutSuccess>
+        <CheckoutSuccess />
       ) : (
         <div>
           <Head>
