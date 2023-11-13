@@ -4,7 +4,7 @@ import { NewPasswordType } from './changePasswordModels'
 
 const setNewPasswordApi = (data: NewPasswordType): Promise<AxiosResponse> => {
   return callAPI({
-    url: '/api/user/change-password/',
+    url: '/api/first-change-password/',
     method: 'put',
     data: data,
   })

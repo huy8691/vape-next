@@ -1,0 +1,95 @@
+{
+  "title": "Configuración de envío",
+  "shippingCarrierConfiguration": "Configuración del transportista de envío",
+  "shippingFeeConfiguration": "Configuración de la tarifa de envío",
+  "shippingAddressConfiguration": "Configuración de dirección de envío",
+  "messenger": {
+    "updateStatusSuccessfully": "Actualizar estado exitosamente",
+    "configShippingPriceSuccessfully": "Configurar el precio de envío exitosamente",
+    "configShippingAddressSuccessfully": "Configurar la dirección de envío exitosamente"
+  },
+  "retailer": "Detallista",
+  "freeForAllRetailer": "Gratis para todos los minoristas",
+  "excludedId": "Identificación excluida",
+  "selectRetailers": "Seleccionar minoristas",
+  "freeForSpecificRetailer": "Gratis para minoristas específicos",
+  "selectedId": "Identificación seleccionada",
+  "freeBasedOnTotalBilling": "Gratis según la facturación total",
+  "billingAmountThreshold": "Umbral de importe de facturación",
+  "customer": "Cliente",
+  "freeForAllCustomer": "Gratis para todos los clientes",
+  "selectCustomer": "Seleccionar Cliente",
+  "name": "Nombre",
+  "address": "DIRECCIÓN",
+  "email": "Correo electrónico",
+  "phoneNumber": "Número de teléfono",
+  "rowsPerPage": "Filas por página",
+  "cancel": "Cancelar",
+  "select": "Seleccionar",
+  "businessOwnerName": "Nombre del negocio/propietario",
+  "federalTaxId": "ID de impuestos federales",
+  "pickUpLocation": "Lugar de recogida",
+  "thisAddressWillBeSetAsDefaultPickupLocationYouCanChangeItWhenProcessingYourOrder": "Esta dirección se establecerá como lugar de recogida predeterminado. Puedes cambiarlo al procesar tu pedido.",
+  "city": "Ciudad",
+  "state": "Estado",
+  "postalZipcode": "Código postal",
+  "contactName": "Nombre de contacto",
+  "returnLocation": "Ubicación de regreso",
+  "defineAReturnAddressForHandlingCanceledOrders": "Definir una dirección de devolución para manejar pedidos cancelados",
+  "submit": "Entregar",
+  "validate": {
+    "location": {
+      "address": "Se requiere ubicación",
+      "latitude": "Se requiere ubicación",
+      "longitude": "Se requiere ubicación"
+    },
+    "phoneNumber": "El número de teléfono es obligatorio.",
+    "receiverName": {
+      "required": "El campo Nombre del receptor es obligatorio",
+      "min": "El nombre del receptor debe tener al menos 2 caracteres.",
+      "max": "El nombre del receptor debe tener como máximo 50 caracteres.",
+      "matches": "Nombre del receptor no válido"
+    },
+    "city": {
+      "required": "El campo ciudad es obligatorio",
+      "min": "La ciudad debe tener al menos 2 caracteres.",
+      "max": "La ciudad debe tener como máximo 500 caracteres."
+    },
+    "state": {
+      "name": "El campo de estado es obligatorio",
+      "abbreviation": "El campo de estado es obligatorio"
+    },
+    "stateReturn": {
+      "name": "El campo de estado es obligatorio",
+      "abbreviation": "El campo de estado es obligatorio"
+    },
+    "postal_zipcode": {
+      "required": "El campo del código postal es obligatorio",
+      "min": "El código postal debe tener al menos 5 caracteres",
+      "max": "El código postal debe tener como máximo 9 caracteres.",
+      "test": "El código postal no coincide con la ciudad/estado"
+    },
+    "postalZipcodeReturn": {
+      "required": "El campo del código postal es obligatorio",
+      "min": "El código postal debe tener al menos 5 caracteres",
+      "max": "El código postal debe tener como máximo 9 caracteres.",
+      "test": "El código postal no coincide con la ciudad/estado"
+    },
+    "locationReturn": {
+      "address": "Se requiere ubicación",
+      "latitude": "Se requiere ubicación",
+      "longitude": "Se requiere ubicación"
+    },
+    "receiverNameReturn": {
+      "required": "El campo Nombre del receptor es obligatorio",
+      "min": "El nombre del receptor debe tener al menos 2 caracteres.",
+      "max": "El nombre del receptor debe tener como máximo 50 caracteres.",
+      "matches": "Nombre del receptor no válido"
+    },
+    "cityReturn": {
+      "required": "El campo ciudad es obligatorio",
+      "min": "La ciudad debe tener al menos 2 caracteres.",
+      "max": "La ciudad debe tener como máximo 500 caracteres."
+    }
+  }
+}

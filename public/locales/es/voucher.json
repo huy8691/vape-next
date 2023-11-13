@@ -1,0 +1,141 @@
+{
+  "voucher": "Vale",
+  "voucherManagement": "Gestión de vales",
+  "searchCodeOrTitle": "Código de búsqueda o título...",
+  "addNewVoucher": "Agregar nuevo cupón",
+  "thereAreNoVoucherToShow": "No hay vales para mostrar.",
+  "title": "Título",
+  "code": "Código",
+  "discountAmount": "Importe de descuento",
+  "usage": "Uso",
+  "limit": "Límite",
+  "expiry": "Expiración",
+  "availability": "Disponibilidad",
+  "status": "Estado",
+  "rowsPerPage": "Filas por página",
+  "filterVoucher": "Filtrar vale",
+  "date": "Fecha",
+  "cancel": "Cancelar",
+  "reset": "Reiniciar",
+  "filter": "Filtrar",
+  "viewDetails": "Ver detalles",
+  "ACTIVATED": "Activado",
+  "DEACTIVATED": "Desactivado",
+  "EXPIRED": "Caducado",
+  "userGuide": "Guía del usuario",
+  "message": {
+    "changeTheVoucherStatusToDeactivatedSuccessfully": "Cambiar el estado del cupón a desactivado exitosamente",
+    "changeTheVoucherStatusToActivatedSuccessfully": "Cambiar el estado del cupón a activado exitosamente",
+    "changeTheVoucherStatusFailed": "No se pudo cambiar el estado del comprobante",
+    "theVoucherHasBeenDeletedSuccessfully": "El bono ha sido eliminado exitosamente.",
+    "createVoucherSuccessfully": "Crear bono exitosamente"
+  },
+  "defaultReturnLocation": "Ubicación de devolución predeterminada",
+  "voucherCode": "Código de cupón",
+  "autoGenerate": "Generación automática",
+  "fixedAmount": "Cantidad fija",
+  "expiryDate": "Fecha de caducidad",
+  "usageRestriction": "Restricción de uso",
+  "voucherDetail": "Detalle del cupón",
+  "deactivate": "Desactivar",
+  "activate": "Activar",
+  "discountType": "Tipo de descuento",
+  "usageLimit": "Límite de uso",
+  "startDate": "Fecha de inicio",
+  "endDate": "Fecha final",
+  "usageLimitPerVoucher": "Límite de uso por cupón",
+  "usageLimitPerUser": "Límite de uso por usuario",
+  "restriction": "Restricción",
+  "maximumDiscountAmount": "Importe máximo de descuento",
+  "minimumSpend": "Gasto mínimo",
+  "productsCoverage": "Cobertura de productos",
+  "editVoucher": "Editar cupón",
+  "delete": "Borrar",
+  "print": "Imprimir",
+  "tabs": {
+    "appliedOnlineOrders": "Pedidos en línea aplicados",
+    "appliedRetailOrders": "Órdenes minoristas aplicadas"
+  },
+  "deleteVoucherOfProducts": "Eliminar vale de productos",
+  "areYouSureToDeleteThisVoucher": "¿Estás seguro de eliminar este bono?",
+  "no": "No",
+  "yes": "Sí",
+  "marketplace": "Mercado",
+  "atStore": "En la tienda",
+  "percentage": "Porcentaje",
+  "orderNo": "N º de pedido.",
+  "totalBillingPaymentStatus": "Estado total de facturación/pago",
+  "approved": "APROBADO",
+  "deactivated": "DESACTIVADO",
+  "selectProduct": "Seleccionar producto",
+  "name": "Nombre",
+  "category": "Categoría",
+  "brand": "Marca",
+  "manufacturer": "Fabricante",
+  "haveVariant": "tener variante",
+  "action": "Acción",
+  "quantity": "Cantidad",
+  "price": "Precio",
+  "variantGroupFor": "Grupo de variantes para {0}",
+  "submit": "Entregar",
+  "searchProduct": "Buscar producto...",
+  "theStockIsLow": "El stock esta bajo",
+  "enterVoucherName": "Introduzca el nombre de la categoría",
+  "allProducts": "Todos los productos",
+  "validate": {
+    "title": "Este campo es obligatorio",
+    "code": {
+      "required": "Este campo es obligatorio",
+      "minMax": "El código del bono debe tener entre 6 y 50 caracteres."
+    },
+    "availability": "Se requiere disponibilidad",
+    "limitPerVoucher": {
+      "required": "Este campo es obligatorio",
+      "integer": "Este dato es un número entero y no tiene número decimal.",
+      "minMax": "Estos datos deben estar entre 1 - 10.000.000",
+      "typeError": "El campo debe tener solo dígitos."
+    },
+    "limitPerUser": {
+      "required": "Este campo es obligatorio",
+      "integer": "Este dato es un número entero y no tiene número decimal.",
+      "minMax": "Estos datos deben estar entre 1 - 10.000.000",
+      "typeError": "El campo debe tener solo dígitos."
+    },
+    "discountAmount": {
+      "typeError": "Este campo es obligatorio",
+      "required": "Este campo es obligatorio",
+      "positive": "El monto del descuento debe ser un número positivo",
+      "percentage": {
+        "minMax": "El porcentaje de descuento debe ser del 0,5% al 100%."
+      },
+      "fixedAmount": {
+        "minMax": "El importe mínimo debe estar entre 0,01$ y 10.000.000$"
+      }
+    },
+    "minimumSpend": {
+      "typeError": "Este campo es obligatorio",
+      "positive": "El importe mínimo debe ser un número positivo.",
+      "minMax": "El monto mínimo debe estar entre $0,01 y $10.000.000"
+    },
+    "maxDiscountAmount": {
+      "typeError": "Este campo es obligatorio",
+      "positive": "El importe mínimo debe ser un número positivo.",
+      "minMax": "El monto mínimo debe estar entre $0,01 y $10.000.000"
+    },
+    "startDate": {
+      "required": "Este campo es obligatorio",
+      "typeError": "Fecha de inicio inválido"
+    },
+    "expiryDate": {
+      "required": "Este campo es obligatorio",
+      "typeError": "Fecha de inicio inválido",
+      "min": "La fecha de vencimiento debe ser mayor o igual a la fecha de inicio."
+    }
+  },
+  "Activated": "Activada",
+  "Deactivated": "Desactivada",
+  "Expired": "Caducada",
+  "All": "Toda",
+  "Marketplace": "Mercado",
+  "At Store": "En la tienda"
+}

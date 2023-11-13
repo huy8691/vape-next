@@ -1,0 +1,82 @@
+{
+  "title": "Loyalty",
+  "pointsEarningConfiguration": "Points Earning Configuration",
+  "pointsBurningConfiguration": "Points Burning Configuration",
+  "tieredLoyaltyLevels": "Tiered Loyalty Levels",
+  "tieredBenefit": "Tiered Benefit",
+  "action": "Action",
+  "fixedPoints": "Fixed points",
+  "ofBilling": "% of billing",
+  "paidAnOnlineOrder": "Paid an online order",
+  "enterDiscountRate": "Enter discount rate",
+  "paidAnRetailOrder": "Paid an retail order",
+  "save": "Save",
+  "pointsToBurn": "Points to burn",
+  "discountAmount": "Discount amount",
+  "fixedAmount": "Fixed amount",
+  "addRule": "Add Rule",
+  "deletePointBurning": "Delete PointBurning",
+
+  "areYouSureToDelete": "Are you sure to delete ?",
+  "no": "No",
+  "yes": "Yes",
+  "bronze": "Bronze",
+  "silver": "Silver",
+  "gold": "Gold",
+  "platinum": "Platinum",
+  "diamond": "Diamond",
+  "BRONZE": "Bronze",
+  "SILVER": "Silver",
+  "GOLD": "Gold",
+  "PLATINUM": "Platinum",
+  "DIAMOND": "Diamond",
+  "generalBenefit": "General Benefit",
+  "freeShipping": "Free Shipping",
+  "customBenefit": "Custom Benefit",
+  "benefit": "Benefit",
+  "add": "Add",
+  "enterPointEarningBonus": "Enter point earning bonus",
+  "validate": {
+    "valuePoint": {
+      "required": "% of billing is required",
+      "minMax": "% of billing must be between 0% and 100%"
+    },
+    "maxValuePoints": {
+      "required": "% of billing is required",
+      "positive": "% of billing - earning limit must be a positive number",
+      "typeError": "% of billing must be a number",
+      "min": "% of billing must be at least 0.00$"
+    },
+    "valuePoints": {
+      "required": "Fixed points is required",
+      "typeError": "Fixed points must be a number",
+      "min": "Fixed points must be between 0.00$ ",
+      "positive": "Fixed points must be a positive number"
+    },
+    "points": {
+      "required": "Point to burn is required",
+      "min": "Point to burn must be greater than or equal to 1"
+    },
+    "valueAmount": {
+      "required": "Fixed amount is required",
+      "moreThan": "Fixed amount must be greater then 0"
+    },
+    "valuePercent": {
+      "required": "% of billing is required",
+      "moreThan": "% of billing must be greater than 0"
+    },
+    "maxValue": {
+      "required": "Earning limit is required",
+      "min": "Earning limit must be greater than or equal to 0"
+    }
+  },
+  "message": {
+    "updatePointEarningPaidAnOnlineOrderSuccessfully": "Update point earning paid an online order successfully",
+    "updatePointEarningPaidAnRetailOrderSuccessfully": "Update point earning paid an retail order successfully",
+    "deletePointBurningSuccessfully": "Delete point burning successfully",
+    "configLoyaltyLevelSuccessfully": "Config loyalty level successfully",
+    "updateTieredBenefit": "Update tiered benefit",
+    "updateSuccessfully": "Update successfully.",
+    "createSuccessfully": "Create successfully."
+  }
+}

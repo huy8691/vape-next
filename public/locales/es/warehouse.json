@@ -1,0 +1,99 @@
+{
+  "title": "Gestion de almacenes",
+  "message": {
+    "theWarehouseStateCurrentWarehouseNameHasBeenMarkedAsDefaultSuccessfully": "El almacén se ha marcado como predeterminado correctamente.",
+    "theWarehouseStateCurrentWarehouseNameHasBeenDeletedSuccessfully": "El almacén {0} se ha eliminado correctamente",
+    "theWarehouseHasBeenCreatedSuccessfully": "El almacén se ha creado con éxito.",
+    "theWarehouseHasBeenUpdatedSuccessfully": "El almacén se ha actualizado correctamente."
+  },
+  "searchProductByName": "Buscar producto por nombre..",
+  "addNewWarehouse": "Agregar nuevo almacén",
+  "thereAreNoWarehouseToShow": "No hay almacén para mostrar",
+  "list": {
+    "no.": "No.",
+    "warehouseName": "Nombre del almacén",
+    "address": "DIRECCIÓN",
+    "city": "Ciudad",
+    "state": "Estado",
+    "postalCode": "Código Posta",
+    "isDefault": "Es predeterminado",
+    "default": "POR DEFECTO",
+    "action": "Acción",
+    "rowsPerPage": "Filas por página"
+  },
+  "edit": "Editar",
+  "markAsDefault": "Marcar como predeterminada",
+  "deleteWarehouse": "Eliminar almacén",
+  "areYouSureToRemoveTheStateCurrentWarehouseNameOutOfList": "Estás segura de eliminar el de la lista?",
+  "no": "No",
+  "yes": "Sí",
+  "cancel": "Cancelar",
+  "reset": "Reiniciar",
+  "submit": "Entregar",
+  "details": {
+    "warehouseDetail": "Detalle del almacén",
+    "warehouseInformation": "Información del almacén",
+    "warehouseName": "Nombre del almacén",
+    "address": "DIRECCIÓN",
+    "defaultStatus": "Estado predeterminado",
+    "listProductInWarehouse": "Listar producto en almacén",
+    "searchProductByName": "Buscar producto por nombre...",
+    "addNewProduct": "Agregar nuevo producto",
+    "thereAreNoProductsToShow": "No hay productos para mostrar",
+    "code": "Código",
+    "productName": "Nombre del producto",
+    "category": "Categoría",
+    "quantity": "Cantidad",
+    "brand": "Marca",
+    "manufacturer": "Fabricante",
+    "haveVariant": "tener variante",
+    "status": "Estado",
+    "updateDate": "Fecha de actualización",
+    "action": "Acción",
+    "active": "Activo",
+    "deactivated": "Desactivado",
+    "rowsPerPage": "Filas por página",
+    "viewDetails": "Ver detalles",
+    "filter": "Filtrar",
+    "price": "Precio",
+    "from": "De",
+    "to": "A",
+    "selectCategory": "selecciona una categoría",
+    "selectManufacturer": "Seleccionar fabricante",
+    "selectBrand": "Seleccionar marca"
+  },
+  "createUpdate": {
+    "createNewWarehouse": "Crear nuevo almacén",
+    "updateWarehouse": "Actualizar almacén",
+    "warehouseName": "Nombre del almacén",
+    "enterWarehouseName": "Introduzca el nombre del almacén",
+    "address": "DIRECCIÓN",
+    "enterAddress": "Introduzca el nombre de la dirección",
+    "city": "Ciudad",
+    "state": "Estado",
+    "postalZipCode": "código postal",
+    "description": "Descripción",
+    "enterDescription": "Introduce la descripción"
+  },
+  "validate": {
+    "search": "La búsqueda no puede incluir caracteres especiales.",
+    "quantityFromFieldMustBeLessThanOrEqualToQuantityToField": "El campo Cantidad desde debe ser menor o igual que el campo Cantidad hasta",
+    "priceFromFieldMustBeLessThanOrEqualToPriceToField": "El precio del campo debe ser menor o igual que el precio del campo",
+    "name": {
+      "required": "El nombre del almacén es un campo obligatorio",
+      "matches": "El nombre del almacén no debe contener espacios iniciales",
+      "min": "El nombre del almacén debe tener al menos 2 caracteres",
+      "max": "La longitud máxima del nombre del almacén debe ser de 50 caracteres"
+    },
+    "address": {
+      "min": "La dirección postal debe tener al menos 2 caracteres.",
+      "max": "La dirección postal debe tener como máximo 255 caracteres.",
+      "matches": "La dirección no debe contener espacios iniciales"
+    },
+    "description": {
+      "min": "La descripción debe tener al menos 2 caracteres",
+      "max": "La descripción debe tener como máximo 500 caracteres",
+      "matches": "La descripción no debe contener espacios iniciales"
+    }
+  }
+}

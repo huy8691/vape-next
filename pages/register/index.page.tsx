@@ -1,5 +1,5 @@
 // react
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import type { ReactElement } from 'react'
 // react
 
@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 // next
 
 // mui
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Stack from '@mui/material/Stack'
 import Grid from '@mui/material/Unstable_Grid2'
 // import Paper from '@mui/material/Paper'
@@ -34,33 +34,37 @@ import Checkbox from '@mui/material/Checkbox'
 import FormHelperText from '@mui/material/FormHelperText'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Typography from '@mui/material/Typography'
-
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
 // mui
 
 // other
 import SignatureCanvas from './parts/signatureCanvas'
 import Cookies from 'js-cookie'
-
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 // other
 
 // form
-import { RegisterType } from './registerModels'
+import { RegisterValidateType } from './registerModels'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema, schemaCheckMail } from './validations'
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
-import { registerActions } from './registerSlice'
 import {
   checkMailApi,
+  registerApi,
   getMonthlyPurchaseApi,
   getMonthlySaleApi,
   getTypeOfSaleApi,
   getFindUsOverApi,
+  organizationInfoApi,
 } from './registerAPI'
 import { loadingActions } from 'src/store/loading/loadingSlice'
-import { notificationActions } from 'src/store/notification/notificationSlice'
+import { useEnqueueSnackbar } from 'src/components/enqueueSnackbar'
+import { handlerGetErrMessage } from 'src/utils/global.utils'
 // api
 
 // layout
@@ -82,6 +86,11 @@ import {
   MenuItemSelectCustom,
   ComponentFileUploader,
 } from 'src/components'
+import { Target } from '@phosphor-icons/react'
+import { PatternFormat } from 'react-number-format'
+import { Autocomplete, TextField } from '@mui/material'
+import RequiredLabel from 'src/components/requiredLabel'
+import dataState from './states.json'
 
 const TypographyTitlePage = styled(Typography)({
   fontSize: '2.4rem',
@@ -116,6 +125,7 @@ type Props = {
   dataMonthlySale: { id: number; monthly_sale: string }[]
   dataTypeOfSale: { id: number; type_of_sale: string }[]
   dataFindUsOver: { id: number; find_us_over: string }[]
+  dataOrganizationInfo: any
 }
 
 const Register: NextPageWithLayout<Props> = ({
@@ -124,11 +134,14 @@ const Register: NextPageWithLayout<Props> = ({
   dataTypeOfSale,
   dataFindUsOver,
 }) => {
+  const { t } = useTranslation(['register'])
+  const theme = useTheme()
   const router = useRouter()
   const token = Boolean(Cookies.get('token'))
   if (token) {
     router.push('/')
   }
+
   const signatureRef = useRef<any>(null)
   const [stateCheckMail, setStateCheckMail] = React.useState<CheckMail>({
     status: '',
@@ -143,18 +156,21 @@ const Register: NextPageWithLayout<Props> = ({
   const [stateValueFindUsOver, setStateValueFindUsOver] =
     React.useState<string>()
 
+  const [stateOpenBackdrop, setStateOpenBackdrop] =
+    React.useState<boolean>(false)
+
+  const [pushMessage] = useEnqueueSnackbar()
   const {
     setValue,
     trigger,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
+  } = useForm<RegisterValidateType>({
+    resolver: yupResolver(schema(t)),
     // reValidateMode: 'onChange',
     mode: 'all',
   })
-
   // check mail
   const {
     setValue: setValueCheckMail,
@@ -162,21 +178,49 @@ const Register: NextPageWithLayout<Props> = ({
     control: controlCheckMail,
     formState: { errors: errorsCheckMail },
   } = useForm({
-    resolver: yupResolver(schemaCheckMail),
+    resolver: yupResolver(schemaCheckMail(t)),
 
     mode: 'all',
   })
   const dispatch = useAppDispatch()
 
-  const onSubmitSignUp = (valueSignUp: RegisterType) => {
+  const onSubmitSignUp = (valueSignUp: RegisterValidateType) => {
     console.log('valueSignUp', valueSignUp)
     // setStateStatusSignature(!stateStatusSignature)
     if (stateCheckMail.valueEmail) {
       const newValues = {
         ...valueSignUp,
+        state: valueSignUp.state.abbreviation,
+        phone_number: valueSignUp.phone_number
+          .replace('(', '')
+          .replace(')', '')
+          .replaceAll(' ', ''),
         email: stateCheckMail.valueEmail,
+        website_link_url: valueSignUp.website_link_url
+          ? valueSignUp.website_link_url
+          : null,
       }
-      dispatch(registerActions.doRegister(newValues))
+      if (
+        !valueSignUp.organization_refferal ||
+        valueSignUp.organization_refferal == ''
+      ) {
+        delete newValues.organization_refferal
+      }
+
+      registerApi(newValues)
+        .then((response) => {
+          const data = response.data
+          dispatch(loadingActions.doLoadingSuccess())
+          pushMessage(data.message, 'success')
+          router.push('/login')
+        })
+        .catch((response) => {
+          dispatch(loadingActions.doLoadingFailure())
+          const { status, data } = response.response
+          pushMessage(handlerGetErrMessage(status, data), 'error')
+        })
+
+      // pushMessage('Sign-up successfully', 'success')
     }
   }
 
@@ -194,39 +238,19 @@ const Register: NextPageWithLayout<Props> = ({
           valueEmail: values.email,
         })
         dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: data.message,
-          })
-        )
+        pushMessage(data.message, 'success')
       })
-      .catch((error) => {
-        const data = error.response?.data
-        setStateCheckMail({
-          status: 'error',
-          valueEmail: '',
-        })
+      .catch((response) => {
+        // const data = error.response?.data
+        // setStateCheckMail({
+        //   status: 'error',
+        //   valueEmail: '',
+        // })
         dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
+        const { status, data } = response.response
+        pushMessage(handlerGetErrMessage(status, data), 'error')
       })
   }
-
-  // const [showPassword, setShowPassword] = useState<boolean>(false)
-
-  // const handleClickShowPassword = () => {
-  //   setShowPassword(!showPassword)
-  // }
-
-  // const handleMouseDownPassword = (
-  //   event: React.MouseEvent<HTMLButtonElement>
-  // ) => {
-  //   event.preventDefault()
-  // }
 
   //
   const handleChangeMonthlyPurchase = (value: number) => {
@@ -253,10 +277,53 @@ const Register: NextPageWithLayout<Props> = ({
     )
   }
 
+  const IntervalTimerFunctional = () => {
+    const [time, setTime] = React.useState(10)
+    useEffect(() => {
+      const timerId = setInterval(() => {
+        setTime((t) => {
+          if (t === 1) {
+            window.location.href = `${
+              router.locale !== router.defaultLocale ? `/${router.locale}` : ''
+            }/register`
+          }
+          return t - 1
+        })
+      }, 1000)
+
+      return () => clearInterval(timerId)
+    }, [])
+
+    return <>{time}</>
+  }
+
+  console.log('router', router)
+
+  useEffect(() => {
+    if (router.query.refcode) {
+      setValue('organization_refferal', String(router.query.refcode))
+      organizationInfoApi({ organization_refferal: `${router.query.refcode}` })
+        .then((res) => {
+          const { data } = res.data
+          console.log('data', data)
+          dispatch(loadingActions.doLoadingSuccess())
+          setValue('find_us_over', '6')
+          setValue('find_us_over_other', data?.find_us_over_other)
+          setStateValueFindUsOver('Referring Business Name')
+        })
+        .catch(({ response }) => {
+          dispatch(loadingActions.doLoadingFailure())
+          const { status, data } = response
+          pushMessage(handlerGetErrMessage(status, data), 'error')
+          setStateOpenBackdrop(true)
+        })
+    }
+  }, [router.query.refcode])
+
   return (
     <div className={classes['register-page']}>
       <Head>
-        <title>Sign Up | Vape</title>
+        <title>{t('register:title')} | TWSS</title>
       </Head>
       <div className={`${classes['register-page__container']} container`}>
         <div className={classes['register-page__content']}>
@@ -282,7 +349,7 @@ const Register: NextPageWithLayout<Props> = ({
                 <Link href="/">
                   <a>
                     <Image
-                      src="/images/logo.svg"
+                      src={'/' + '/images/logo.svg'}
                       alt="Logo"
                       width="133"
                       height="52"
@@ -293,12 +360,18 @@ const Register: NextPageWithLayout<Props> = ({
             </Grid>
           </Grid>
           <Stack alignItems="center" mb={4}>
-            <TypographyTitlePage variant="h1">Sign Up</TypographyTitlePage>
+            <TypographyTitlePage variant="h1">
+              {t('register:title')}
+            </TypographyTitlePage>
           </Stack>
           <form onSubmit={handleSubmitCheckMail(onSubmitCheckMail)}>
-            <TypographyTitleSection variant="h3" mb={2}>
-              Verify your email
-            </TypographyTitleSection>
+            <Stack direction="row" alignItems="center" mb={2} spacing={2}>
+              <Target size={18} color={theme.palette.primary.main} />
+              <TypographyTitleSection variant="h3">
+                {t('register:verifyYourEmail')}
+              </TypographyTitleSection>
+            </Stack>
+
             <Controller
               control={controlCheckMail}
               name="email"
@@ -309,7 +382,8 @@ const Register: NextPageWithLayout<Props> = ({
                     htmlFor="email"
                     error={!!errorsCheckMail.email}
                   >
-                    Email
+                    <RequiredLabel />
+                    {t('register:email')}
                   </InputLabelCustom>
                   <TextFieldCheckMailCustom fullWidth>
                     <Grid container rowSpacing={3} columnSpacing={2}>
@@ -317,7 +391,7 @@ const Register: NextPageWithLayout<Props> = ({
                         <OutlinedInput
                           id="email"
                           fullWidth
-                          placeholder="Enter email"
+                          placeholder={t('register:enterEmail')}
                           error={!!errorsCheckMail.email}
                           {...field}
                           onChange={(event: any) => {
@@ -348,12 +422,8 @@ const Register: NextPageWithLayout<Props> = ({
                         />
                       </Grid>
                       <Grid xs>
-                        <ButtonRegisterCustom
-                          variant="contained"
-                          size="large"
-                          type="submit"
-                        >
-                          Check
+                        <ButtonRegisterCustom variant="contained" type="submit">
+                          {t('register:check')}
                         </ButtonRegisterCustom>
                       </Grid>
                     </Grid>
@@ -370,9 +440,12 @@ const Register: NextPageWithLayout<Props> = ({
             onSubmit={handleSubmit(onSubmit)}
             className={classes['register-form']}
           >
-            <TypographyTitleSection variant="h3" mb={2}>
-              Input Infomations
-            </TypographyTitleSection>
+            <Stack direction="row" alignItems="center" mb={2} spacing={2}>
+              <Target size={18} color={theme.palette.primary.main} />
+              <TypographyTitleSection variant="h3">
+                {t('register:inputInformation')}
+              </TypographyTitleSection>
+            </Stack>
             <Grid container rowSpacing={3} columnSpacing={2} mb={4}>
               <Grid xs={4}>
                 <Controller
@@ -385,13 +458,14 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="first_name"
                         error={!!errors.first_name}
                       >
-                        First Name
+                        <RequiredLabel />
+                        {t('register:firstName')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="first_name"
                           error={!!errors.first_name}
-                          placeholder="Enter first name"
+                          placeholder={t('register:enterFirstName')}
                           {...field}
                         />
                         <FormHelperText error={!!errors.first_name}>
@@ -413,13 +487,14 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="last_name"
                         error={!!errors.last_name}
                       >
-                        Last Name
+                        <RequiredLabel />
+                        {t('register:lastName')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="last_name"
                           error={!!errors.last_name}
-                          placeholder="Enter last name"
+                          placeholder={t('register:enterLastName')}
                           {...field}
                         />
                         <FormHelperText error={!!errors.last_name}>
@@ -443,15 +518,20 @@ const Register: NextPageWithLayout<Props> = ({
                           htmlFor="phone_number"
                           error={!!errors.phone_number}
                         >
-                          Phone number
+                          <RequiredLabel />
+                          {t('register:phoneNumber')}
                         </InputLabelCustom>
                         <FormControl fullWidth>
-                          <TextFieldCustom
-                            id="phone_number"
-                            placeholder="Enter phone number"
-                            error={!!errors.phone_number}
-                            {...field}
-                          />
+                          <div className={classes['input-number']}>
+                            <PatternFormat
+                              id="phone_number"
+                              customInput={TextField}
+                              {...field}
+                              error={!!errors.phone_number}
+                              placeholder={t('register:enterPhoneNumber')}
+                              format="(###) ### ####"
+                            />
+                          </div>
                           <FormHelperText error={!!errors.phone_number}>
                             {errors.phone_number &&
                               `${errors.phone_number.message}`}
@@ -473,12 +553,13 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="business_name"
                         error={!!errors.business_name}
                       >
-                        Business Name
+                        <RequiredLabel />
+                        {t('register:businessName')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="business_name"
-                          placeholder="Enter business name"
+                          placeholder={t('register:enterBusinessName')}
                           error={!!errors.business_name}
                           {...field}
                         />
@@ -502,13 +583,13 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="website_link_url"
                         error={!!errors.website_link_url}
                       >
-                        Website link URL
+                        {t('register:websiteLinkURL')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="website_link_url"
                           error={!!errors.website_link_url}
-                          placeholder="Ex: example.com"
+                          placeholder={t('register:ex')}
                           {...field}
                         />
                         <FormHelperText error={!!errors.website_link_url}>
@@ -531,7 +612,8 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="monthly_purchase"
                         error={!!errors.monthly_purchase}
                       >
-                        Average monthly purchase volume
+                        <RequiredLabel />
+                        {t('register:averageMonthlyPurchaseVolume')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <SelectCustom
@@ -545,7 +627,7 @@ const Register: NextPageWithLayout<Props> = ({
                             if (value === '') {
                               return (
                                 <PlaceholderSelect>
-                                  <div>Select value</div>
+                                  <div>{t('register:selectValue')}</div>
                                 </PlaceholderSelect>
                               )
                             }
@@ -601,7 +683,10 @@ const Register: NextPageWithLayout<Props> = ({
                             rows={2}
                             id="monthly_purchase_other"
                             error={!!errors.monthly_purchase_other}
-                            placeholder="Input other average monthly purchase volume..."
+                            inputProps={{ maxLength: 200 }}
+                            placeholder={t(
+                              'register:inputOtherAverageMonthlyPurchaseVolume'
+                            )}
                             {...field}
                           />
                           <FormHelperText
@@ -627,7 +712,8 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="monthly_sale"
                         error={!!errors.monthly_sale}
                       >
-                        Average monthly sale volume
+                        <RequiredLabel />
+                        {t('register:averageMonthlySaleVolume')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <SelectCustom
@@ -639,7 +725,7 @@ const Register: NextPageWithLayout<Props> = ({
                             if (value === '') {
                               return (
                                 <PlaceholderSelect>
-                                  <div>Select value</div>
+                                  <div>{t('register:selectValue')}</div>
                                 </PlaceholderSelect>
                               )
                             }
@@ -685,7 +771,10 @@ const Register: NextPageWithLayout<Props> = ({
                             rows={2}
                             id="monthly_sale_other"
                             error={!!errors.monthly_sale_other}
-                            placeholder="Input other average monthly sale volume..."
+                            inputProps={{ maxLength: 200 }}
+                            placeholder={t(
+                              'register:inputOtherAverageMonthlySaleVolume'
+                            )}
                             {...field}
                           />
                           <FormHelperText error={!!errors.monthly_sale_other}>
@@ -709,7 +798,8 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="type_of_sale"
                         error={!!errors.type_of_sale}
                       >
-                        Type of sale
+                        <RequiredLabel />
+                        {t('register:typeOfSale')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <SelectCustom
@@ -721,7 +811,7 @@ const Register: NextPageWithLayout<Props> = ({
                             if (value === '') {
                               return (
                                 <PlaceholderSelect>
-                                  <div>Select value</div>
+                                  <div>{t('register:selectValue')}</div>
                                 </PlaceholderSelect>
                               )
                             }
@@ -765,7 +855,7 @@ const Register: NextPageWithLayout<Props> = ({
                           <TextFieldCustom
                             id="type_of_sale_other"
                             error={!!errors.type_of_sale_other}
-                            placeholder="Input value..."
+                            placeholder={t('register:inputValue')}
                             {...field}
                           />
                           {errors.type_of_sale_other && (
@@ -791,13 +881,14 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="total_locations"
                         error={!!errors.total_locations}
                       >
-                        How many locations
+                        <RequiredLabel />
+                        {t('register:howManyLocations')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="total_locations"
                           error={!!errors.total_locations}
-                          placeholder="Ex: 0>10.0000"
+                          placeholder="Ex: 0 > 10.000"
                           {...field}
                         />
                         <FormHelperText error={!!errors.total_locations}>
@@ -820,7 +911,8 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="find_us_over"
                         error={!!errors.find_us_over}
                       >
-                        How did you find us?
+                        <RequiredLabel />
+                        {t('register:howDidYouFindUs')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <SelectCustom
@@ -832,7 +924,7 @@ const Register: NextPageWithLayout<Props> = ({
                             if (value === '') {
                               return (
                                 <PlaceholderSelect>
-                                  <div>Select value</div>
+                                  <div>{t('register:selectValue')}</div>
                                 </PlaceholderSelect>
                               )
                             }
@@ -843,6 +935,10 @@ const Register: NextPageWithLayout<Props> = ({
                           {...field}
                           onChange={(event: any) => {
                             setValue('find_us_over', event.target.value)
+                            console.log(
+                              'event.target.value',
+                              event.target.value
+                            )
                             trigger('find_us_over')
                             handleChangeFindUsOver(event.target.value)
                           }}
@@ -866,7 +962,8 @@ const Register: NextPageWithLayout<Props> = ({
                     </Box>
                   )}
                 />
-                {stateValueFindUsOver === 'OTHER' && (
+                {(stateValueFindUsOver === 'OTHER' ||
+                  stateValueFindUsOver === 'Referring Business Name') && (
                   <Controller
                     control={control}
                     name="find_us_over_other"
@@ -876,7 +973,7 @@ const Register: NextPageWithLayout<Props> = ({
                           <TextFieldCustom
                             id="find_us_over_other"
                             error={!!errors.find_us_over_other}
-                            placeholder="Input value..."
+                            placeholder={t('register:inputValue')}
                             {...field}
                           />
                           <FormHelperText error={!!errors.find_us_over_other}>
@@ -900,7 +997,8 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="id_verification"
                         error={!!errors.id_verification}
                       >
-                        Do you have an ID Age Verification system?
+                        <RequiredLabel />
+                        {t('register:doYouHaveAnIdAgeVerificationSystem')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <SelectCustom
@@ -911,7 +1009,7 @@ const Register: NextPageWithLayout<Props> = ({
                             if (value === '') {
                               return (
                                 <PlaceholderSelect>
-                                  <div>Select value</div>
+                                  <div>{t('register:selectValue')}</div>
                                 </PlaceholderSelect>
                               )
                             }
@@ -923,10 +1021,10 @@ const Register: NextPageWithLayout<Props> = ({
                           {...field}
                         >
                           <MenuItemSelectCustom value="YES">
-                            Yes
+                            {t('register:yes')}
                           </MenuItemSelectCustom>
                           <MenuItemSelectCustom value="NO">
-                            No
+                            {t('register:no')}
                           </MenuItemSelectCustom>
                         </SelectCustom>
                         <FormHelperText error={!!errors.id_verification}>
@@ -949,7 +1047,10 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="payment_processing"
                         error={!!errors.payment_processing}
                       >
-                        Do you currently have a payment processing system?
+                        <RequiredLabel />
+                        {t(
+                          'register:doYouCurrentlyHaveAPaymentProcessingSystem'
+                        )}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <SelectCustom
@@ -960,26 +1061,26 @@ const Register: NextPageWithLayout<Props> = ({
                             if (value === '') {
                               return (
                                 <PlaceholderSelect>
-                                  <div>Select value</div>
+                                  <div>{t('register:selectValue')}</div>
                                 </PlaceholderSelect>
                               )
                             }
                             return [
                               { value: 'YES', label: 'Yes' },
                               { value: 'NO', label: 'No' },
-                              { value: 'in_process', label: 'In Process' },
+                              { value: 'IN_PROCESS', label: 'In Process' },
                             ].find((obj) => obj.value === value)?.label
                           }}
                           {...field}
                         >
                           <MenuItemSelectCustom value="YES">
-                            Yes
+                            {t('register:yes')}
                           </MenuItemSelectCustom>
                           <MenuItemSelectCustom value="NO">
-                            No
+                            {t('register:no')}
                           </MenuItemSelectCustom>
-                          <MenuItemSelectCustom value="in_process">
-                            In Process
+                          <MenuItemSelectCustom value="IN_PROCESS">
+                            {t('register:inProcess')}
                           </MenuItemSelectCustom>
                         </SelectCustom>
                         <FormHelperText error={!!errors.payment_processing}>
@@ -1002,13 +1103,14 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="federal_tax_id"
                         error={!!errors.federal_tax_id}
                       >
-                        Federal tax ID
+                        <RequiredLabel />
+                        {t('register:federalTaxID')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
                           id="federal_tax_id"
                           error={!!errors.federal_tax_id}
-                          placeholder="Enter federal tax ID"
+                          placeholder={t('register:enterFederalTaxID')}
                           {...field}
                         />
                         <FormHelperText error={!!errors.federal_tax_id}>
@@ -1031,7 +1133,8 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="business_tax_document"
                         error={!!errors.business_tax_document}
                       >
-                        Business tax document
+                        <RequiredLabel />
+                        {t('register:businessTaxDocument')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <input id="business_tax_document" {...field} hidden />
@@ -1069,7 +1172,10 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="vapor_tobacco_license"
                         error={!!errors.vapor_tobacco_license}
                       >
-                        Vapor & Tobacco licenses (if required by your state)
+                        <RequiredLabel />
+                        {t(
+                          'register:vapor&TobaccoLicenses(IfRequiredByYourState)'
+                        )}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <input id="vapor_tobacco_license" {...field} hidden />
@@ -1107,7 +1213,8 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="address"
                         error={!!errors.address}
                       >
-                        Street address
+                        <RequiredLabel />
+                        {t('register:streetAddress')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
@@ -1127,24 +1234,25 @@ const Register: NextPageWithLayout<Props> = ({
                 <Controller
                   control={control}
                   defaultValue=""
-                  name="address2"
+                  name="sub_address"
                   render={({ field }) => (
                     <Box>
                       <InputLabelCustom
-                        htmlFor="address2"
-                        error={!!errors.address2}
+                        htmlFor="sub_address"
+                        error={!!errors.sub_address}
                       >
-                        Address line 2
+                        {t('register:addressLine2')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
-                          id="address2"
-                          error={!!errors.address2}
+                          id="sub_address"
+                          error={!!errors.sub_address}
                           {...field}
                         />
-                        {errors.address2 && (
-                          <FormHelperText error={!!errors.address2}>
-                            {errors.address2 && `${errors.address2.message}`}
+                        {errors.sub_address && (
+                          <FormHelperText error={!!errors.sub_address}>
+                            {errors.sub_address &&
+                              `${errors.sub_address.message}`}
                           </FormHelperText>
                         )}
                       </FormControl>
@@ -1160,7 +1268,8 @@ const Register: NextPageWithLayout<Props> = ({
                   render={({ field }) => (
                     <Box>
                       <InputLabelCustom htmlFor="city" error={!!errors.city}>
-                        City
+                        <RequiredLabel />
+                        {t('register:city')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
@@ -1179,21 +1288,48 @@ const Register: NextPageWithLayout<Props> = ({
               <Grid xs={4}>
                 <Controller
                   control={control}
-                  defaultValue=""
                   name="state"
-                  render={({ field }) => (
+                  render={({ field: { value } }) => (
                     <Box>
-                      <InputLabelCustom htmlFor="state" error={!!errors.state}>
-                        State
+                      <InputLabelCustom
+                        htmlFor="state"
+                        error={!!errors.state?.name}
+                      >
+                        <RequiredLabel />
+                        {t('state')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
-                        <TextFieldCustom
-                          id="state"
-                          error={!!errors.state}
-                          {...field}
+                        <Autocomplete
+                          getOptionLabel={(option) => option.name}
+                          options={dataState}
+                          value={value}
+                          renderInput={(params) => (
+                            <TextFieldCustom
+                              error={!!errors.state?.name}
+                              {...(params as any)}
+                            />
+                          )}
+                          onChange={(_, newValue) => {
+                            console.log('event', newValue)
+                            if (newValue) {
+                              setValue('state', newValue)
+                            } else {
+                              setValue('state', {
+                                name: '',
+                                abbreviation: '',
+                              })
+                            }
+                            trigger('state')
+                          }}
+                          sx={{
+                            '& .MuiOutlinedInput-root .MuiAutocomplete-input': {
+                              padding: '1px 5px',
+                            },
+                          }}
                         />
-                        <FormHelperText error={!!errors.state}>
-                          {errors.state && `${errors.state.message}`}
+                        <FormHelperText error={!!errors.state?.name}>
+                          {errors.state?.name &&
+                            `${errors.state?.name?.message}`}
                         </FormHelperText>
                       </FormControl>
                     </Box>
@@ -1211,7 +1347,8 @@ const Register: NextPageWithLayout<Props> = ({
                         htmlFor="postal_zipcode"
                         error={!!errors.postal_zipcode}
                       >
-                        Postal / Zip Code
+                        <RequiredLabel />
+                        {t('register:postal/ZipCode')}
                       </InputLabelCustom>
                       <FormControl fullWidth>
                         <TextFieldCustom
@@ -1222,6 +1359,34 @@ const Register: NextPageWithLayout<Props> = ({
                         <FormHelperText error={!!errors.postal_zipcode}>
                           {errors.postal_zipcode &&
                             `${errors.postal_zipcode.message}`}
+                        </FormHelperText>
+                      </FormControl>
+                    </Box>
+                  )}
+                />
+              </Grid>
+              <Grid xs={4}>
+                <Controller
+                  control={control}
+                  defaultValue=""
+                  name="organization_refferal"
+                  render={({ field }) => (
+                    <Box>
+                      <InputLabelCustom
+                        htmlFor="organization_refferal"
+                        error={!!errors.organization_refferal}
+                      >
+                        {t('register:referralCode')}
+                      </InputLabelCustom>
+                      <FormControl fullWidth>
+                        <TextFieldCustom
+                          id="organization_refferal"
+                          error={!!errors.organization_refferal}
+                          {...field}
+                        />
+                        <FormHelperText error={!!errors.organization_refferal}>
+                          {errors.organization_refferal &&
+                            `${errors.organization_refferal.message}`}
                         </FormHelperText>
                       </FormControl>
                     </Box>
@@ -1243,7 +1408,9 @@ const Register: NextPageWithLayout<Props> = ({
                     <Box>
                       <FormControlLabel
                         control={<Checkbox {...field} />}
-                        label="I have read and agree to Terms & Conditions"
+                        label={t(
+                          'register:iHaveReadAndAgreeToTerms&Conditions'
+                        )}
                       />
                       <FormHelperText error={!!errors.checkbox} defaultChecked>
                         {errors.checkbox && `${errors.checkbox.message}`}
@@ -1254,6 +1421,7 @@ const Register: NextPageWithLayout<Props> = ({
               </Grid>
               <Grid xs={12}>
                 <SignatureCanvas
+                  clearOnResize={false}
                   uploadSignatureSuccess={(valueSignUp: any) => {
                     onSubmitSignUp(valueSignUp)
                   }}
@@ -1268,21 +1436,53 @@ const Register: NextPageWithLayout<Props> = ({
             <Stack alignItems="center">
               <ButtonRegisterCustom
                 variant="contained"
-                size="large"
                 type="submit"
                 disabled={stateCheckMail.valueEmail === '' ? true : false}
               >
-                Submit sign up request
+                {t('register:submitSignUpRequest')}
               </ButtonRegisterCustom>
             </Stack>
           </form>
         </div>
       </div>
+
+      {stateOpenBackdrop && (
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={stateOpenBackdrop}
+          // onClick={handleClose}
+        >
+          <Stack
+            flexDirection="column"
+            justifyItems="center"
+            alignItems="center"
+          >
+            <CircularProgress color="inherit" />
+            <Typography mt={2} mb={3} variant="h5">
+              {t(
+                'register:theInvitationLinkHasAlreadyExpiredOrIsInvalidThePageWillRefreshAutomaticallyIn'
+              )}{' '}
+              <IntervalTimerFunctional /> {t('register:seconds')}.
+            </Typography>
+            <a
+              href={`${
+                router.locale !== router.defaultLocale
+                  ? `/${router.locale}`
+                  : ''
+              }/register`}
+            >
+              <Button variant="contained" sx={{ color: '#ffffff' }}>
+                {t('register:refresh')}
+              </Button>
+            </a>
+          </Stack>
+        </Backdrop>
+      )}
     </div>
   )
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({ locale }: { locale: string }) {
   const dataMonthlyPurchase = await getMonthlyPurchaseApi()
     .then((response) => {
       const { data } = response.data
@@ -1310,7 +1510,7 @@ export async function getStaticProps() {
   const dataFindUsOver = await getFindUsOverApi()
     .then((response) => {
       const { data } = response.data
-      console.log('🚀 ~ file: index.page.tsx:1313 ~ .then ~ data', data)
+      console.log('456', data)
       return data
     })
     .catch(() => {
@@ -1322,6 +1522,8 @@ export async function getStaticProps() {
       dataMonthlySale: dataMonthlySale,
       dataTypeOfSale: dataTypeOfSale,
       dataFindUsOver: dataFindUsOver,
+      locale,
+      ...(await serverSideTranslations(locale, ['register'])),
     },
   }
 }
@@ -1330,4 +1532,5 @@ Register.getLayout = function getLayout(page: ReactElement) {
   return <WrapLayout>{page}</WrapLayout>
 }
 Register.theme = 'light'
+
 export default Register

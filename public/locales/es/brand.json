@@ -1,0 +1,64 @@
+{
+  "title": "Gestión de la marca",
+  "list": {
+    "searchBrandByName": "Buscar marca por nombre......",
+    "uploadFile": "Subir archivo...",
+    "downloadFile": "Descargar archivo",
+    "addNewBrand": "Agregar nueva marca",
+    "thereAreNoBrandToShow": "No hay marcas para mostrar.",
+    "number": "No.",
+    "logo": "Logo",
+    "brandName": "Nombre de la marca",
+    "action": "Acción",
+    "rowsPerPage": "Filas por página",
+    "edit": "Editar",
+    "delete": "Borrar",
+    "deleteBrand": "Eliminar marca",
+    "areYouSureToRemoveTheBrandOutOfList": "¿Está seguro de eliminar la marca de la lista?",
+    "no": "No",
+    "yes": "Sí",
+    "importBrand": "Marca de importación",
+    "selectImportFile": "Seleccionar archivo de importación",
+    "thereAreSomeErrorsWithTheImportFilePleaseDownloadTheErrorFileForMoreInformation": "Hay algunos errores con el archivo de importación. Descargue el archivo de error para obtener más información.",
+    "clickHere": "haga clic aquí",
+    "toDownTheImportTemplate": "para bajar la plantilla de importación..",
+    "allowedFileExtensionXlsxCsv": "Extensión de archivo permitida: .xlsx / .csv",
+    "allowedFileSizeIs_10Mb": "El tamaño de archivo permitido es {'<'} 10 MB",
+    "cancel": "Cancelar",
+    "submit": "Entregar",
+    "message": {
+      "importSuccessfully": "Importar exitosamente",
+      "deleteDataItemNameSuccessfully": "Eliminar {0} correctamente"
+    }
+  },
+  "createUpdate": {
+    "title": "Crear nueva marca de producto",
+    "updateProductBrand": "Actualizar marca del producto",
+    "brandLogo": "Logotipo",
+    "brandName": "Nombre de la marca",
+    "enterBrandName": "Introduzca el nombre de la marca",
+    "cancel": "Cancelar",
+    "submit": "Entregar",
+    "message": {
+      "productBrandHasBeenCreatedSuccessfully": "La marca del producto se ha creado con éxito.",
+      "productBrandHasBeenUpdatedSuccessfully": "La marca del producto se ha actualizado correctamente."
+    }
+  },
+  "validate": {
+    "name": {
+      "required": "El nombre de la categoría es un campo obligatorio",
+      "min": "El nombre de la categoría debe tener al menos 2 caracteres.",
+      "max": "El nombre de la categoría debe tener como máximo 50 caracteres."
+    },
+    "nameBrand": {
+      "required": "El nombre de la marca es un campo obligatorio",
+      "min": "El nombre de la marca debe tener al menos 2 caracteres.",
+      "max": "El nombre de la marca debe tener como máximo 50 caracteres.",
+      "matches": "Nombre de marca no válido"
+    },
+    "importData": {
+      "required": "Este campo es obligatorio",
+      "test": "El archivo es demasiado grande."
+    }
+  }
+}

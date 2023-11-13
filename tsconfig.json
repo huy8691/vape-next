@@ -17,7 +17,7 @@
     // "baseUrl": ".",
     // "declaration": true,
     // "sourceMap": true,
-
+    "downlevelIteration": true,
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true, // Allow JavaScript files to be compiled
@@ -48,7 +48,9 @@
     "src",
     "src/**/*",
     "src/*.d.tsx",
-    "src/*.tsx"
+    "src/*.tsx",
+    "next-i18next.config.js",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

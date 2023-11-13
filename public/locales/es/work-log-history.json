@@ -1,0 +1,19 @@
+{
+  "title": "Historial de registros de trabajo",
+  "exportExcel": "Exportar a Excel",
+  "fullName": "Nombre completo",
+  "date": "Fecha",
+  "time": "Hora",
+  "timeSpent": "Tiempo empleado",
+  "description": "Descripción",
+  "rowsPerPage": "Filas por página",
+  "filter": "Filtrar",
+  "reset": "Restablecer",
+  "confirmation": "Confirmación",
+  "areYouSureYouWantToExportExcel": "¿Estás seguro de que quieres exportar a Excel?",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "message": {
+    "exportExcelSuccessfully": "Exportación a Excel exitosa"
+  }
+}

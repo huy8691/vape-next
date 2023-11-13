@@ -1,0 +1,200 @@
+{
+  "title": "Register-Supplier",
+  "supplierSignUpRequest": "Solicitud de Registro de Proveedor",
+  "verifyYourEmail": "Verifica tu correo electrónico",
+  "thisEmailIsUsedToReceiveLoginInformationForTheSupplierAccountAfterItHasBeenCreated": "Este correo electrónico se utiliza para recibir información de inicio de sesión de la cuenta de proveedor una vez que ha sido creada.",
+  "email": "Correo electrónico",
+  "other": "OTRO",
+  "enterEmail": "Ingresar correo electrónico",
+  "check": "Verificar",
+  "businessInformation": "Información de Negocio",
+  "inputInformation": "Ingresar Información",
+  "firstName": "Nombre",
+  "enterFirstName": "Ingresar nombre",
+  "lastName": "Apellido",
+  "enterLastName": "Ingresar apellido",
+  "phoneNumber": "Número de teléfono",
+  "ownerPhoneNumber": "Número de teléfono del propietario",
+  "pocPhoneNumber": "Número de teléfono del POC",
+  "enterPhoneNumber": "Ingresar número de teléfono",
+  "businessName": "Nombre del negocio",
+  "enterBusinessName": "Ingresar nombre del negocio",
+  "businessPhoneNumber": "Número de teléfono del negocio",
+  "website": "Sitio web",
+  "separateByAComma": "Separar por una coma",
+  "ex": "Ejemplo: example.com",
+  "branch": "Marcas",
+  "enterBrands": "Ingresar marcas",
+  "averageMonthlyPurchaseVolume": "Volumen de Compras Mensuales Promedio",
+  "averageMonthlySaleVolume": "Volumen de Ventas Mensuales Promedio",
+  "typeOfSale": "Tipo de Venta",
+  "howManyLocations": "¿Cuántas ubicaciones?",
+  "howDidYouFindUs": "¿Cómo nos encontraste?",
+  "doYouHaveAnIdAgeVerificationSystem": "¿Tienes un sistema de verificación de edad con ID?",
+  "doYouCurrentlyHaveAPaymentProcessingSystem": "¿Tienes actualmente un sistema de procesamiento de pagos?",
+  "federalTaxID": "Número de Identificación de Impuestos Federales",
+  "enterFederalTaxID": "Ingresar número de identificación de impuestos federales",
+  "businessTaxDocument": "Documento de impuestos del negocio",
+  "selectValue": "Seleccionar Valor",
+  "vapor&TobaccoLicenses(IfRequiredByYourState)": "Licencias de Vapor y Tabaco (si es requerido por tu estado)",
+  "streetAddress": "Dirección",
+  "enterAddress": "Ingresar dirección",
+  "addressLine2": "Dirección línea 2",
+  "city": "Ciudad",
+  "state": "Estado",
+  "postal/ZipCode": "Código Postal / Zip",
+  "enterFederalTaxId": "Ingresar número de identificación de impuestos federales",
+  "referralCode": "Código de Referencia",
+  "iHaveReadAndAgreeToTerms&Conditions": "He leído y acepto los Términos y Condiciones",
+  "drawYourSignature": "Dibuja tu Firma:",
+  "submitSignUpRequest": "Enviar Solicitud de Registro",
+  "theInvitationLinkHasAlreadyExpiredOrIsInvalidThePageWillRefreshAutomaticallyIn": "El enlace de invitación ha caducado o no es válido. La página se actualizará automáticamente en",
+  "inputOtherAverageMonthlyPurchaseVolume": "Ingresar otro volumen de compras mensuales promedio...",
+  "inputOtherAverageMonthlySaleVolume": "Ingresar otro volumen de ventas mensuales promedio...",
+  "inputValue": "Ingresar valor...",
+  "seconds": "segundos",
+  "refresh": "Actualizar",
+  "no": "No",
+  "yes": "Sí",
+  "inProcess": "En Proceso",
+  "vaporTobaccoLicensesIfRequiredByYourState": "Licencias de Vapor y Tabaco (si es requerido por tu estado)",
+  "ownerInformation": "Información del Propietario",
+  "ownerEmail": "Correo Electrónico del Propietario",
+  "pointOfContactInformation": "Información de Punto de Contacto",
+  "pocEmail": "Correo Electrónico del Punto de Contacto",
+  "bankWireInformation": "Información de Transferencia Bancaria",
+  "nameOnAccount": "Nombre en la Cuenta",
+  "enterNameAccount": "Ingresar nombre en la cuenta",
+  "bankName": "Nombre del Banco",
+  "enterBankName": "Ingresar nombre del banco",
+  "bankAddress": "Dirección del Banco",
+  "enterBankAddress": "Ingresar dirección del banco",
+  "bankPhoneNumber": "Número de Teléfono del Banco",
+  "enterNumberPhone": "Ingresar número de teléfono",
+  "routingNumber": "Número de Ruta",
+  "enterRoutingNumber": "Ingresar número de ruta",
+  "accountNumber": "Número de Cuenta",
+  "enterAccountNumber": "Ingresar número de cuenta",
+  "preferredShippingServices": "Servicios de Envío Preferidos",
+  "enterShippingServiceName": "Ingresar nombre del servicio de envío",
+  "iHaveReadAndAgreeToTermsConditions": "He leído y acepto los Términos y Condiciones",
+  "signUpRequestSent": "Solicitud de Registro Enviada",
+  "thankYouForSigningUpOnTwsMarketplace": "Gracias por registrarse en TWS Marketplace.",
+  "onceYourAccountHasBeenCreatedYouWillBeEmailedYourLoginInformationAlongWithTheRequirementsForPuttingYourProductOnourMarketplace": "Una vez que se haya creado tu cuenta, se te enviará por correo electrónico tu información de inicio de sesión junto con los requisitos para poner tus productos en nuestro mercado.",
+  "visitOurWebsite": "Visita Nuestro Sitio Web",
+  "goBackToSignInPage": "Regresar a la Página de Inicio de Sesión",
+  "enterReasons": "Introduce motivos",
+  "validate": {
+    "required": "Este campo es obligatorio",
+    "email": {
+      "invalid": "Correo electrónico no válido",
+      "required": "El correo electrónico es un campo obligatorio"
+    },
+    "firstName": {
+      "required": "El nombre es un campo obligatorio",
+      "max": "El nombre debe tener como máximo 50 caracteres",
+      "min": "El nombre debe tener al menos 2 caracteres",
+      "matches": "Solo se permiten letras para este campo",
+      "invalid": "Valor no válido"
+    },
+    "lastName": {
+      "required": "El apellido es un campo obligatorio",
+      "max": "El apellido debe tener como máximo 50 caracteres",
+      "min": "El apellido debe tener al menos 2 caracteres",
+      "matches": "Solo se permiten letras para este campo",
+      "invalid": "Valor no válido"
+    },
+    "businessName": {
+      "required": "El nombre del negocio es un campo obligatorio",
+      "max": "El nombre del negocio debe tener como máximo 50 caracteres",
+      "min": "El nombre del negocio debe tener al menos 2 caracteres",
+      "matches": "Valor no válido"
+    },
+    "phoneNumber": {
+      "required": "Se requiere el número de teléfono",
+      "matches": "El formato del número de teléfono es incorrecto"
+    },
+    "websiteLinkUrl": {
+      "matches": "El enlace del sitio web no es correcto"
+    },
+    "monthlyPurchaseOther": {
+      "max": "Debe tener como máximo 200 caracteres",
+      "matches": "Valor no válido"
+    },
+    "monthlySaleOther": {
+      "max": "Debe tener como máximo 200 caracteres",
+      "matches": "Valor no válido"
+    },
+    "typeOfSaleOther": {
+      "max": "Debe tener como máximo 200 caracteres",
+      "matches": "Valor no válido"
+    },
+    "totalLocations": {
+      "integer": "El número de ubicaciones debe ser un número entero",
+      "typeError": "El campo debe contener solo dígitos",
+      "max": "El número de ubicaciones debe estar entre 0 y 10,000",
+      "min": "El número de ubicaciones debe estar entre 0 y 10,000"
+    },
+    "findUsOverOther": {
+      "max": "Debe tener como máximo 200 caracteres",
+      "matches": "Valor no válido"
+    },
+    "federalTaxId": {
+      "required": "El número de identificación de impuestos federales es un campo obligatorio",
+      "max": "El número de identificación de impuestos federales debe tener como máximo 200 caracteres",
+      "min": "El número de identificación de impuestos federales debe tener al menos 5 caracteres",
+      "matches": "Valor no válido"
+    },
+    "address": {
+      "max": "La dirección debe tener como mínimo 2 caracteres",
+      "min": "La dirección debe tener como máximo 255 caracteres",
+      "matches": "Valor no válido"
+    },
+    "address2": {
+      "max": "La dirección adicional debe tener como mínimo 2 caracteres",
+      "min": "La dirección adicional debe tener como máximo 255 caracteres",
+      "matches": "Valor no válido"
+    },
+    "city": {
+      "max": "La ciudad debe tener entre 2 y 100 caracteres",
+      "min": "La ciudad debe tener entre 2 y 100 caracteres",
+      "matches": "Valor no válido"
+    },
+    "state": {
+      "max": "El estado debe tener entre 2 y 100 caracteres",
+      "min": "El estado debe tener entre 2 y 100 caracteres",
+      "matches": "Valor no válido"
+    },
+    "postalZipcode": {
+      "required": "El código postal es un campo obligatorio",
+      "max": "El código postal debe tener entre 5 y 9 caracteres",
+      "min": "El código postal debe tener entre 5 y 9 caracteres",
+      "matches09": "El código postal solo puede ser un número",
+      "matches": "Valor no válido",
+      "test": "El código postal no coincide con la Ciudad/Estado"
+    },
+    "organizationRefferal": {
+      "max": "El código de referencia debe tener entre 5 y 255 caracteres",
+      "min": "El código de referencia debe tener entre 5 y 255 caracteres"
+    },
+    "checkbox": {
+      "bool": "Debes aceptar los términos y condiciones"
+    },
+    "accountNumber": {
+      "required": "Se requiere el número de cuenta",
+      "matches": "El número de cuenta solo puede ser un número",
+      "max": "El número de cuenta debe tener entre 2 y 25 caracteres",
+      "min": "El número de cuenta debe tener entre 2 y 25 caracteres"
+    },
+    "routingNumber": {
+      "required": "Se requiere el número de ruta",
+      "max": "El número de ruta debe tener entre 2 y 25 caracteres",
+      "min": "El número de ruta debe tener entre 2 y 25 caracteres"
+    },
+    "shippingServices": {
+      "required": "Shipping Service must select at least one service. ",
+      "min": "El Servicio de Envío debe seleccionar al menos un servicio."
+    },
+    "nameShipping": "Este campo es obligatorio"
+  }
+}

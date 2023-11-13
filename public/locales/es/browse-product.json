@@ -1,0 +1,14 @@
+{
+  "notFoundProductList": "No hay productos disponibles en este momento.",
+  "products": "Productos",
+  "price": "Precio",
+  "from": "De",
+  "to": "A",
+  "submit": "Entregar",
+  "featured": "Presentado",
+  "supplier": "Proveedor",
+  "manufacturer": "Fabricante",
+  "category": "Categoría",
+  "brand": "Marca",
+  "clearFilter": "Filtro claro"
+}

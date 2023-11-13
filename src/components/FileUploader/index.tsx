@@ -4,13 +4,13 @@ import { styled } from '@mui/material/styles'
 import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
-import { UploadSimple, XCircle } from 'phosphor-react'
+import { UploadSimple, XCircle } from '@phosphor-icons/react'
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { getUrlUploadFileApi, uploadFileApi } from './uploadAPI'
 import { loadingActions } from 'src/store/loading/loadingSlice'
-import { notificationActions } from 'src/store/notification/notificationSlice'
+import { useEnqueueSnackbar } from '../enqueueSnackbar'
 // api
 
 type Props = {
@@ -64,10 +64,11 @@ const ComponentFileUploader = ({
   const dispatch = useAppDispatch()
   const fileInputRef = React.useRef<any>(null)
   const textFieldRef = React.useRef<HTMLInputElement>(null)
+  const [pushMessage] = useEnqueueSnackbar()
 
   const [stateFile, setStateFile] = React.useState<{ name: string }>()
 
-  const handleFileInput = (e: any) => {
+  const handleFileInput = async (e: any) => {
     // handle validations
 
     console.log('e', e)
@@ -87,23 +88,36 @@ const ComponentFileUploader = ({
       //   return
       // }
       if (fileInput.size) {
-        const size = fileInput.size / 1024 / 1024 < 5
+        const size = fileInput.size / 1024 / 1024 < 50
         if (!size) {
           onFileSelectError()
-          dispatch(
-            notificationActions.doNotification({
-              message: 'File cannot be large than 5MB',
-              type: 'error',
-            })
-          )
+          pushMessage('file can not be larger than 50MB', 'error')
+
           return
         }
       }
-      handleGetUrlUpload(fileInput)
+      if (typeof window !== 'undefined' && fileInput.type === 'image/heic') {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const heic2any = require('heic2any')
+        const convertedBlob = await heic2any({
+          blob: fileInput,
+          toType: 'image/jpeg',
+          quality: 0.5,
+        })
+        const jpgFile = new File([convertedBlob], `${fileInput.name}.jpg`, {
+          type: 'image/jpeg',
+        })
+        console.log('convertedBlob', convertedBlob, jpgFile)
+        handleGetUrlUpload(jpgFile)
+      } else {
+        console.log('4444')
+        handleGetUrlUpload(fileInput)
+      }
     }
   }
   const handleGetUrlUpload = (fileInput: any) => {
     dispatch(loadingActions.doLoading())
+
     getUrlUploadFileApi({
       files: [
         {
@@ -131,33 +145,19 @@ const ComponentFileUploader = ({
             setStateFile(fileInput)
             onFileSelectSuccess(data.newUrl)
             dispatch(loadingActions.doLoadingSuccess())
-            dispatch(
-              notificationActions.doNotification({
-                message: 'Upload success',
-              })
-            )
+            pushMessage('Upload success', 'success')
           })
           .catch((error) => {
             console.log('🚀 ~ error', error)
 
             dispatch(loadingActions.doLoadingFailure())
-            dispatch(
-              notificationActions.doNotification({
-                message: 'Upload error',
-                type: 'error',
-              })
-            )
+            pushMessage('Upload failed', 'error')
           })
       })
       .catch(() => {
         // const data = error.response.data
         dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: 'Get url error',
-            type: 'error',
-          })
-        )
+        pushMessage('Upload failed', 'error')
       })
   }
   const handleDelete = () => {
@@ -202,7 +202,7 @@ const ComponentFileUploader = ({
         type="file"
         onChange={handleFileInput}
         // accept="image/*"
-        accept=".doc,.docx,application/pdf,.png,.jpg,.jpeg"
+        accept=".doc,.docx,application/pdf,.png,.jpg,.jpeg,.webp,.heic"
         hidden
         ref={fileInputRef}
       />

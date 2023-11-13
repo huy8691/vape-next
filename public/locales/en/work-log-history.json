@@ -1,0 +1,19 @@
+{
+  "title": "Work Logs History",
+  "exportExcel": "Export excel",
+  "fullName": "Full name",
+  "date": "Date",
+  "time": "Time",
+  "timeSpent": "Time spent",
+  "description": "Description",
+  "rowsPerPage": "Rows Per Page",
+  "filter": "Filter",
+  "reset": "Reset",
+  "confirmation": "Confirmation",
+  "areYouSureYouWantToExportExcel": "Are you sure you want to export excel",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "message": {
+    "exportExcelSuccessfully": "Export excel successfully"
+  }
+}

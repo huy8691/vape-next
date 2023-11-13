@@ -1,0 +1,81 @@
+{
+  "title": "Lealtad",
+  "pointsEarningConfiguration": "Configuración de Ganancia de Puntos",
+  "pointsBurningConfiguration": "Configuración de Quema de Puntos",
+  "tieredLoyaltyLevels": "Niveles de Lealtad Escalonados",
+  "tieredBenefit": "Beneficio Escalonado",
+  "action": "Acción",
+  "fixedPoints": "Puntos Fijos",
+  "ofBilling": "% de facturación",
+  "paidAnOnlineOrder": "Pagó un pedido en línea",
+  "enterDiscountRate": "Ingrese la tasa de descuento",
+  "paidAnRetailOrder": "Pagó un pedido minorista",
+  "save": "Guardar",
+  "pointsToBurn": "Puntos a quemar",
+  "discountAmount": "Cantidad de descuento",
+  "fixedAmount": "Cantidad fija",
+  "addRule": "Agregar Regla",
+  "deletePointBurning": "Eliminar Quema de Puntos",
+  "areYouSureToDelete": "¿Estás seguro de eliminar?",
+  "no": "No",
+  "yes": "Sí",
+  "bronze": "Bronce",
+  "silver": "Plata",
+  "gold": "Oro",
+  "platinum": "Platino",
+  "diamond": "Diamante",
+  "BRONZE": "Bronce",
+  "SILVER": "Plata",
+  "GOLD": "Oro",
+  "PLATINUM": "Platino",
+  "DIAMOND": "Diamante",
+  "generalBenefit": "Beneficio General",
+  "freeShipping": "Envío Gratis",
+  "customBenefit": "Beneficio Personalizado",
+  "benefit": "Beneficio",
+  "add": "Agregar",
+  "enterPointEarningBonus": "Ingrese bonificación por ganancia de puntos",
+  "validate": {
+    "valuePoint": {
+      "required": "Se requiere % de facturación",
+      "minMax": "% de facturación debe estar entre 0% y 100%"
+    },
+    "maxValuePoints": {
+      "required": "Se requiere % de facturación",
+      "positive": "Límite de ganancia - % de facturación debe ser un número positivo",
+      "typeError": "% de facturación debe ser un número",
+      "min": "% de facturación debe ser al menos 0.00$"
+    },
+    "valuePoints": {
+      "required": "Se requieren Puntos Fijos",
+      "typeError": "Puntos Fijos deben ser un número",
+      "min": "Puntos Fijos deben estar entre 0.00$ ",
+      "positive": "Puntos Fijos deben ser un número positivo"
+    },
+    "points": {
+      "required": "Se requieren Puntos a Quemar",
+      "min": "Puntos a Quemar deben ser mayores o iguales a 1"
+    },
+    "valueAmount": {
+      "required": "Se requiere Cantidad Fija",
+      "moreThan": "La Cantidad Fija debe ser mayor que 0"
+    },
+    "valuePercent": {
+      "required": "Se requiere % de facturación",
+      "moreThan": "% de facturación debe ser mayor que 0"
+    },
+    "maxValue": {
+      "required": "Se requiere Límite de Ganancia",
+      "min": "El Límite de Ganancia debe ser mayor o igual a 0"
+    }
+  },
+  "message": {
+    "updatePointEarningPaidAnOnlineOrderSuccessfully": "Actualización exitosa de puntos al pagar un pedido en línea",
+    "updatePointEarningPaidAnRetailOrderSuccessfully": "Actualización exitosa de puntos al pagar un pedido minorista",
+    "deletePointBurningSuccessfully": "Eliminación exitosa de quema de puntos",
+    "configLoyaltyLevelSuccessfully": "Configuración exitosa del nivel de lealtad",
+    "updateTieredBenefit": "Actualizar beneficio escalonado",
+    "updateSuccessfully": "Actualización exitosa.",
+    "createSuccessfully": "Creación exitosa."
+  }
+}

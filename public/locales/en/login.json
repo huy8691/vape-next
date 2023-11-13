@@ -1,0 +1,33 @@
+{
+  "title": "Login",
+  "signIn": "Sign In",
+  "welcomeTo": "WELCOME TO",
+  "portal": "PORTAL",
+  "email": "Email",
+  "password": "Password",
+  "rememberMe": "Remember me",
+  "newToTws": "New to TWS?",
+  "register": "Register",
+  "forgotPassword": "Forgot password",
+  "message": {
+    "success": "Sign in successfully"
+  },
+  "yourRole": {
+    "selectYourRole": "Select Your Role",
+    "supplier": "SUPPLIER",
+    "signIn": "Sign In",
+    "retailer": "RETAILER"
+  },
+  "validate": {
+    "email": {
+      "invalid": "Invalid email",
+      "required": "Please enter your Email"
+    },
+    "password": {
+      "required": "Please enter your password",
+      "min": "This password is too short. It must contain at least 8 characters",
+      "matches": "Password is incorrect format"
+    }
+  },
+  "adminPortal": "ADMIN PORTAL"
+}

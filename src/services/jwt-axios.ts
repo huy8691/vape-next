@@ -1,10 +1,17 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-let urlApi = 'https://cms.theweedsupplies.com'
 
-const env = process.env.ENV
+let urlApi = 'https://cms.dev.twssolutions.us'
+// let urlApi = 'http://192.168.1.15:8000/'
+const env = process.env.NEXT_PUBLIC_ENV
 if (env === 'prod') {
-  urlApi = 'https://cms.theweedsupplies.com'
+  urlApi = 'https://cms.twssolutions.us'
+  console.log =
+    console.warn =
+    console.error =
+      () => {
+        return
+      }
 }
 
 let isRefreshing = false
@@ -24,12 +31,11 @@ const processQueue = (error: any, token = null) => {
 
 const callAPI = axios.create({
   baseURL: urlApi, // YOUR_API_URL HERE
-  timeout: 10000,
+  timeout: 20000,
   timeoutErrorMessage: 'Timeout error',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'ngrok-skip-browser-warning': '69420',
   },
 })
 
@@ -47,7 +53,7 @@ callAPI.interceptors.response.use(
 
 const callAPIWithToken = axios.create({
   baseURL: urlApi,
-  timeout: 10000,
+  timeout: 20000,
   timeoutErrorMessage: 'Timeout error',
   // headers: {
   //   'Content-Type': 'application/json',
@@ -63,7 +69,6 @@ callAPIWithToken.interceptors.request.use(
     req.headers = {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
-      'ngrok-skip-browser-warning': '69420',
       withCredentials: true,
       Authorization: `Bearer ${token}`,
     }
@@ -87,12 +92,15 @@ callAPIWithToken.interceptors.response.use(
     //   window.location.href = '/login'
     //   Cookies.remove('token')
     // }
-    if (err.response && err.response.status === 403) {
-      window.location.href = '/403'
-      // Cookies.remove('token')
+    // if (err.response && err.response.status === 403) {
+    //   window.location.href = '/403'
+    //   // Cookies.remove('token')
+    // }
+    if (err.code === 'ERR_NETWORK') {
+      return err
     }
 
-    if (err.response.status === 401 && !originalConfig._retry) {
+    if (err.response?.status === 401 && !originalConfig._retry) {
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject })
@@ -128,7 +136,12 @@ callAPIWithToken.interceptors.response.use(
               reject(err)
               Cookies.remove('token')
               Cookies.remove('refreshToken')
-              window.location.href = '/login'
+              window.location.href = `${
+                document.documentElement.lang !== 'en'
+                  ? `/${document.documentElement.lang}`
+                  : ''
+              }/login`
+              // window.location.href = `/login`
             })
             .finally(() => {
               isRefreshing = false
@@ -138,21 +151,27 @@ callAPIWithToken.interceptors.response.use(
         isRefreshing = false
         Cookies.remove('token')
         Cookies.remove('refreshToken')
-        window.location.href = '/login'
+        window.location.href = `${
+          document.documentElement.lang !== 'en'
+            ? `/${document.documentElement.lang}`
+            : ''
+        }/login`
       }
     }
+
+    console.log('err.code', err)
+
     return Promise.reject(err)
   }
 )
 
 const callAPIUpLoad = axios.create({
   baseURL: urlApi, // YOUR_API_URL HERE
-  timeout: 10000,
+  timeout: 30000,
   timeoutErrorMessage: 'Timeout error',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'ngrok-skip-browser-warning': '69420',
     // 'Content-Type': 'image/png',
   },
 })

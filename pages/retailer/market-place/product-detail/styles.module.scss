@@ -1,0 +1,90 @@
+@import 'styles/colors.scss';
+
+.product-detail {
+  &__priceUnit {
+    font-size: 2.4rem;
+    font-weight: 600;
+    &__unit {
+      font-weight: normal;
+      font-size: 2.4rem;
+      text-transform: lowercase;
+    }
+  }
+
+  &__slick-carousel {
+    padding-top: 15px;
+    margin-left: -5px;
+    margin-right: -5px;
+    min-height: 70px;
+    &__item {
+      overflow: hidden;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    :global {
+      .slick-current {
+        > div > div > div {
+          border: 1px solid $primary;
+        }
+      }
+      .slick-dots {
+        bottom: -20px;
+      }
+    }
+  }
+}
+.text-field-add-to-cart {
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+.input-number {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  :global {
+    .MuiInputBase-input {
+      border-radius: 20px;
+    }
+    .MuiTextField-root {
+      width: 100%;
+    }
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+      font-size: 1.4rem;
+      overflow: hidden;
+      border-color: #e1e6ef;
+    }
+    .MuiOutlinedInput-notchedOutline {
+      border-width: 1px !important;
+      border-color: #e1e6ef;
+    }
+    .MuiInputBase-multiline {
+      padding: 0px;
+    }
+    .MuiInputBase-input {
+      padding: 10px 15px;
+    }
+  }
+}
+.wrapper-add-to-cart {
+  overflow: auto;
+  max-height: 500px;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+}
+.wrapper-add-to-cart::-webkit-scrollbar {
+  display: none;
+}

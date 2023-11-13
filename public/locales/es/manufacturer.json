@@ -1,0 +1,58 @@
+{
+  "title": "Gestión de fabricantes",
+  "importSuccessfully": "Importado exitosamente",
+  "deleteManufacturerStateIdManufacturerNameSuccessfully": "Eliminar fabricante {0} exitosamente",
+  "searchByNameManufacturer": "Buscar por nombre del fabricante...",
+  "addNewManufacturer": "Agregar Nuevo Fabricante",
+  "thereAreNoManufacturerToShow": "No hay fabricantes para mostrar",
+  "list": {
+    "no.": "No.",
+    "logo": "Logo",
+    "manufacturerName": "Nombre del fabricante",
+    "action": "Acción",
+    "rowsPerPage": "Filas por página",
+    "edit": "Editar",
+    "delete": "Eliminar"
+  },
+  "deleteManufacturer": "Eliminar Fabricante",
+  "areYouSureToRemoveTheManufacturerOutOfList": "¿Estás seguro de eliminar el fabricante de la lista?",
+  "no": "No",
+  "yes": "Sí",
+  "importManufacturer": "Importar Fabricante",
+  "selectImportFile": "Seleccionar archivo de importación",
+  "uploadFile": "Cargar archivo...",
+  "thereAreSomeErrorsWithTheImportFilePleaseDownloadTheErrorFileForMoreInformation": " Hay algunos errores con el archivo de importación. Por favor, descarga el archivo de errores para obtener más información.",
+  "Information": " Hay algunos errores con el archivo de importación. Por favor, descarga el archivo de errores para obtener más información.",
+  "clickHere": "Haz clic aquí",
+  "toDownTheImportTemplate": "para descargar la plantilla de importación.",
+  "allowedFileExtensionXlsxCsv": "Extensión de archivo permitida: .xlsx / .csv",
+  "allowedFileSizeIs_10Mb": "El tamaño de archivo permitido es {'<'} 10 MB",
+  "cancel": "Cancelar",
+  "submit": "Enviar",
+  "createUpdate": {
+    "createNewManufacturer": "Crear Nuevo Fabricante",
+    "updateManufacturer": "Actualizar Fabricante",
+    "manufacturerLogo": "Logo del Fabricante",
+    "manufacturerName": " Nombre del Fabricante",
+    "enterManufacturerName": "Ingrese el nombre del fabricante",
+    "cancel": "Cancelar",
+    "submit": "Enviar"
+  },
+  "message": {
+    "productManufacturerHasBeenCreatedSuccessfully": "El fabricante de productos se ha creado exitosamente",
+    "productManufacturerHasBeenUpdatedSuccessfully": "El fabricante de productos se ha actualizado exitosamente"
+  },
+
+  "validate": {
+    "name": {
+      "required": "El nombre del fabricante es un campo obligatorio",
+      "min": "El nombre del fabricante debe tener al menos 2 caracteres",
+      "max": "El nombre del fabricante debe tener como máximo 50 caracteres",
+      "matches": "Nombre de fabricante no válido"
+    },
+    "importData": {
+      "required": "Este campo es obligatorio",
+      "test": "El archivo es demasiado grande"
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "title": "Inscribirse",
+  "verifyYourEmail": "Verifique su correo electrónico",
+  "email": "Correo electrónico",
+  "enterEmail": "Ingrese correo electrónico",
+  "check": "Controlar",
+  "inputInformation": "Información de entrada",
+  "firstName": "Nombre de pila",
+  "enterFirstName": "Introduce el nombre",
+  "lastName": "Apellido",
+  "enterLastName": "Introduzca el apellido",
+  "phoneNumber": "Número de teléfono",
+  "enterPhoneNumber": "Ingrese el número de teléfono",
+  "businessName": "Nombre del Negocio",
+  "enterBusinessName": "Introduzca el nombre de la empresa",
+  "websiteLinkURL": "URL del enlace del sitio web",
+  "ex": "Ex: example.com",
+  "averageMonthlyPurchaseVolume": "Volumen medio de compra mensual",
+  "averageMonthlySaleVolume": "Volumen medio de venta mensual",
+  "typeOfSale": "Tipo de venta",
+  "howManyLocations": "¿Cuántas ubicaciones? ?",
+  "howDidYouFindUs": "¿Cómo se enteró de nosotros??",
+  "doYouHaveAnIdAgeVerificationSystem": "¿Tiene un sistema de verificación de edad de identificación??",
+  "doYouCurrentlyHaveAPaymentProcessingSystem": "¿Tiene actualmente un sistema de procesamiento de pagos??",
+  "federalTaxID": "ID de impuestos federales",
+  "enterFederalTaxID": "Ingrese el número de identificación fiscal federal",
+  "businessTaxDocument": "Documento fiscal empresarial",
+  "selectValue": "Selecciona valor",
+  "vapor&TobaccoLicenses(IfRequiredByYourState)": "Licencias de vapor y tabaco (si lo requiere su estado)",
+  "streetAddress": "Dirección",
+  "addressLine2": "Línea de dirección 2",
+  "city": "Ciudad",
+  "state": "Estado",
+  "postal/ZipCode": "Código postal",
+  "referralCode": "Código de referencia",
+  "iHaveReadAndAgreeToTerms&Conditions": "He leído y acepto los Términos y condiciones",
+  "drawYourSignature": "Dibuja tu firma::",
+  "submitSignUpRequest": "Enviar solicitud de registro",
+  "theInvitationLinkHasAlreadyExpiredOrIsInvalidThePageWillRefreshAutomaticallyIn": "El enlace de invitación ya caducó o no es válido. La página se actualizará automáticamente en 10 segundos.",
+  "inputOtherAverageMonthlyPurchaseVolume": "Introduzca otro volumen de compra mensual promedio......",
+  "inputOtherAverageMonthlySaleVolume": "Introduzca otro volumen de venta mensual promedio......",
+  "inputValue": "Valor de entrada......",
+  "seconds": "segundos",
+  "refresh": "Actualizar",
+  "no": "No",
+  "yes": "Sí",
+  "inProcess": "En proceso",
+  "validate": {
+    "required": "Este campo es obligatorio",
+    "email": {
+      "invalid": "Email inválido",
+      "required": "El correo electrónico es un campo obligatorio"
+    },
+    "firstName": {
+      "required": "El nombre es un campo obligatorio",
+      "max": "El nombre debe tener como máximo 50 caracteres.",
+      "min": "El nombre debe tener al menos 2 caracteres.",
+      "matches": "Sólo se permiten alfabetos para este campo.",
+      "invalid": "valor no válido"
+    },
+    "lastName": {
+      "required": "El apellido es un campo obligatorio",
+      "max": "El apellido debe tener como máximo 50 caracteres.",
+      "min": "El apellido debe tener al menos 2 caracteres.",
+      "matches": "Sólo se permiten alfabetos para este campo",
+      "invalid": "valor no válido"
+    },
+    "businessName": {
+      "required": "El nombre de la empresa es un campo obligatorio",
+      "max": "El nombre de la empresa debe tener como máximo 50 caracteres.",
+      "min": "El nombre de la empresa debe tener al menos 2 caracteres.",
+      "matches": "valor no válido"
+    },
+    "phoneNumber": {
+      "required": "Se requiere número de teléfono",
+      "matches": "Se requiere número de teléfono"
+    },
+    "websiteLinkUrl": {
+      "matches": "La URL del enlace del sitio web no es correcta"
+    },
+    "monthlyPurchaseOther": {
+      "max": "Debe tener como máximo 200 caracteres.",
+      "matches": "valor no válido"
+    },
+    "monthlySaleOther": {
+      "max": "Debe tener como máximo 200 caracteres.",
+      "matches": "valor no válido"
+    },
+    "typeOfSaleOther": {
+      "max": "Debe tener como máximo 200 caracteres.",
+      "matches": "valor no válido"
+    },
+    "totalLocations": {
+      "integer": "¿Cuántas ubicaciones deben ser enteras?",
+      "typeError": "El campo debe tener solo dígitos.",
+      "max": "¿Cuántas ubicaciones deben estar entre 0 y 10 000?",
+      "min": "¿Cuántas ubicaciones deben estar entre 0 y 10 000?"
+    },
+    "findUsOverOther": {
+      "max": "Debe tener como máximo 200 caracteres.",
+      "matches": "valor no válido"
+    },
+    "federalTaxId": {
+      "required": "La identificación fiscal federal es un campo obligatorio",
+      "max": "La identificación fiscal federal debe tener como máximo 200 caracteres.",
+      "min": "La identificación fiscal federal debe tener al menos 5 caracteres",
+      "matches": "valor no válido"
+    },
+    "address": {
+      "max": "La dirección postal debe tener al menos 2 caracteres.",
+      "min": "La dirección postal debe tener como máximo 255 caracteres.",
+      "matches": "valor no válido"
+    },
+    "address2": {
+      "max": "La subdirección debe tener al menos 2 caracteres.",
+      "min": "La subdirección debe tener como máximo 255 caracteres.",
+      "matches": "valor no válido"
+    },
+    "city": {
+      "max": "La ciudad debe tener entre 2 y 100 caracteres.",
+      "min": "La ciudad debe tener entre 2 y 100 caracteres.",
+      "matches": "valor no válido"
+    },
+    "state": {
+      "max": "El estado debe tener entre 2 y 100 caracteres.",
+      "min": "El estado debe tener entre 2 y 100 caracteres.",
+      "matches": "valor no válido"
+    },
+    "postalZipcode": {
+      "required": "El código postal es un campo obligatorio",
+      "max": "El código postal debe tener de 5 a 9 caracteres.",
+      "min": "El código postal debe tener de 5 a 9 caracteres.",
+      "matches09": "El código postal solo puede ser un número",
+      "matches": "valor no válido",
+      "test": "El código postal no coincide con la ciudad/estado"
+    },
+    "organizationRefferal": {
+      "max": "El código de referencia debe tener entre 5 y 255 caracteres.",
+      "min": "Referral code must be between 5 and 255 characters"
+    },
+    "checkbox": {
+      "bool": "Debe aceptar los Términos y Condiciones"
+    }
+  }
+}

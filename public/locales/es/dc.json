@@ -1,0 +1,112 @@
+{
+  "title": "Canal de distribución",
+  "titleUpdateDC": "Actualizar canal de distribución",
+  "titleCreateDC": "Crear canal de distribución",
+  "dcInformation": "Información del canal de distribución",
+  "titleJoinChannel": "Unirse al canal",
+  "channelName": "Nombre del Canal",
+  "channelCode": "código de canal",
+  "channelDetails": "Detalles del canal de distribución",
+  "ownedChannel": "Canal propio",
+  "vendorChannel": "Canal de proveedores",
+  "createChannel": "Crear canal",
+  "addNewProduct": "Agregar nuevo producto",
+  "searchChannel": "Buscar canal...",
+  "thereAreNoProductToShow": "No hay productos para mostrar",
+  "code": "código",
+  "productName": "nombre del producto",
+  "selectCategory": "selecciona una categoría",
+  "category": "Categoría",
+  "manufacturer": "Fabricante",
+  "quantity": "Cantidad",
+  "status": "Estado",
+  "haveVariant": "Tiene variante",
+  "updatedDate": "Fecha de actualización",
+  "action": "Acción",
+  "active": "Activo",
+  "update": "Actualizar",
+  "submit": "Entregar",
+  "deactive": "Desactivado",
+  "variantGroupFor": "Grupo de variantes para",
+  "codeColumn": "Código",
+  "name": "Nombre",
+  "rowsPerPage": "Filas por página",
+  "viewDetail": "Ver detalles",
+  "filter": "filtrar",
+  "price": "Precio",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "from": "De",
+  "to": "A",
+  "yes": "Sí",
+  "no": "No",
+  "codeChannel": "Canal de código",
+  "enterCodeChannel": "Ingresar código de canal",
+  "selectManufacturer": "Seleccionar fabricante",
+  "brand": "Marca",
+  "selectBrand": "Seleccionar marca",
+  "reset": "Reiniciar",
+  "merchantName": "Nombre del comerciante",
+  "titleMerchantList": "Minoristas del canal de distribución",
+  "leaveChannel": "Salir del canal",
+  "thisChannelDontHaveAnyRetailer": "Este canal no tiene ningún minorista",
+  "numericOrder": "No.",
+  "retailerName": "Nombre minorista",
+  "joinDate": "Fecha de Ingreso",
+  "delete": "Borrar",
+  "deleteRetailer": "Eliminar minorista",
+  "leaveDistributionChannel": "Dejar los canales de distribución",
+  "areYouSureToDelete": "¿Estás seguro de eliminar?",
+  "areYouSureToRemove": "¿Estás seguro de eliminar?",
+  "outOfDC": "fuera del canal de distribución",
+  "dcName": "Nombre del canal de distribución",
+  "enterNameChannel": "Ingrese el nombre del canal",
+  "joinChannel": "Unirse al canal",
+  "thisPageDonotExist": "¡Esta página no existe!",
+  "takeMeBack": "Llévame de vuelta",
+  "joinDC": "Únase al canal de distribución",
+  "validation": {
+    "instock_gte": {
+      "test": "El campo Cantidad desde debe ser menor o igual que el campo Cantidad hasta"
+    },
+    "instock_rte": {
+      "test": "El campo Cantidad hasta debe ser mayor o igual que el campo Cantidad desde"
+    },
+    "price_gte": {
+      "test": "El precio del campo debe ser menor o igual que el precio del campo"
+    },
+    "price_rte": {
+      "test": "El campo Precio hasta debe ser mayor o igual que el campo Precio desde"
+    },
+    "retail_price": {
+      "required": "Se requiere precio de venta al público",
+      "min": "El precio de venta al público debe ser mayor o igual a 1",
+      "max": "El precio minorista debe ser menor o igual a 10000000"
+    },
+    "createDC": {
+      "required": "El nombre es un campo obligatorio",
+      "min": "El nombre debe tener al menos 2 caracteres",
+      "max": "El nombre debe tener menos o igual de 255 caracteres",
+      "matches": "Nombre no válido"
+    },
+    "joinChannel": {
+      "required": "El código de canal es un campo obligatorio",
+      "min": "El código de canal debe tener al menos 2 caracteres"
+    }
+  },
+  "pushMessage": {
+    "removeMerchantSuccess": "El comerciante ha sido eliminado del canal exitosamente",
+    "createSuccessfully": "El canal de distribución se ha creado con éxito",
+    "updateSuccessfully": "El canal de distribución se ha actualizado correctamente",
+    "joinChannel": "Unirse al canal exitosamente"
+  },
+  "youDonTHaveAnyChannel": "No tienes ningun canal",
+  "detailDistributionChannel": "Detalle del canal de distribución",
+  "distributionChannelDetails": "Detalles del canal de distribución",
+  "distributionChannel": "Canal de distribución",
+  "createDistributionChannel": "Crear canal de distribución",
+  "updateDistributionChannel": "Actualizar canal de distribución",
+  "retailers": "Minoristas",
+  "products": "Productos",
+  "discountRules": "Reglas de descuento"
+}

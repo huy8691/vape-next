@@ -1,0 +1,51 @@
+{
+  "title": "Proveedores Externos",
+  "search": "Buscar...",
+  "create": "Crear",
+  "thereAreNoExternalToShow": "No hay proveedores externos para mostrar",
+  "businessName": "Nombre de la empresa",
+  "phoneNumber": "Número de teléfono",
+  "email": "Correo electrónico",
+  "address": "Dirección",
+  "rowsPerPage": "Filas por página",
+  "edit": "Editar",
+  "delete": "Eliminar",
+  "deleteExternalSupplier": "Eliminar proveedor externo",
+  "areYouSureToDeleteThisExternalSupplier": "¿Estás seguro de eliminar este proveedor externo?",
+  "no": "No",
+  "yes": "Sí",
+  "createExternalSuppler": "CREAR PROVEEDOR EXTERNO",
+  "updateExternalSuppler": "ACTUALIZAR PROVEEDOR EXTERNO",
+  "streetAddress": "Dirección",
+  "city": "Ciudad",
+  "state": "Estado",
+  "postalCode": "Código postal",
+  "cancel": "Cancelar",
+  "submit": "Enviar",
+  "message": {
+    "theExternalSupplierHasBeenDeletedSuccessfully": "El proveedor externo ha sido eliminado correctamente",
+    "createExternalSupplierSuccessfully": "Proveedor externo creado con éxito",
+    "somethingsWentWrong": "Algo salió mal, por favor inténtalo de nuevo o contacta a Salonbookly si el problema persiste: Mensaje de error común",
+    "updateExternalSupplierSuccessfully": "Proveedor externo actualizado con éxito"
+  },
+  "validate": {
+    "email": "Correo electrónico no válido",
+    "name": {
+      "required": "Este campo es obligatorio",
+      "min": "El nombre de la empresa debe tener al menos 2 caracteres",
+      "max": "El nombre de la empresa debe tener como máximo 50 caracteres",
+      "matches": "Nombre de la empresa no válido"
+    },
+    "phoneNumber": "Número de teléfono no válido",
+    "address": {
+      "max": "La dirección debe tener como máximo 255 caracteres",
+      "matches": "Dirección no válida"
+    },
+    "city": "La ciudad debe tener como máximo 500 caracteres",
+    "postalCode": {
+      "min": "El código postal debe tener al menos 5 caracteres",
+      "max": "El código postal debe tener como máximo 9 caracteres",
+      "test": "El código postal no coincide con la ciudad/estado"
+    }
+  }
+}

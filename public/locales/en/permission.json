@@ -1,0 +1,20 @@
+{
+  "title": "Permission",
+  "configurePermission": "Configure Permission",
+  "selectRole": "Select role",
+  "searchByModule": "Search by module",
+  "selectAll": "Select all",
+  "applyReplaceRolesType": "Apply/Replace Roles type",
+  "submit": "Submit",
+  "thereAreNoRoleToShow": " There are no role to show",
+  "selectRoleType": "Select role type",
+  "replace": "Replace",
+  "apply": "Apply",
+  "message": {
+    "assignPermissionSuccessfully": "Assign permission successfully",
+    "pleaseSelectRoleType": "Please select role type",
+    "thisRoleTypeIsNotAppropriateWithCurrentRole": "This role type is not appropriate with current role",
+    "replaceRoleTypeStateCurrentRoleTypeNameSuccessfully": "Replace role type {{0}} successfully",
+    "applyRoleTypeStateCurrentRoleTypeNameSuccessfully": "Apply role type {{0}} successfully"
+  }
+}

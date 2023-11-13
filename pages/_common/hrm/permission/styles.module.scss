@@ -1,0 +1,29 @@
+.overlay {
+  position: relative;
+  min-width: 1600px;
+  height: 490px;
+  &:before {
+    content: '';
+    cursor: not-allowed;
+    display: block;
+    z-index: 10;
+    background-color: black;
+    opacity: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+  &::after {
+    content: 'Please choose role';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 11;
+    color: white;
+    font-size: 2.4rem;
+    font-weight: 600;
+  }
+}

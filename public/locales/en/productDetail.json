@@ -1,0 +1,31 @@
+{
+  "pushMessage": {
+    "inputQuantityHigherAvailability": "Input quantity is higher than availability",
+    "pleaseFillAtLeastOne": "Please fill at least one product quantity for add to cart",
+    "pleaseCheckProductVariant": "Please check product variant",
+    "addToCartSuccess": "Add to cart successfully",
+    "pleaseCheckProductVariantQuantity": "`Pleas check product variant {{0}} quantity`"
+  },
+  "quantity": "Quantity",
+  "productDetail": "Product details",
+  "shortDescription": "Short description",
+  "productName": "Product name",
+  "brand": "Brand",
+  "manufacturer": "Manufacturer",
+  "unitType": "Unit type",
+  "instock": "Instock",
+  "orderThisProduct": "Order This Product",
+  "addToCart": "Add to cart",
+  "enterNumberOf": "Enter number of",
+  "enterQuantity": "Enter quantity",
+  "youWantToOrder": "you want to order",
+  "unitPrice": "Unit Price",
+  "total": "Total",
+  "relatedProduct": "Related Products",
+  "selectDistributionChannel": "Select distribution channel",
+  "UNIT": "unit",
+  "PACKAGE": "package",
+  "overview": "Overview",
+  "specification": "Specification",
+  "somethingsWentWrong": "Somethings went wrong"
+}

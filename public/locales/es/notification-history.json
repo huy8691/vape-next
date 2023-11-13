@@ -1,0 +1,12 @@
+{
+  "title": "Historial de notificaciones",
+  "all": "Todo",
+  "read": "Leer",
+  "unRead": "No leído",
+  "today": "Hoy",
+  "yesterday": "Ayer",
+  "theProductHasBeenAddedToMarketplaceCart": "El producto ha sido agregado al carrito del mercado.",
+  "theProductIsNoLongerAvailableToOrder": "El producto ya no está disponible para ordenar.",
+  "restock": "REPOSTADO",
+  "replenish": "Reponer"
+}

@@ -1,0 +1,113 @@
+{
+  "invalidItemInOrder": "Some items in your order were invalid",
+  "changeAddress": "Change address successfully",
+  "orderSuccess": "The order has been checkout successfully",
+  "makePaymentSuccess": "makePaymentSuccess",
+  "checkOrderAgain": "Please double check your order",
+  "createAddressSuccess": "The address has been created successfully",
+  "updateAddressSuccess": "The address has been update successfully",
+  "checkout": "Checkout",
+  "shoppingCart": "Shopping cart",
+  "marketplace": "Marketplace",
+  "shippingAddress": "Shipping Address",
+  "pleaseCreateAddress": "Please create an address",
+  "cart": "Cart",
+  "change": "Change",
+  "createAddress": "Create Address",
+  "updateAddress": "Update Address",
+  "paymentMethod": "Payment method",
+  "expire": "Expire",
+  "paymentDetail": "Payment detail",
+  "subtotal": "Sub total",
+  "totalShipping": "Total shipping",
+  "total": "Total",
+  "clickTerm": " Clicking order means that you have read and understood",
+  "term": "the terms",
+  "ofTWSSolutions": "of TWS Solutions",
+  "confirmation": "Confirmation",
+  "confirmPlaceOrder": "Are you sure to place an order ?",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "addressBook": "Address Book",
+  "default": "Default",
+  "addNewAddress": "Add New Address",
+  "addressName": "Address Name",
+  "placeholderAddressName": "Enter address name",
+  "receiverName": "Receiver name",
+  "placeholderReceiverName": "Enter receiver name",
+  "phoneNumber": "Phone number",
+  "address": "Address",
+  "placeholderAddress": "Enter address",
+  "city": "City",
+  "state": "State",
+  "postalZipcode": "Postal zipcode",
+  "selectCard": "Select card for payment",
+  "addCardAndCheckout": "Add Card & Checkout",
+  "addCard": "Add Card",
+  "cardNumber": "Card Number",
+  "name": "Name",
+  "unit": "Unit",
+  "cvv": "CVV",
+  "expiry": "Expiry",
+  "validThru": "validThru",
+  "invalidMonth": "Month expiry is invalid",
+  "submit": "Submit",
+  "vaultCardSuccess": "Vault card successfully",
+  "vaultCardFail": "Vault card failed",
+  "creditCard": "Credit Cards",
+  "selectPaymentMethod": "Select A Payment Method",
+  "shippingMethod": "Shipping Method",
+  "products": "Products",
+  "theProductIsNotAvailable": "The product is no longer available",
+  "noteForStore": "Note for store",
+  "chooseShippingMethod": "Please choose shipping method",
+  "validation": {
+    "card": {
+      "required": "Card number is required"
+    },
+    "name": {
+      "required": "Name is required",
+      "min": "Name must be at least 5 characters",
+      "max": "Name must be at most 50 characters"
+    },
+    "note": {
+      "min": "Note must be between 5 and 255 characters"
+    },
+    "addressName": {
+      "required": "Address name is required",
+      "min": "Address name must be at least 2 characters",
+      "max": "Address name must be at most 50 characters",
+      "matches": "Address name invalid"
+    },
+    "phoneNumber": {
+      "required": "Phone number is required",
+      "matches": "Phone number invalid"
+    },
+    "address": {
+      "required": "Address is required",
+      "min": "Address must be at least 2 characters",
+      "max": "Address must be at most 50 characters",
+      "matches": "Address invalid"
+    },
+    "receiverName": {
+      "required": "Receiver name is required",
+      "min": "Receiver name must be at least 2 characters",
+      "max": "Receiver name must be at most 50 characters",
+      "matches": "Receiver name invalid"
+    },
+    "city": {
+      "required": "City field is required",
+      "min": "City must be at least 2 characters",
+      "max": "City must be at most 500 characters"
+    },
+    "state": {
+      "required": "State field is required"
+    },
+    "postalZipcode": {
+      "required": "Postal zip code field is required",
+      "min": "Postal zip code must be at least 5 characters",
+      "max": "Postal zip code must be at most 9 characters",
+      "matches": "Postal zip code does not match City/State"
+    }
+  }
+}

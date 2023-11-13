@@ -1,0 +1,145 @@
+{
+  "title": "Sign Up",
+  "verifyYourEmail": "Verify your email",
+  "email": "Email",
+  "enterEmail": "Enter email",
+  "check": "Check",
+  "inputInformation": "Input Information",
+  "firstName": "First Name",
+  "enterFirstName": "Enter first name",
+  "lastName": "Last Name",
+  "enterLastName": "Enter last name",
+  "phoneNumber": "Phone number",
+  "enterPhoneNumber": "Enter phone number",
+  "businessName": "Business name",
+  "enterBusinessName": "Enter business name",
+  "websiteLinkURL": "Website link URL",
+  "ex": "Ex: example.com",
+  "averageMonthlyPurchaseVolume": "Average monthly purchase volume",
+  "averageMonthlySaleVolume": "Average Monthly Sale Volume",
+  "typeOfSale": "Type of sale",
+  "howManyLocations": "How many locations ?",
+  "howDidYouFindUs": "How did you find us?",
+  "doYouHaveAnIdAgeVerificationSystem": "Do you have an ID Age Verification system?",
+  "doYouCurrentlyHaveAPaymentProcessingSystem": "Do you currently have a payment processing system?",
+  "federalTaxID": "Federal tax ID",
+  "enterFederalTaxID": "Enter federal tax ID",
+  "businessTaxDocument": "Business tax document",
+  "selectValue": "Select Value",
+  "vapor&TobaccoLicenses(IfRequiredByYourState)": "Vapor & Tobacco licenses (if required by your state)",
+  "streetAddress": "Street address",
+  "addressLine2": "Address line 2",
+  "city": "City",
+  "state": "State",
+  "postal/ZipCode": "Postal / Zip Code",
+  "referralCode": "Referral code",
+  "iHaveReadAndAgreeToTerms&Conditions": "I have read and agree to Terms & Conditions",
+  "drawYourSignature": "Draw your Signature:",
+  "submitSignUpRequest": "Submit sign up request",
+  "theInvitationLinkHasAlreadyExpiredOrIsInvalidThePageWillRefreshAutomaticallyIn": "The invitation link has already expired or is invalid. The page will refresh automatically in",
+  "inputOtherAverageMonthlyPurchaseVolume": "Input other average monthly purchase volume...",
+  "inputOtherAverageMonthlySaleVolume": "Input other average monthly sale volume...",
+  "inputValue": "Input value...",
+  "seconds": "seconds",
+  "refresh": "Refresh",
+  "no": "No",
+  "yes": "Yes",
+  "inProcess": "In Process",
+  "validate": {
+    "required": "This field is required",
+    "email": {
+      "invalid": "Invalid email",
+      "required": "Email is a required field"
+    },
+    "firstName": {
+      "required": "First name is a required field",
+      "max": "First name must be at most 50 characters",
+      "min": "First name must be at least 2 characters",
+      "matches": "Only alphabets are allowed for this field",
+      "invalid": "Invalid value"
+    },
+    "lastName": {
+      "required": "Last name is a required field",
+      "max": "Last name must be at most 50 characters",
+      "min": "Last name must be at least 2 characters",
+      "matches": "Only alphabets are allowed for this field",
+      "invalid": "Invalid value"
+    },
+    "businessName": {
+      "required": "Business name is a required field",
+      "max": "Business name must be at most 50 characters",
+      "min": "Business name must be at least 2 characters",
+      "matches": "Invalid value"
+    },
+    "phoneNumber": {
+      "required": "Phone number is required",
+      "matches": "Phone number is incorrect format"
+    },
+    "websiteLinkUrl": {
+      "matches": "Website link URL is not correct"
+    },
+    "monthlyPurchaseOther": {
+      "max": "Must be at most 200 characters",
+      "matches": "Invalid value"
+    },
+    "monthlySaleOther": {
+      "max": "Must be at most 200 characters",
+      "matches": "Invalid value"
+    },
+    "typeOfSaleOther": {
+      "max": "Must be at most 200 characters",
+      "matches": "Invalid value"
+    },
+    "totalLocations": {
+      "integer": "How many locations must be integer",
+      "typeError": "The field should have digits only",
+      "max": "How many locations must be between 0 - 10,000",
+      "min": "How many locations must be between 0 - 10,000"
+    },
+    "findUsOverOther": {
+      "max": "Must be at most 200 characters",
+      "matches": "Invalid value"
+    },
+    "federalTaxId": {
+      "required": "Federal tax ID is a required field",
+      "max": "Federal tax ID must be at most 200 characters",
+      "min": "Federal tax ID must be at least 5 characters",
+      "matches": "Invalid value"
+    },
+    "address": {
+      "max": "Street address must be at least 2 characters",
+      "min": "Street address must be at most 255 characters",
+      "matches": "Invalid value"
+    },
+    "address2": {
+      "max": "Sub address must be at least 2 characters",
+      "min": "Sub address must be at most 255 characters",
+      "matches": "Invalid value"
+    },
+    "city": {
+      "max": "City must be from 2 to 100 characters",
+      "min": "City must be from 2 to 100 characters",
+      "matches": "Invalid value"
+    },
+    "state": {
+      "max": "State must be from 2 to 100 characters",
+      "min": "State must be from 2 to 100 characters",
+      "matches": "Invalid value"
+    },
+    "postalZipcode": {
+      "required": "Zip code is a required field",
+      "max": "Zip code must be from 5 to 9 characters",
+      "min": "Zip code must be from 5 to 9 characters",
+      "matches09": "Zip code can only be a number",
+      "matches": "Invalid value",
+      "test": "Postal zip code does not match City/State"
+    },
+    "organizationRefferal": {
+      "max": "Referral code must be between 5 and 255 characters",
+      "min": "Referral code must be between 5 and 255 characters"
+    },
+    "checkbox": {
+      "bool": "You must accept the terms and conditions"
+    }
+  }
+}

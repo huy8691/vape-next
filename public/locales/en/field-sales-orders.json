@@ -1,0 +1,18 @@
+{
+  "title": "Field Sales Orders",
+  "allOrders": "All Orders",
+  "confirmation": "Confirmation",
+  "confirmed": "Confirmed",
+  "rejected": "Rejected",
+  "searchOrderByCode": "Search order by code...",
+  "thereAreNoOrdersAtThisTime": "There are no orders at this time",
+  "orderNumber": "Order number",
+  "createdDate": "Created date",
+  "totalBilling": "Total billing",
+  "status": "Status",
+  "businessName": "Business name",
+  "federalTaxId": "Federal tax id",
+  "rowsPerPage": "Rows per page",
+
+  "specialCharacterAreNotAllowedForThisField": "Special character are not allowed for this field"
+}

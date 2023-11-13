@@ -1,26 +1,18 @@
-// import React from 'react'
-// // import Link from 'next/link'
-// // layout
-// import type { NextPageWithLayout } from 'pages/_app.page'
-
-// const Custom404: NextPageWithLayout = () => {
-//   return <div className="container">404</div>
-// }
-
-// export default Custom404
-
-import React, { useEffect, useState } from 'react'
+import { Stack, Typography, Box } from '@mui/material'
 import Link from '@mui/material/Link'
-import { Box, Button, Container, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 // layout
 // layout
-import type { ReactElement } from 'react'
-import NestedLayout from 'src/layout/nestedLayout'
 import type { NextPageWithLayout } from 'pages/_app.page'
+import type { ReactElement } from 'react'
+import { ButtonCustom } from 'src/components'
+import NestedLayout from 'src/layout/nestedLayout'
+import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const Custom404: NextPageWithLayout = () => {
+  const { t } = useTranslation('common')
   // fix error when use next theme
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
@@ -31,39 +23,46 @@ const Custom404: NextPageWithLayout = () => {
   }
   // fix error when use next theme
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100%',
-      }}
-    >
-      <Container maxWidth="md">
-        <Grid container spacing={2}>
-          <Grid xs={6}>
-            <Typography variant="h1">404</Typography>
-            <Typography variant="h6" mb={2}>
-              The page you’re looking for doesn’t exist.
-            </Typography>
-            <Link underline="none" color="link" href="/">
-              <a>
-                <Button variant="contained">Back Home</Button>
-              </a>
-            </Link>
-          </Grid>
-          <Grid xs={6}>
-            <Image
-              src="https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569__340.jpg"
-              alt=""
-              width={500}
-              height={250}
-            />
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
+    <Stack spacing="50px" alignItems={'center'}>
+      <Box>
+        <Image
+          src={'/' + '/images/image404.png'}
+          alt=""
+          width={500}
+          height={250}
+        />
+      </Box>
+
+      <Typography
+        color="#49516F"
+        align="center"
+        fontSize="16px"
+        fontWeight="700"
+      >
+        {t('thisPageDoNotExist')}
+      </Typography>
+
+      <Link
+        underline="none"
+        color="link"
+        href="/"
+        style={{ textAlign: 'center' }}
+      >
+        <ButtonCustom variant="contained" size="large">
+          {t('takeMeBack')}
+        </ButtonCustom>
+      </Link>
+    </Stack>
   )
+}
+
+export const getStaticProps = async ({ locale }: { locale: string }) => {
+  return {
+    props: {
+      locale,
+      ...(await serverSideTranslations(locale, ['common', 'account'])),
+    },
+  }
 }
 
 Custom404.getLayout = function getLayout(page: ReactElement) {

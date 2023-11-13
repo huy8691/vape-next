@@ -3,6 +3,13 @@
 .item-product {
   font-size: 1.4rem;
   height: 100%;
+  position: relative;
+  &__icon-hear {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    z-index: 10;
+  }
   &__category {
     font-size: 1.2rem;
     margin-bottom: 5px;
@@ -21,5 +28,6 @@
   }
   &__code {
     font-size: 1rem;
+    margin-bottom: 5px;
   }
 }

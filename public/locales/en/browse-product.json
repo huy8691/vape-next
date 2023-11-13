@@ -1,0 +1,14 @@
+{
+  "notFoundProductList": "There are no available products at this time",
+  "products": "Products",
+  "price": "Price",
+  "from": "From",
+  "to": "To",
+  "submit": "Submit",
+  "featured": "Featured",
+  "supplier": "Supplier",
+  "manufacturer": "Manufacturer",
+  "category": "Category",
+  "brand": "Brand",
+  "clearFilter": "Clear filter"
+}

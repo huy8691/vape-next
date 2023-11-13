@@ -1,0 +1,20 @@
+@import 'styles/colors.scss';
+.uploadTextFieldWrapper {
+  input[type='file']::file-selector-button {
+    display: none;
+  }
+  input[type='file'] {
+    color: #ffffff;
+  }
+}
+
+.errorText {
+  font-weight: 600;
+  color: #e02d3c;
+  text-decoration: underline;
+}
+.downText {
+  font-weight: 600;
+  color: $primary;
+  cursor: pointer;
+}

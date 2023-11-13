@@ -1,0 +1,31 @@
+@import 'styles/colors.scss';
+.forgot-password-page {
+  background-image: url('/images/Background.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  &__container {
+    min-height: 100vh;
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    margin-top: 10vh;
+  }
+
+  &__count {
+    color: $error;
+  }
+}

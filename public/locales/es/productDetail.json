@@ -1,0 +1,29 @@
+{
+  "pushMessage": {
+    "inputQuantityHigherAvailability": "La cantidad de entrada es mayor que la disponibilidad",
+    "pleaseFillAtLeastOne": "Por favor complete al menos una cantidad de producto para agregar al carrito",
+    "pleaseCheckProductVariant": "Por favor verifique la cantidad de variante del producto",
+    "addToCartSuccess": "Añadir al carrito con éxito"
+  },
+  "quantity": "Cantidad",
+  "productDetail": "Detalles de producto",
+  "shortDescription": "Breve descripción:",
+  "productName": "nombre del producto",
+  "brand": "Marca",
+  "manufacturer": "Fabricante",
+  "unitType": "Tipo de unidad",
+  "instock": "En stock",
+  "orderThisProduct": "Ordene este producto",
+  "addToCart": "Añadir a la cesta",
+  "enterNumberOf": "Ingrese el número de que desea ordenar",
+  "youWantToOrder": "que desea ordenar",
+  "unitPrice": "Precio unitario",
+  "total": "Total",
+  "relatedProduct": "Productos relacionados",
+  "selectDistributionChannel": "Seleccionar canal de distribución",
+  "UNIT": "unidad",
+  "PACKAGE": "paquete",
+  "overview": "Descripción general",
+  "specification": "Especificación",
+  "enterQuantity": "Introduce la cantidad"
+}

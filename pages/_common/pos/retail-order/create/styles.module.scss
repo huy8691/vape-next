@@ -1,0 +1,165 @@
+.image-wrapper {
+  border: 1px solid #f8f9fc;
+  border-radius: 6px;
+  position: relative;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // min-width: 60px;
+  min-width: 55px;
+  min-height: 55px;
+  @media screen and (max-width: 900px) {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+.custom-img {
+  object-fit: contain;
+  width: 100% !important;
+  position: relative !important;
+  height: unset !important;
+}
+.input-number {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  width: 100%;
+  :global {
+    .MuiInputBase-input {
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .MuiTextField-root {
+      width: 100%;
+    }
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+      font-size: 1.4rem;
+      overflow: hidden;
+      // border-color: #e1e6ef;
+      border: none;
+    }
+    .MuiOutlinedInput-notchedOutline {
+      // border-width: 1px !important;
+      // border-color: #e1e6ef;
+      border: none;
+    }
+    .MuiInputBase-multiline {
+      padding: 0px;
+    }
+    .MuiInputBase-input {
+      padding: 10px 15px;
+    }
+  }
+}
+
+.input-number-tip {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  width: 100%;
+  background-color: white;
+
+  :global {
+    .MuiInputBase-input {
+      border-radius: 20px;
+    }
+    .MuiTextField-root {
+      width: 100%;
+    }
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+      font-size: 1.4rem;
+      overflow: hidden;
+      border-color: #e1e6ef;
+    }
+    .MuiOutlinedInput-notchedOutline {
+      border-width: 1px !important;
+      border-color: #e1e6ef;
+    }
+    .MuiInputBase-multiline {
+      padding: 0px;
+    }
+    .MuiInputBase-input {
+      padding: 10px 15px;
+    }
+  }
+}
+
+.line-loading {
+  width: 100%;
+  height: 5px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.line-loading:before {
+  content: '';
+  position: absolute;
+  right: auto;
+  left: 0;
+  height: 100%;
+  background-color: var(--primary);
+  animation: lineLoading 1s forwards infinite linear;
+}
+
+@keyframes lineLoading {
+  0% {
+    right: 100%;
+  }
+
+  50% {
+    right: 0;
+    left: 0;
+  }
+
+  100% {
+    right: 0;
+    left: 100%;
+  }
+}
+
+.product-name {
+  display: -webkit-box;
+  max-width: 180px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.input-number-for-cash {
+  margin-bottom: 15px;
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  :global {
+    .MuiInputBase-input {
+      border-radius: 20px;
+    }
+    .MuiTextField-root {
+      width: 100%;
+    }
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+      font-size: 1.4rem;
+      overflow: hidden;
+      border-color: #e1e6ef;
+    }
+    .MuiOutlinedInput-notchedOutline {
+      border-width: 1px !important;
+      border-color: #e1e6ef;
+    }
+    .MuiInputBase-multiline {
+      padding: 0px;
+    }
+    .MuiInputBase-input {
+      padding: 10px 15px;
+    }
+  }
+}

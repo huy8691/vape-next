@@ -1,0 +1,45 @@
+{
+  "title": "Gestión de opciones de atributos",
+  "addNewAttribute": "Agregar nuevo atributo",
+  "thereAreNoAttributeAndOptionToShow": "No hay atributos ni opciones para mostrar.",
+  "attributeName": "Nombre del Atributo",
+  "option": "Opciones",
+  "action": "Acción",
+  "rowsPerPage": "Filas por página",
+  "updateAttributeOptions": "Actualizar atributos y opciones",
+  "deleteAttribute": "Eliminar atributo",
+  "attribute": "Atributo",
+  "optionName": "Nombre de la opción",
+  "append": "Adjuntar",
+  "submit": "Entregar",
+  "areYouSureToDelete": "¿Estás seguro de eliminar?",
+  "no": "No",
+  "yes": "Sí",
+  "searchAttributeByName": "Buscar atributo por nombre..",
+  "create": {
+    "title": "Crear atributo",
+    "attributeName": "Nombre del Atributo",
+    "enterAttributeName": "Introduzca el nombre del atributo",
+    "option": "Opciones",
+    "cancel": "Cancelar",
+    "submit": "Entregar"
+  },
+  "message": {
+    "deleteAttributeSuccessfully": "Eliminar atributo exitosamente",
+    "updateAttributeOptionSuccessfully": "Actualizar atributo y opción correctamente",
+    "createAttributeSuccessfully": "Crear atributo exitosamente"
+  },
+  "validate": {
+    "name": "El nombre es un campo obligatorio",
+    "attributeName": {
+      "minMax": "El nombre del atributo debe tener entre 2 y 50 caracteres.",
+      "matches": "El nombre del atributo no debe contener espacios iniciales.",
+      "required": "El nombre del atributo es obligatorio."
+    },
+    "optionsName": {
+      "minMax": "El nombre de la opción debe tener entre 2 y 50 caracteres.",
+      "matches": "El nombre de la opción no debe contener espacios iniciales.",
+      "required": "El nombre de la opción es obligatorio."
+    }
+  }
+}

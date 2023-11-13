@@ -38,7 +38,7 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 
 // other
 import Cookies from 'js-cookie'
-import { Eye, EyeSlash } from 'phosphor-react'
+import { Eye, EyeSlash } from '@phosphor-icons/react'
 // other
 
 // custom style
@@ -51,12 +51,15 @@ import {
 // style
 import classes from './styles.module.scss'
 // style
-
+// import { NewPasswordType } from './changePasswordModels'
 // api
 import { useAppDispatch } from 'src/store/hooks'
 import { setNewPasswordApi } from './changePasswordAPI'
 import { loadingActions } from 'src/store/loading/loadingSlice'
-import { notificationActions } from 'src/store/notification/notificationSlice'
+import { useEnqueueSnackbar } from 'src/components/enqueueSnackbar'
+import { handlerGetErrMessage } from 'src/utils/global.utils'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 const TypographyH1Custom = styled(Typography)({
   fontSize: '14px',
@@ -77,6 +80,7 @@ const ButtonSubmitCustom = styled(ButtonCustom)(() => ({
 }))
 
 const ChangePassword: NextPageWithLayout = () => {
+  const { t } = useTranslation('change-password')
   const router = useRouter()
   const token = Boolean(Cookies.get('token'))
   if (token) {
@@ -90,10 +94,18 @@ const ChangePassword: NextPageWithLayout = () => {
   )
 
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [stateShowConfirmPassword, setStateShowConfirmPassword] =
+    useState<boolean>(false)
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
   }
+
+  const handleClickShowConfirmPassword = () => {
+    setStateShowConfirmPassword(!stateShowConfirmPassword)
+  }
+
+  const [pushMessage] = useEnqueueSnackbar()
 
   // check password
   const {
@@ -101,7 +113,7 @@ const ChangePassword: NextPageWithLayout = () => {
     control: controlPassword,
     formState: { errors: errorsPassword },
   } = useForm({
-    resolver: yupResolver(schemaPassword),
+    resolver: yupResolver(schemaPassword(t)),
     mode: 'all',
   })
 
@@ -109,30 +121,21 @@ const ChangePassword: NextPageWithLayout = () => {
     dispatch(loadingActions.doLoading())
     setNewPasswordApi({
       email: emailChangePassword.email,
-      old_password: emailChangePassword.old_password,
-      password: values.password,
+      current_password: emailChangePassword.old_password,
+      new_password: values.password,
     })
-      .then((response) => {
-        const data = response.data
+      .then(() => {
         dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: data.message,
-          })
-        )
+        pushMessage(t('passwordWasChangedSuccessfully'), 'success')
         setTimeout(() => {
           router.push('/login')
         }, 2000)
       })
-      .catch((error) => {
-        const data = error.response?.data
+      .catch(({ response }) => {
         dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
+        const { status, data } = response
+        console.log('check', status, data)
+        pushMessage(handlerGetErrMessage(status, data), 'error')
       })
   }
 
@@ -158,7 +161,7 @@ const ChangePassword: NextPageWithLayout = () => {
   return (
     <div className={classes['change-password-page']}>
       <Head>
-        <title>Change your password | Vape</title>
+        <title>{t('changeYourPassword')} | TWSS</title>
       </Head>
       <div className={classes['change-password-page__container']}>
         <div className={classes['change-password-page__content']}>
@@ -166,7 +169,7 @@ const ChangePassword: NextPageWithLayout = () => {
             <Link href="/">
               <a>
                 <Image
-                  src="/images/logo.svg"
+                  src={'/' + '/images/logo.svg'}
                   alt="Logo"
                   width="133"
                   height="52"
@@ -177,10 +180,10 @@ const ChangePassword: NextPageWithLayout = () => {
           <Box sx={{ width: '100%', typography: 'body1' }}>
             <Box mb={4} style={{ textAlign: 'center' }}>
               <TypographyH1Custom variant="h1" mb={2}>
-                Set New Password
+                {t('setNewPassword')}
               </TypographyH1Custom>
               <TypographyBodyCustom variant="body2" mb={2}>
-                Please setup your new password to continue.
+                {t('pleaseSetupYourNewPasswordToContinue')}
               </TypographyBodyCustom>
               <TypographyBodyCustom variant="body2" className={classes.link}>
                 {emailChangePassword.email}
@@ -198,7 +201,7 @@ const ChangePassword: NextPageWithLayout = () => {
                         htmlFor="outlined-adornment-password"
                         error={!!errorsPassword.password}
                       >
-                        New password
+                        {t('newPassword')}
                       </InputLabelCustom>
                       <TextFieldPasswordCustom fullWidth variant="outlined">
                         <OutlinedInput
@@ -211,9 +214,9 @@ const ChangePassword: NextPageWithLayout = () => {
                                 onClick={handleClickShowPassword}
                               >
                                 {showPassword ? (
-                                  <EyeSlash size={24} />
-                                ) : (
                                   <Eye size={24} />
+                                ) : (
+                                  <EyeSlash size={24} />
                                 )}
                               </IconButton>
                             </InputAdornment>
@@ -240,22 +243,22 @@ const ChangePassword: NextPageWithLayout = () => {
                         htmlFor="outlined-adornment-password"
                         error={!!errorsPassword.confirmPassword}
                       >
-                        Confirm password
+                        {t('confirmPassword')}
                       </InputLabelCustom>
                       <TextFieldPasswordCustom fullWidth variant="outlined">
                         <OutlinedInput
-                          type={showPassword ? 'text' : 'password'}
+                          type={stateShowConfirmPassword ? 'text' : 'password'}
                           {...field}
                           endAdornment={
                             <InputAdornment position="end">
                               <IconButton
                                 aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
+                                onClick={handleClickShowConfirmPassword}
                               >
-                                {showPassword ? (
-                                  <EyeSlash size={24} />
-                                ) : (
+                                {stateShowConfirmPassword ? (
                                   <Eye size={24} />
+                                ) : (
+                                  <EyeSlash size={24} />
                                 )}
                               </IconButton>
                             </InputAdornment>
@@ -277,7 +280,7 @@ const ChangePassword: NextPageWithLayout = () => {
                   size="large"
                   type="submit"
                 >
-                  Reset Password
+                  {t('resetPassword')}
                 </ButtonSubmitCustom>
               </Stack>
             </form>
@@ -285,12 +288,25 @@ const ChangePassword: NextPageWithLayout = () => {
         </div>
         <TypographyTextCustom variant="body1">
           <Link href="/login">
-            <a className={classes.link}>Back to Sign in</a>
+            <a className={classes.link}>{t('backToSignIn')}</a>
           </Link>
         </TypographyTextCustom>
       </div>
     </div>
   )
+}
+
+export const getStaticProps = async ({ locale }: { locale: string }) => {
+  return {
+    props: {
+      locale,
+      ...(await serverSideTranslations(locale, [
+        'common',
+        'account',
+        'change-password',
+      ])),
+    },
+  }
 }
 
 ChangePassword.getLayout = function getLayout(page: ReactElement) {

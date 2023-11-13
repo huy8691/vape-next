@@ -5,6 +5,7 @@ import ReplayIcon from '@mui/icons-material/Replay'
 import SignaturePad from 'react-signature-canvas'
 import classes from '../styles.module.scss'
 import { InputLabelCustom } from 'src/components'
+import { useTranslation } from 'next-i18next'
 
 // api
 import { useAppDispatch } from 'src/store/hooks'
@@ -20,10 +21,14 @@ import { notificationActions } from 'src/store/notification/notificationSlice'
 type Props = {
   uploadSignatureSuccess: (value: any) => void
   uploadSignatureError: () => void
+  clearOnResize: boolean
 }
 
 const SignatureCanvas = forwardRef(
-  ({ uploadSignatureSuccess, uploadSignatureError }: Props, ref) => {
+  (
+    { uploadSignatureSuccess, uploadSignatureError, clearOnResize }: Props,
+    ref
+  ) => {
     useImperativeHandle(ref, () => ({
       handleSignature(valueSignUp: any) {
         if (sigCanvas.current.isEmpty()) {
@@ -100,7 +105,7 @@ const SignatureCanvas = forwardRef(
         }
       },
     }))
-
+    const { t } = useTranslation(['register'])
     const dispatch = useAppDispatch()
     const sigCanvas = useRef<any>(null)
     const [stateIsSigCanvas, setStateIsSigCanvas] =
@@ -139,7 +144,7 @@ const SignatureCanvas = forwardRef(
     return (
       <>
         <Box>
-          <InputLabelCustom>Draw your Signature:</InputLabelCustom>
+          <InputLabelCustom>{t('register:drawYourSignature')}</InputLabelCustom>
           <Box className={classes['block-signature']}>
             <IconButton
               aria-label="Clear"
@@ -151,6 +156,7 @@ const SignatureCanvas = forwardRef(
           </Box>
           <SignaturePad
             ref={sigCanvas}
+            clearOnResize={clearOnResize}
             canvasProps={{
               className: `${classes.signatureCanvas} ${
                 stateIsSigCanvas ? `${classes.error}` : ''

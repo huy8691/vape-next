@@ -1,0 +1,21 @@
+@import 'styles/colors.scss';
+.dotsClass {
+  bottom: 25px;
+  li {
+    width: auto;
+    height: auto;
+  }
+  li button {
+    height: 3px;
+    width: 30px;
+    background-color: #c3cad9;
+    border-radius: 3px;
+    padding: 0;
+    &::before {
+      display: none;
+    }
+  }
+}
+.dotsClass :global(li.slick-active) button {
+  background-color: $primary;
+}

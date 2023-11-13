@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from 'react'
 import type { ReactElement } from 'react'
+import React, { useEffect, useState, createContext } from 'react'
 // import PropTypes from 'prop-types'
 // import classNames from 'classnames'
 // import { withStyles } from '@material-ui/core/styles'
-import { styled, Theme, CSSObject } from '@mui/material/styles'
+import { CSSObject, Theme, styled } from '@mui/material/styles'
 
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import Logo from 'public/images/logo.svg'
 // import { useRouter } from 'next/router'
 
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
-import MuiDrawer from '@mui/material/Drawer'
-import Toolbar from '@mui/material/Toolbar'
-import CssBaseline from '@mui/material/CssBaseline'
 import MenuIcon from '@mui/icons-material/Menu'
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
+import CssBaseline from '@mui/material/CssBaseline'
+import MuiDrawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
-import WrapLayout from './wrapLayout'
+import Toolbar from '@mui/material/Toolbar'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import HeaderInner from './header'
 import SideBar from './sidebar'
-
-import { createContext } from 'react'
+import WrapLayout from './wrapLayout'
 
 import {
   ThemeProvider as ThemeProviderMui,
@@ -34,6 +33,10 @@ import {
 } from 'next-themes'
 
 import RequireAuth from './requireAuth'
+import { AxiosResponse } from 'axios'
+import { callAPIWithToken } from 'src/services/jwt-axios'
+import { useRouter } from 'next/router'
+
 // import classes from './styles.module.scss'
 
 // redux
@@ -54,7 +57,8 @@ const ThemeMui = ({ children }: Props) => {
         palette: {
           mode,
           primary: {
-            main: '#34DC75',
+            main: '#1DB46A',
+            // main: '#34DC75',
           },
           error: {
             main: '#BA2532',
@@ -76,7 +80,8 @@ const ThemeMui = ({ children }: Props) => {
     [mode]
   )
   useEffect(() => {
-    setMode(theme === 'dark' ? 'dark' : 'light')
+    // setMode(theme === 'dark' ? 'dark' : 'light')
+    setMode('light')
   }, [theme])
 
   // useEffect only runs on the client, so now we can safely show the UI
@@ -97,6 +102,10 @@ export const DrawerWidthContext = createContext({
   drawerWidth: drawerWidth,
   open: true,
 })
+type ContextType = {
+  setOpen(value: boolean): void
+}
+export const OpenSideBar = createContext<ContextType | undefined>(undefined)
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -129,15 +138,20 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
+  tablet?: boolean
 }
 
 const BoxMain = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
+})<AppBarProps>(({ theme, open, tablet }) => ({
   width: open ? `calc(100% - ${drawerWidth}px)` : `calc(100% - 65px)`,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
+  }),
+  ...(tablet && {
+    maxWidth: `calc(100% - 65px)`,
+    marginLeft: '65px',
   }),
 }))
 
@@ -153,7 +167,7 @@ const LogoHeader = styled(Box, {
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
+})<AppBarProps>(({ theme, open, tablet }) => ({
   left: `calc(${theme.spacing(8)} + 1px)`,
   width: `calc(100% - ${theme.spacing(8)} - 1px)`,
   // [theme.breakpoints.up('sm')]: {
@@ -164,7 +178,7 @@ const AppBar = styled(MuiAppBar, {
     '0px 1px 0px -1px rgb(0 0 0 / 20%), 0px 0px 3px 0px rgb(0 0 0 / 14%), 0px 0px 0px 0px rgb(0 0 0 / 12%)',
   backgroundColor:
     theme.palette.mode === 'light' ? '#fff' : theme.palette.background.default,
-  zIndex: theme.zIndex.drawer + 1,
+  zIndex: theme.zIndex.drawer,
   transition: theme.transitions.create(['width', 'left'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -176,6 +190,10 @@ const AppBar = styled(MuiAppBar, {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+  }),
+  ...(tablet && {
+    left: `calc(${theme.spacing(8)} + 1px)`,
+    width: `calc(100% - ${theme.spacing(8)} - 1px)`,
   }),
 }))
 
@@ -196,24 +214,94 @@ const Drawer = styled(MuiDrawer, {
   }),
 }))
 // config layout
+interface ProductListInRetailOrderType {
+  name: string
+  quantity: number
+  total: number
+}
+interface OtherProductInRetailOrderType {
+  product_name: string
+  quantity: number
+  total: number
+}
+interface RetailOrderDetailType {
+  id: number
+  code: string
+  order_date: string
+  items: ProductListInRetailOrderType[]
+  other_products: OtherProductInRetailOrderType[]
+  total_billing: number
+  total_tip: number
+  total_value: number
+}
+export interface RetailOrderDetailResponseType {
+  data: RetailOrderDetailType
+  errors?: any
+}
+const getRetailDetailOrder = (
+  barcode: string
+): Promise<AxiosResponse<RetailOrderDetailResponseType>> => {
+  return callAPIWithToken({
+    url: `/api/organization/retail-order/barcode/?code=${barcode}`,
+    method: 'get',
+  })
+}
 
 const NestedLayout: React.FC<Props> = ({ children }: Props) => {
-  const [open, setOpen] = React.useState(true)
+  const tablet = useMediaQuery('(max-width:1199px)')
+  const router = useRouter()
+  const [open, setOpen] = React.useState(tablet ? false : true)
   const handleDrawer = () => {
     setOpen(!open)
   }
 
-  // const userInfo = useAppSelector((state) => state.userInfo)
-  // const router = useRouter()
+  let barcodeScan = ''
+  useEffect(() => {
+    function handleKeydown(e: any) {
+      if (
+        e.keyCode === 13 &&
+        barcodeScan.length > 3 &&
+        barcodeScan.substring(0, 3) === 'VRO'
+      ) {
+        console.log('zzz', barcodeScan)
+        handleGetBarcode(barcodeScan)
+        barcodeScan = ''
 
-  // const role = userInfo.data.user_type
-  // let allowed = true
-  // if (router.pathname.startsWith('/cart') && role !== 'MERCHANT') {
-  //   allowed = false
-  // }
-  // if (router.pathname.startsWith('/customer') && role !== 'SUPPLIER') {
-  //   allowed = false
-  // }
+        return
+      }
+      if (e.keyCode === 16) {
+        return
+      }
+      barcodeScan += e.key
+    }
+    // setTimeout(() => {
+    //   barcodeScan = ''
+    // }, 100)
+    console.log('trigger barcode')
+    document.addEventListener('keydown', handleKeydown)
+    return function cleanup() {
+      document.removeEventListener('keydown', handleKeydown)
+    }
+  })
+  const handleGetBarcode = (barcode: string) => {
+    getRetailDetailOrder(barcode)
+      .then((res) => {
+        const { data } = res.data
+
+        router.push(`/retailer/pos/retail-order/detail/${data.id}`)
+      })
+      .catch(() => {
+        console.log('response')
+      })
+  }
+  useEffect(() => {
+    tablet ? setOpen(false) : setOpen(true)
+  }, [tablet])
+
+  useEffect(() => {
+    document.body.classList.add('nested-layout')
+  }, [])
+
   return (
     <WrapLayout>
       <RequireAuth>
@@ -221,18 +309,37 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
           <ThemeMui>
             <Box sx={{ display: 'flex' }}>
               <CssBaseline />
-              <AppBar position="fixed" open={open}>
+              <AppBar position="fixed" open={open} tablet={tablet}>
                 <Toolbar>
                   <HeaderInner />
                 </Toolbar>
               </AppBar>
-              <Drawer variant="permanent" open={open}>
+              <Drawer
+                variant="permanent"
+                open={open}
+                style={
+                  tablet
+                    ? {
+                        position: 'fixed',
+                        zIndex: 10000,
+                      }
+                    : {}
+                }
+                ModalProps={{
+                  keepMounted: true, // Better open performance on mobile.
+                }}
+              >
                 {/* <DrawerHeader /> */}
                 <LogoHeader open={open}>
                   {open && (
                     <Link href="/">
                       <a>
-                        <Image src={Logo} alt="Logo" width="100" height="40" />
+                        <Image
+                          src={'/' + `${Logo}`}
+                          alt="Logo"
+                          width="100"
+                          height="40"
+                        />
                       </a>
                     </Link>
                   )}
@@ -248,9 +355,16 @@ const NestedLayout: React.FC<Props> = ({ children }: Props) => {
                     <MenuIcon />
                   </IconButton>
                 </LogoHeader>
-                <SideBar open={open} />
+                <OpenSideBar.Provider value={{ setOpen }}>
+                  <SideBar open={open} />
+                </OpenSideBar.Provider>
               </Drawer>
-              <BoxMain component="main" sx={{ flexGrow: 1, p: 3 }} open={open}>
+              <BoxMain
+                component="main"
+                sx={{ flexGrow: 1, p: 3 }}
+                open={open}
+                tablet={tablet}
+              >
                 <DrawerHeader />
                 <DrawerWidthContext.Provider
                   value={{ drawerWidth: drawerWidth, open: open }}

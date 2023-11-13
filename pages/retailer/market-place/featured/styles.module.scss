@@ -1,0 +1,6 @@
+@import 'styles/colors.scss';
+.col-product {
+  @media (min-width: 992px) {
+    width: 33.3333% !important;
+  }
+}

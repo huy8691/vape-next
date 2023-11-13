@@ -1,0 +1,33 @@
+{
+  "title": "Acceso",
+  "signIn": "Iniciar sesión",
+  "welcomeTo": "BIENVENIDO A",
+  "portal": "PORTAL",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "rememberMe": "Acuérdate de mí",
+  "newToTws": "¿Nuevo en TWS?",
+  "register": "Registro",
+  "forgotPassword": "Has olvidado tu contraseña",
+  "message": {
+    "success": "Iniciar sesión correctamente"
+  },
+  "yourRole": {
+    "selectYourRole": "Seleccione su rol",
+    "supplier": "PROVEEDOR",
+    "signIn": "Iniciar sesión",
+    "retailer": "DETALLISTA"
+  },
+  "validate": {
+    "email": {
+      "invalid": "Email inválido",
+      "required": "Por favor introduzca su correo electrónico"
+    },
+    "password": {
+      "required": "Por favor, introduzca su contraseña",
+      "min": "Esta contraseña es demasiado corta. Debe contener al menos 8 caracteres.",
+      "matches": "La contraseña tiene un formato incorrecto"
+    }
+  },
+  "adminPortal": " PORTAL DE ADMINISTRACIÓN"
+}

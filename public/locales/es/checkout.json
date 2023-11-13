@@ -1,0 +1,113 @@
+{
+  "invalidItemInOrder": "Algunos artículos de tu pedido no eran válidos",
+  "changeAddress": "Cambiar dirección exitosamente",
+  "orderSuccess": "El pedido se ha realizado correctamente.",
+  "makePaymentSuccess": "Realice el pago con éxito",
+  "checkOrderAgain": "Por favor revisa tu pedido",
+  "createAddressSuccess": "La dirección se ha creado correctamente.",
+  "updateAddressSuccess": "La dirección se ha actualizado correctamente.",
+  "checkout": "Verificar",
+  "shoppingCart": "Carro de la compra",
+  "marketplace": "Mercado",
+  "shippingAddress": "Dirección de envío",
+  "pleaseCreateAddress": "Por favor cree una dirección.",
+  "cart": "Carro",
+  "change": "Cambios",
+  "createAddress": "Crear dirección",
+  "updateAddress": "Actualizar dirección",
+  "paymentMethod": "Método de pago:",
+  "expire": "Expirar",
+  "paymentDetail": "Detalles de pago",
+  "subtotal": "Subtotal",
+  "totalShipping": "envío total",
+  "total": "Total",
+  "clickTerm": "Hacer clic en el pedido significa que ha leído y comprendido",
+  "term": "los términos",
+  "ofTWSSolutions": "de Soluciones TWS",
+  "confirmation": "Confirmación",
+  "confirmPlaceOrder": "¿Estás seguro de hacer un pedido?",
+  "cancel": "Cancelado",
+  "confirm": "Confirmado",
+  "addressBook": "Directorio",
+  "default": "Por defecto",
+  "addNewAddress": "Agregar nueva dirección",
+  "addressName": "Nombre de la dirección",
+  "placeholderAddressName": "Introduzca el nombre de la dirección",
+  "receiverName": "Nombre del destinatario",
+  "placeholderReceiverName": "Introduzca el nombre del receptor",
+  "phoneNumber": "Número de teléfono",
+  "address": "Dirección",
+  "placeholderAddress": "Introduzca el nombre de la dirección",
+  "city": "Ciudad",
+  "state": "Estado",
+  "postalZipcode": "Código postal",
+  "selectCard": "Seleccionar tarjeta para pago",
+  "addCardAndCheckout": "Agregar tarjeta y pagar",
+  "addCard": "Agregar tarjeta",
+  "cardNumber": "Número de tarjeta",
+  "name": "Nombre",
+  "unit": "Unidad",
+  "cvv": "CVV",
+  "expiry": "Expiración",
+  "validThru": "válido a través de",
+  "invalidMonth": "El vencimiento del mes no es válido",
+  "submit": "Entregar",
+  "vaultCardSuccess": "Tarjeta de bóveda exitosamente",
+  "vaultCardFail": "Falló la tarjeta de bóveda",
+  "creditCard": "Tarjetas de crédito",
+  "selectPaymentMethod": "Seleccione un método de pago",
+  "shippingMethod": "Método de envío",
+  "products": "Productos",
+  "theProductIsNotAvailable": "El producto ya no está disponible",
+  "noteForStore": "no para tienda",
+  "chooseShippingMethod": "Elige el método de envío......",
+  "validation": {
+    "card": {
+      "required": "Se requiere el número de tarjeta"
+    },
+    "name": {
+      "required": "Se requiere el nombre",
+      "min": "El nombre debe tener al menos 5 caracteres.",
+      "max": "El nombre debe tener como máximo 50 caracteres."
+    },
+    "note": {
+      "min": "La nota debe tener entre 5 y 255 caracteres."
+    },
+    "addressName": {
+      "required": "El nombre de la dirección es obligatorio.",
+      "min": "El nombre de la dirección debe tener al menos 2 caracteres.",
+      "max": "El nombre de la dirección debe tener como máximo 50 caracteres.",
+      "matches": "Nombre de dirección no válido"
+    },
+    "phoneNumber": {
+      "required": "Se requiere número de teléfono",
+      "matches": "Número de teléfono no válido"
+    },
+    "address": {
+      "required": "La dirección es necesaria",
+      "min": "La dirección debe tener al menos 2 caracteres.",
+      "max": "La dirección debe tener como máximo 50 caracteres.",
+      "matches": "Dirección no válida"
+    },
+    "receiverName": {
+      "required": "El nombre del receptor es obligatorio",
+      "min": "El nombre del receptor debe tener al menos 2 caracteres.",
+      "max": "El nombre del receptor debe tener como máximo 50 caracteres.",
+      "matches": "Nombre del receptor no válido"
+    },
+    "city": {
+      "required": "El campo ciudad es obligatorio",
+      "min": "La ciudad debe tener al menos 2 caracteres.",
+      "max": "La ciudad debe tener como máximo 500 caracteres."
+    },
+    "state": {
+      "required": "El campo de estado es obligatorio"
+    },
+    "postalZipcode": {
+      "required": "El campo del código postal es obligatorio",
+      "min": "El código postal debe tener al menos 5 caracteres",
+      "max": "El código postal debe tener como máximo 9 caracteres.",
+      "matches": "El código postal no coincide con la ciudad/estado"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 export interface NewPasswordType {
   email: string
-  old_password: string
-  password: string
+  current_password: string
+  new_password: string
 }

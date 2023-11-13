@@ -1,0 +1,60 @@
+{
+  "title": "Gestión por categorías",
+  "importSuccessfully": "Importar exitosamente",
+  "edit": "Editado",
+  "delete": "Borrar",
+  "searchCategoryByName": "Buscar categoría por nombre...",
+  "addNewCategory": "Añadir nueva categoria",
+  "thereAreNoProductCategoryToShow": "No hay ninguna categoría de producto para mostrar.",
+  "import": "Importar",
+  "list": {
+    "no.": "No.",
+    "categoryName": "Nombre de la categoría",
+    "action": "Acción",
+    "rowsPerPage": "Filas por página",
+    "edit": "Editar",
+    "delete": "Borrar"
+  },
+  "deleteCategory": "Eliminar categorías",
+  "areYouSureToRemoveTheCategoriesOutOfList": "¿Estás segura de eliminar las categorías de la lista?",
+  "no": "No",
+  "yes": "Sí",
+  "importCategory": "Categoría de importación",
+  "selectImportFile": "Seleccione Importar archivo",
+  "uploadFile": "Subir archivo......",
+  "thereAreSomeErrorsWithTheImportFilePleaseDownloadTheErrorFileForMoreInformation": "Hay algunos errores con el archivo de importación. Descargue el archivo de error para obtener más información.",
+  "clickHere": "haga clic aquí",
+  "toDownTheImportTemplate": " haga clic aquí.",
+  "allowedFileExtensionXlsxCsv": "Extensión de archivo permitida: .xlsx / .csv",
+  "allowedFileSizeIs_10Mb": " El tamaño de archivo permitido es {'<'} 10 MB",
+  "cancel": "Cancelar",
+  "submit": "Entregar",
+  "createUpdate": {
+    "productCategoryManagement": "Gestión de categorías de productos ",
+    "createProductCategory": "Crear categoría de producto",
+    "updateProductCategory": " Actualizar categoría de producto",
+    "categoryName": "nombre de la categoría",
+    "enterCategoryName": "Introduzca el nombre de la categoría",
+    "parentCategoryIfHave": "Categoría principal (si la tiene)",
+    "selectValue": "Selecciona valor",
+    "cancel": "Cancelar",
+    "submit": "Entregar"
+  },
+  "message": {
+    "deleteDataItemNameSuccessfully": "Eliminar {0} correctamente",
+    "productCategoryHasBeenCreatedSuccessfully": "La categoría de producto se ha creado correctamente.",
+    "productCategoryHasBeenUpdatedSuccessfully": "La categoría de producto se ha actualizado correctamente."
+  },
+  "validate": {
+    "importData": {
+      "required": "Este campo es obligatorio",
+      "test": "El archivo es demasiado grande."
+    },
+    "name": {
+      "required": "El nombre de la categoría es un campo obligatorio",
+      "min": "El nombre de la categoría debe tener al menos 2 caracteres.",
+      "max": "El nombre de la categoría debe tener como máximo 50 caracteres.",
+      "matches": " Nombre de categoría no válido"
+    }
+  }
+}

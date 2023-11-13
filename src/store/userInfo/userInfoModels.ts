@@ -8,6 +8,7 @@ export interface UserInfoType {
   avatar: string
   address: string
   user_type: string
+  is_master: boolean | string
 }
 export interface UserInfoResponseType {
   data: UserInfoType

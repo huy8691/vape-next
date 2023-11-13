@@ -1,0 +1,60 @@
+{
+  "title": "Category Management",
+  "importSuccessfully": "Import successfully",
+  "edit": "Edit",
+  "delete": "Delete",
+  "searchCategoryByName": "Search Category by name...",
+  "addNewCategory": "Add New Category",
+  "thereAreNoProductCategoryToShow": "There are no product category to show",
+  "import": "Import",
+  "list": {
+    "no.": "No.",
+    "categoryName": "Category Name",
+    "action": "Action",
+    "rowsPerPage": "Rows per page",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "deleteCategory": "Delete Categories",
+  "areYouSureToRemoveTheCategoriesOutOfList": " Are you sure to remove the categories out of list?",
+  "no": "No",
+  "yes": "Yes",
+  "importCategory": "Import Category",
+  "selectImportFile": "Select Import File",
+  "uploadFile": "Upload file...",
+  "thereAreSomeErrorsWithTheImportFilePleaseDownloadTheErrorFileForMoreInformation": "There are some errors with the import file .Please download the error file for more information.",
+  "clickHere": "Click here",
+  "toDownTheImportTemplate": " to down the import template.",
+  "allowedFileExtensionXlsxCsv": "Allowed file extension: .xlsx / .csv",
+  "allowedFileSizeIs_10Mb": " Allowed file size is {'<'} 10 mb",
+  "cancel": "Cancel",
+  "submit": "Submit",
+  "createUpdate": {
+    "productCategoryManagement": "Product Category Management ",
+    "createProductCategory": "Create Product Category",
+    "updateProductCategory": " Update Product Category",
+    "categoryName": "Category Name",
+    "enterCategoryName": "Enter category name",
+    "parentCategoryIfHave": "Parent Category (if have)",
+    "selectValue": "Select value",
+    "cancel": "Cancel",
+    "submit": "Submit"
+  },
+  "message": {
+    "deleteDataItemNameSuccessfully": "Delete {0} successfully",
+    "productCategoryHasBeenCreatedSuccessfully": "Product category has been created successfully",
+    "productCategoryHasBeenUpdatedSuccessfully": "Product category has been updated successfully"
+  },
+  "validate": {
+    "importData": {
+      "required": "This field is required",
+      "test": "The file is too large"
+    },
+    "name": {
+      "required": "Category name is a required field",
+      "min": "Category name must be at least 2 characters",
+      "max": "Category name must be at most 50 characters",
+      "matches": " Invalid Category Name"
+    }
+  }
+}

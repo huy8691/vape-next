@@ -1,0 +1,17 @@
+{
+  "title": "Field Sales Orders",
+  "allOrders": "Todas las Órdenes",
+  "confirmation": "Confirmación",
+  "confirmed": "Confirmado",
+  "rejected": "Rechazado",
+  "searchOrderByCode": "Buscar orden por código...",
+  "thereAreNoOrdersAtThisTime": "No hay órdenes en este momento",
+  "orderNumber": "Número de orden",
+  "createdDate": "Fecha de creación",
+  "totalBilling": "Facturación total",
+  "status": "Estado",
+  "businessName": "Nombre del negocio",
+  "federalTaxId": "Identificación fiscal federal",
+  "rowsPerPage": "Filas por página",
+  "specialCharacterAreNotAllowedForThisField": "Los caracteres especiales no están permitidos en este campo"
+}

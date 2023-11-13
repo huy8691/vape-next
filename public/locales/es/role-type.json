@@ -1,0 +1,27 @@
+{
+  "title": "Tipo de rol",
+  "searchRoleType": "Buscar tipo de rol...",
+  "createRoleType": "Crear tipo de rol",
+  "thereAreNoRoleTypeToShow": "No hay tipos de rol para mostrar",
+  "list": {
+    "no.": "No.",
+    "name": "Nombre",
+    "action": "Acción",
+    "rowsPerPage": "Filas por página"
+  },
+  "createUpdate": {
+    "createRoleType": "Crear Tipo de Rol",
+    "selectAll": "Seleccionar todo",
+    "enterNameRoleType": "Ingrese el nombre del Tipo de Rol",
+    "name": "Nombre",
+    "submit": "Enviar"
+  },
+  "update": "Actualizar",
+  "message": {
+    "theRoleTypeHasBeenCreatedSuccessfully": "El Tipo de Rol se ha creado exitosamente",
+    "theRoleTypeHasBeenUpdatedSuccessfully": "El Tipo de Rol se ha actualizado exitosamente"
+  },
+  "validate": {
+    "name": "Este campo es obligatorio"
+  }
+}

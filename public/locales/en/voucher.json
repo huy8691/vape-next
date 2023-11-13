@@ -1,0 +1,143 @@
+{
+  "voucher": "Voucher",
+  "voucherManagement": "Voucher Management",
+  "searchCodeOrTitle": "Search code or title...",
+  "addNewVoucher": "Add New Voucher",
+  "thereAreNoVoucherToShow": "There are no voucher to show",
+  "createVoucher": "Create Voucher",
+  "updateVoucher": "Update Voucher",
+  "title": "Title",
+  "code": "Code",
+  "discountAmount": "Discount amount",
+  "usage": "Usage",
+  "limit": "Limit",
+  "expiry": "Expiry",
+  "availability": "Availability",
+  "status": "Status",
+  "rowsPerPage": "Rows per page",
+  "filterVoucher": "Filter Voucher",
+  "date": "Date",
+  "cancel": "Cancel",
+  "reset": "Reset",
+  "filter": "Filter",
+  "viewDetails": "View details",
+  "ACTIVATED": "Activated",
+  "DEACTIVATED": "Deactivated",
+  "EXPIRED": "Expired",
+  "userGuide": "User guide",
+  "message": {
+    "changeTheVoucherStatusToDeactivatedSuccessfully": "Change the voucher status to deactivated successfully",
+    "changeTheVoucherStatusToActivatedSuccessfully": "Change the voucher status to activated successfully",
+    "changeTheVoucherStatusFailed": "Change the voucher status failed",
+    "theVoucherHasBeenDeletedSuccessfully": "The voucher has been deleted successfully",
+    "createVoucherSuccessfully": "Create voucher successfully"
+  },
+  "defaultReturnLocation": "Default Return Location",
+  "voucherCode": "Voucher Code",
+  "autoGenerate": "Auto Generate",
+  "fixedAmount": "Fixed amount",
+  "expiryDate": "Expiry Date",
+  "usageRestriction": "Usage Restriction",
+  "voucherDetail": "Voucher Detail",
+  "deactivate": "Deactivate",
+  "activate": "Activate",
+  "discountType": "Discount type",
+  "usageLimit": "Usage Limit",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "usageLimitPerVoucher": "Usage limit per voucher",
+  "usageLimitPerUser": "Usage limit per user",
+  "restriction": "Restriction",
+  "maximumDiscountAmount": "Maximum discount amount",
+  "minimumSpend": "Minimum Spend",
+  "productsCoverage": "Products Coverage",
+  "editVoucher": "Edit Voucher",
+  "delete": "Delete",
+  "print": "Print",
+  "tabs": {
+    "appliedOnlineOrders": "Applied Online Orders",
+    "appliedRetailOrders": "Applied Retail Orders"
+  },
+  "deleteVoucherOfProducts": "Delete voucher of products",
+  "areYouSureToDeleteThisVoucher": "Are you sure to delete this voucher?",
+  "no": "No",
+  "yes": "Yes",
+  "marketplace": "Marketplace",
+  "atStore": "At Store",
+  "percentage": "Percentage",
+  "orderNo": "Order No.",
+  "totalBillingPaymentStatus": "Total Billing/Payment Status",
+  "approved": "APPROVED",
+  "deactivated": "DEACTIVATED",
+  "selectProduct": "Select Product",
+  "name": "Name",
+  "category": "Category",
+  "brand": "Brand",
+  "manufacturer": "Manufacturer",
+  "haveVariant": "Have variant",
+  "action": "Action",
+  "quantity": "Quantity",
+  "price": "Price",
+  "variantGroupFor": "Variant group for {0}",
+  "submit": "Submit",
+  "searchProduct": "Search product...",
+  "theStockIsLow": "The stock is low",
+  "enterVoucherName": "Enter category name",
+  "allProducts": "All Products",
+  "validate": {
+    "title": "This field required",
+    "code": {
+      "required": "This field required",
+      "minMax": "The voucher code must be from 6 to 50 characters"
+    },
+    "availability": "Availability is required",
+    "limitPerVoucher": {
+      "required": "This field is required",
+      "integer": "This data is an integer number not have a decimal number",
+      "minMax": "This data must be between 1 - 10,000,000",
+      "typeError": "The field should have digits only"
+    },
+    "limitPerUser": {
+      "required": "This field is required",
+      "integer": "This data is an integer number not have a decimal number",
+      "minMax": "This data must be between 1 - 10,000,000",
+      "typeError": "The field should have digits only"
+    },
+    "discountAmount": {
+      "typeError": "This field is required",
+      "required": "This field is required",
+      "positive": "Discount amount must be a positive number",
+      "percentage": {
+        "minMax": "The discount percentage must be from 0.5% to 100%"
+      },
+      "fixedAmount": {
+        "minMax": "Minimum amount must be between 0.01$ and 10,000,000$"
+      }
+    },
+    "minimumSpend": {
+      "typeError": "This field is required",
+      "positive": "Minimum amount must be a positive number",
+      "minMax": "Minimum amount must be between $0.01 and $10,000,000"
+    },
+    "maxDiscountAmount": {
+      "typeError": "This field is required",
+      "positive": "Minimum amount must be a positive number",
+      "minMax": "Minimum amount must be between $0.01 and $10,000,000"
+    },
+    "startDate": {
+      "required": "This field is required",
+      "typeError": "Start date invalid"
+    },
+    "expiryDate": {
+      "required": "This field is required",
+      "typeError": "Start date invalid",
+      "min": "Expiry date must be greater than or equal to start date"
+    }
+  },
+  "Activated": "Activated",
+  "Deactivated": "Deactivated",
+  "Expired": "Expired",
+  "All": "All",
+  "Marketplace": "Marketplace",
+  "At Store": "At Store"
+}

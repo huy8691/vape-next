@@ -1,0 +1,37 @@
+{
+  "title": "Roles Management",
+  "searchRoleByName": "Search role by name..",
+  "addNewRole": " Add New Role",
+  "role": "Role",
+  "action": "action",
+  "update": "Update",
+  "delete": "Delete",
+  "deleteRole": "Delete role",
+  "areYouSureToRemoveStateCurrentIdNameOutOfList": "Are you sure to remove {{0}} out of list?",
+  "no": "No",
+  "yes": "Yes",
+  "createUpdate": {
+    "createRole": "Create role",
+    "updateRole": " Update Role",
+    "roleName": " Role Name",
+    "enterRoleName": "Enter role name",
+    "parentRole": "Parent Role",
+    "selectValue": "Select value",
+    "none": "None",
+    "cancel": "Cancel",
+    "submit": "Submit"
+  },
+  "validate": {
+    "name": {
+      "required": "Role name is a required field",
+      "min": "Role name must be at least 2 characters",
+      "max": "Role name must be at most 50 characters",
+      "matches": " Invalid Role name"
+    }
+  },
+  "message": {
+    "deleteRoleStateCurrentIdNameSuccessfully": "Delete role {{0}} successfully",
+    "roleHasBeenCreatedSuccessfully": "Role has been created successfully",
+    "updateRoleSuccess": "Update role success"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Notification History",
+  "all": "All",
+  "read": "Read",
+  "unRead": "Unread",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "theProductHasBeenAddedToMarketplaceCart": "The product has been added to marketplace cart",
+  "theProductIsNoLongerAvailableToOrder": "The product is no longer available to order",
+  "restock": "RESTOCK",
+  "replenish": "Replenish"
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Gestión de roles",
+  "searchRoleByName": "Buscar rol por nombre..",
+  "addNewRole": "Agregar Nuevo Rol",
+  "role": "Rol",
+  "action": "acción",
+  "update": "Actualizar",
+  "delete": "Eliminar",
+  "deleteRole": "Eliminar rol",
+  "areYouSureToRemoveStateCurrentIdNameOutOfList": "¿Estás seguro de eliminar {{0}} de la lista?",
+  "no": "No",
+  "yes": "Sí",
+  "createUpdate": {
+    "createRole": "Crear rol",
+    "updateRole": "Actualizar Rol",
+    "roleName": "Nombre de rol",
+    "enterRoleName": "Ingrese el nombre del rol",
+    "parentRole": "Rol padre",
+    "selectValue": "Seleccionar valor",
+    "none": "Ninguno",
+    "cancel": "Cancelar",
+    "submit": "Enviar"
+  },
+  "validate": {
+    "name": {
+      "required": "El nombre del rol es un campo obligatorio",
+      "min": "El nombre del rol debe tener al menos 2 caracteres",
+      "max": "El nombre del rol debe tener como máximo 50 caracteres",
+      "matches": "Nombre de rol no válido"
+    }
+  },
+  "message": {
+    "deleteRoleStateCurrentIdNameSuccessfully": "Eliminar rol {{0}} exitosamente",
+    "roleHasBeenCreatedSuccessfully": "El rol se ha creado exitosamente",
+    "updateRoleSuccess": "Actualización de rol exitosa"
+  }
+}

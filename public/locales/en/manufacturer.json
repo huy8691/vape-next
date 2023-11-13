@@ -1,0 +1,58 @@
+{
+  "title": "Manufacturer Management",
+  "importSuccessfully": "Import successfully",
+  "deleteManufacturerStateIdManufacturerNameSuccessfully": "Delete manufacturer {0} successfully",
+  "searchByNameManufacturer": "Search by name manufacturer...",
+  "addNewManufacturer": " Add New Manufacturer",
+  "thereAreNoManufacturerToShow": "There are no manufacturer to show",
+  "list": {
+    "no.": "No.",
+    "logo": "Logo",
+    "manufacturerName": "Manufacturer name",
+    "action": "Action",
+    "rowsPerPage": "Rows per page",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "deleteManufacturer": "Delete Manufacturer",
+  "areYouSureToRemoveTheManufacturerOutOfList": "Are you sure to remove the manufacturer out of list?",
+  "no": "No",
+  "yes": "Yes",
+  "importManufacturer": "Import Manufacturer",
+  "selectImportFile": "Select import file",
+  "uploadFile": "Upload file...",
+  "thereAreSomeErrorsWithTheImportFilePleaseDownloadTheErrorFileForMoreInformation": " There are some errors with the import file. Please download the error file for more information.",
+  "Information": " There are some errors with the import file. Please download the error file for more information.",
+  "clickHere": "Click here",
+  "toDownTheImportTemplate": "to down the import template.",
+  "allowedFileExtensionXlsxCsv": "Allowed file extension: .xlsx / .csv",
+  "allowedFileSizeIs_10Mb": "Allowed file size is {'<'} 10 mb",
+  "cancel": "Cancel",
+  "submit": "Submit",
+  "createUpdate": {
+    "createNewManufacturer": "Create New Manufacturer",
+    "updateManufacturer": "Update Manufacturer",
+    "manufacturerLogo": "Manufacturer Logo",
+    "manufacturerName": " Manufacturer Name",
+    "enterManufacturerName": "Enter manufacturer name",
+    "cancel": "Cancel",
+    "submit": "Submit"
+  },
+  "message": {
+    "productManufacturerHasBeenCreatedSuccessfully": "Product manufacturer has been created successfully",
+    "productManufacturerHasBeenUpdatedSuccessfully": "Product manufacturer has been updated successfully"
+  },
+
+  "validate": {
+    "name": {
+      "required": "Manufacturer name is a required field",
+      "min": "Manufacturer name must be at least 2 characters",
+      "max": "Manufacturer name must be at most 50 characters",
+      "matches": "Invalid Manufacturer Name"
+    },
+    "importData": {
+      "required": "This field is required",
+      "test": "The file is too large"
+    }
+  }
+}

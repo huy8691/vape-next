@@ -1,0 +1,62 @@
+.custom-google-map-box {
+  .gm-style .gm-style-iw-c {
+    padding-top: 15px;
+    padding-left: 15px;
+  }
+  .gm-style-iw-d {
+    padding-right: 15px;
+    padding-bottom: 15px;
+    overflow: hidden !important;
+  }
+}
+// #marker-example {
+//   .gm-style .gm-style-iw-c {
+//     padding-top: 15px;
+//     padding-left: 15px;
+//   }
+//   .gm-style-iw-d {
+//     padding-right: 15px;
+//     padding-bottom: 15px;
+//     overflow: hidden !important;
+//   }
+// }
+.fade-loading {
+  width: 30px;
+  height: 30px;
+  background-color: #2cccff;
+  border-radius: 100rem;
+  margin: 10px auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fade-loading:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background-color: inherit;
+  animation: fade 1s forwards infinite linear;
+}
+
+@keyframes fade {
+  to {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.custom-scroll {
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  /* Optional: show position indicator in red */
+}
+.custom-scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}

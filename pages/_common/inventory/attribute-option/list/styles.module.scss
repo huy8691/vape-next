@@ -1,0 +1,13 @@
+/* Hide scrollbar for Chrome, Safari and Opera */
+.custom-scroll {
+  height: 600px;
+}
+.custom-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.custom-scroll {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

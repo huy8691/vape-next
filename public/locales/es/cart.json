@@ -1,0 +1,34 @@
+{
+  "cartEmpty": "No tienes ningún producto en el tuyo Carrito",
+  "searchMore": "Busca mas",
+  "cart": "Carro",
+  "shoppingCart": "Carro de la compra",
+  "product": "Producto",
+  "price": "Precio",
+  "quantity": "Cantidad",
+  "productNotAvailable": "El producto ya no está disponible",
+  "askForRemoveItem": "¿Quieres eliminar este artículo del carrito?",
+  "yes": "Sí",
+  "cancel": "Cancelar",
+  "deleteCheckedItem": "Eliminar elemento marcado",
+  "total": "Total",
+  "checkout": "Verificar",
+  "adjustQuantity": "Ajustar cantidad",
+  "currentInstock": "Actual en stock",
+  "subtotal": "Total parcial",
+  "apply": "Aplicar",
+  "close": "Cerca",
+  "confirm": "Confirmar",
+  "UNIT": "unidad",
+  "PACKAGE": "paquete",
+
+  "selectAllProductOnCart": "Seleccionar todos los productos en el carrito",
+  "message": {
+    "deleteCurrentProductProductNameSuccessfully": "Eliminar {{0}} exitosamente",
+    "deleteCartItemSuccessfully": "Eliminar artículo del carrito exitosamente",
+    "theStockIsNotEnoughForYourOrderPleaseDecreaseYourProductQuantity": "El stock no es suficiente para tu pedido, por favor disminuye la cantidad de tu producto",
+    "updateQuantitySuccessfully": "Actualizar cantidad exitosamente",
+    "youMustChooseAtLeastOneItems": "Debes elegir al menos un artículo",
+    "theStockForTheProductItemProductNameIsNotEnoughForYourOrder": "El stock para el producto {{0}} no es suficiente para tu pedido"
+  }
+}

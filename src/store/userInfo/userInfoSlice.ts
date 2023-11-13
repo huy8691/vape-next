@@ -16,6 +16,7 @@ const initialState: initialUserInfoStateType = {
     avatar: '',
     address: '',
     user_type: '',
+    is_master: '',
   },
 }
 

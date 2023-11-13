@@ -1,0 +1,27 @@
+{
+  "title": "Role Type",
+  "searchRoleType": "Search Role Type...",
+  "createRoleType": " Create Role Type",
+  "thereAreNoRoleTypeToShow": "There are no Role Type to show",
+  "list": {
+    "no.": "No.",
+    "name": "Name",
+    "action": "Action",
+    "rowsPerPage": "Row per pages"
+  },
+  "createUpdate": {
+    "createRoleType": "Create RoleType",
+    "selectAll": " Select all",
+    "enterNameRoleType": "Enter Name Role Type",
+    "name": "Name",
+    "submit": "Submit"
+  },
+  "update": "Update",
+  "message": {
+    "theRoleTypeHasBeenCreatedSuccessfully": "The Role Type has been created successfully",
+    "theRoleTypeHasBeenUpdatedSuccessfully": "The Role Type has been updated successfully"
+  },
+  "validate": {
+    "name": "This field is required"
+  }
+}

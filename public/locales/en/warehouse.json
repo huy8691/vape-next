@@ -1,0 +1,99 @@
+{
+  "title": "Warehouse Management",
+  "message": {
+    "theWarehouseStateCurrentWarehouseNameHasBeenMarkedAsDefaultSuccessfully": "The warehouse {0} has been marked as default successfully.",
+    "theWarehouseStateCurrentWarehouseNameHasBeenDeletedSuccessfully": "The warehouse {0} has been deleted successfully",
+    "theWarehouseHasBeenCreatedSuccessfully": "The warehouse has been created successfully.",
+    "theWarehouseHasBeenUpdatedSuccessfully": "The warehouse has been updated successfully."
+  },
+  "searchProductByName": "Search Product by name...",
+  "addNewWarehouse": "Add New Warehouse",
+  "thereAreNoWarehouseToShow": "There are no warehouse to show",
+  "list": {
+    "no.": "No.",
+    "warehouseName": "Warehouse Name",
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "postalCode": "Postal Code",
+    "isDefault": "Is Default",
+    "default": "DEFAULT",
+    "action": "Action",
+    "rowsPerPage": "Rows per page"
+  },
+  "edit": "Edit",
+  "markAsDefault": " Mark as default",
+  "deleteWarehouse": "Delete Warehouse",
+  "areYouSureToRemoveTheStateCurrentWarehouseNameOutOfList": "Are you sure to remove the {0} out of list?",
+  "no": "No",
+  "yes": "Yes",
+  "cancel": "Cancel",
+  "reset": "Reset",
+  "submit": "Submit",
+  "details": {
+    "warehouseDetail": "Warehouse detail",
+    "warehouseInformation": "Warehouse information",
+    "warehouseName": "Warehouse name",
+    "address": "Address",
+    "defaultStatus": "Default status",
+    "listProductInWarehouse": "List product in warehouse",
+    "searchProductByName": "Search Product by name...",
+    "addNewProduct": "Add New Product",
+    "thereAreNoProductsToShow": "There are no products to show",
+    "code": "Code",
+    "productName": "Product name",
+    "category": "Category",
+    "quantity": "Quantity",
+    "brand": "Brand",
+    "manufacturer": "Manufacturer",
+    "haveVariant": "Have variant",
+    "status": "Status",
+    "updateDate": "Update Date",
+    "action": "Action",
+    "active": "Active",
+    "deactivated": "Deactivated",
+    "rowsPerPage": "Rows per page",
+    "viewDetails": "View details",
+    "filter": "Filter",
+    "price": "Price",
+    "from": "From",
+    "to": "To",
+    "selectCategory": "Select Category",
+    "selectManufacturer": "Select Manufacturer",
+    "selectBrand": "Select Brand"
+  },
+  "createUpdate": {
+    "createNewWarehouse": "Create New Warehouse",
+    "updateWarehouse": "Update Warehouse",
+    "warehouseName": "Warehouse Name",
+    "enterWarehouseName": "Enter warehouse name",
+    "address": "Address",
+    "enterAddress": "Enter address name",
+    "city": "City",
+    "state": "State",
+    "postalZipCode": "Postal zipcode",
+    "description": "Description",
+    "enterDescription": "Enter description"
+  },
+  "validate": {
+    "search": "Search can not include special characters",
+    "quantityFromFieldMustBeLessThanOrEqualToQuantityToField": "Quantity From field must be less than or equal to Quantity To field",
+    "priceFromFieldMustBeLessThanOrEqualToPriceToField": "Price from field must be less than or equal to Price To field",
+    "name": {
+      "required": "Warehouse name is required field",
+      "matches": "Warehouse name must not contain leading spaces",
+      "min": "Warehouse name must be at least 2 characters",
+      "max": "Warehouse name max length must be 50 characters"
+    },
+    "address": {
+      "min": "Address must be at least 2 characters",
+      "max": "Address must be at most 255 characters",
+      "matches": "Address must not contain leading spaces"
+    },
+    "description": {
+      "min": "Description must be at least 2 characters",
+      "max": "Description must be at most 500 characters",
+      "matches": "Description must not contain leading spaces"
+    }
+  }
+}

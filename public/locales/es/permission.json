@@ -1,0 +1,20 @@
+{
+  "title": "Permission",
+  "configurePermission": "Configurar Permiso",
+  "selectRole": "Seleccionar rol",
+  "searchByModule": "Buscar por módulo",
+  "selectAll": "Seleccionar todo",
+  "applyReplaceRolesType": "Aplicar/Reemplazar Tipo de Roles",
+  "submit": "Enviar",
+  "thereAreNoRoleToShow": "No hay roles para mostrar",
+  "selectRoleType": "Seleccionar tipo de rol",
+  "replace": "Reemplazar",
+  "apply": "Aplicar",
+  "message": {
+    "assignPermissionSuccessfully": "Permiso asignado con éxito",
+    "pleaseSelectRoleType": "Por favor, seleccione un tipo de rol",
+    "thisRoleTypeIsNotAppropriateWithCurrentRole": "Este tipo de rol no es apropiado para el rol actual",
+    "replaceRoleTypeStateCurrentRoleTypeNameSuccessfully": "Reemplazar tipo de rol {{0}} con éxito",
+    "applyRoleTypeStateCurrentRoleTypeNameSuccessfully": "Aplicar tipo de rol {{0}} con éxito"
+  }
+}

@@ -1,6 +1,10 @@
 import { AxiosResponse } from 'axios'
 import { callAPI, callAPIWithToken } from 'src/services/jwt-axios'
-import { LoginResponseType, LoginType } from './loginModels'
+import {
+  LoginResponseType,
+  LoginType,
+  // PermissionResponseType,
+} from './loginModels'
 
 const loginAPI = (
   data: LoginType
@@ -25,5 +29,14 @@ const userProfileAPI = (): Promise<AxiosResponse> => {
     method: 'get',
   })
 }
+
+// const getListPermission = (): Promise<
+//   AxiosResponse<PermissionResponseType>
+// > => {
+//   return callAPIWithToken({
+//     url: `/api/user-permissions/`,
+//     method: 'get',
+//   })
+// }
 
 export { loginAPI, logOutAPI, userProfileAPI }

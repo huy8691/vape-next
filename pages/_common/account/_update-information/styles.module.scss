@@ -1,0 +1,35 @@
+.image-wrapper {
+  border: 1px solid #f8f9fc;
+  border-radius: 6px;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.input-number {
+  :global {
+    .MuiInputBase-input {
+      border-radius: 20px;
+    }
+    .MuiTextField-root {
+      width: 100%;
+    }
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+      font-size: 1.4rem;
+      overflow: hidden;
+      border-color: #e1e6ef;
+    }
+    .MuiOutlinedInput-notchedOutline {
+      border-width: 1px !important;
+      border-color: #e1e6ef;
+    }
+    .MuiInputBase-multiline {
+      padding: 0px;
+    }
+    .MuiInputBase-input {
+      padding: 10px 15px;
+    }
+  }
+}

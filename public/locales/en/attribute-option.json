@@ -1,0 +1,45 @@
+{
+  "title": "Attribute Option Management",
+  "addNewAttribute": " Add New Attribute",
+  "thereAreNoAttributeAndOptionToShow": "There are no attribute and option to show",
+  "attributeName": "Attribute Name",
+  "option": "Option",
+  "action": "Action",
+  "rowsPerPage": "Rows per page",
+  "updateAttributeOptions": "Update Attribute & Options",
+  "deleteAttribute": " Delete attribute",
+  "attribute": "Attribute",
+  "optionName": "Option name",
+  "append": "Append",
+  "submit": "Submit",
+  "areYouSureToDelete": "Are you sure to delete ?",
+  "no": "No",
+  "yes": "Yes",
+  "searchAttributeByName": "Search attribute by name...",
+  "create": {
+    "title": "Create Attribute",
+    "attributeName": "Attribute Name",
+    "enterAttributeName": "Enter attribute name",
+    "option": "Option",
+    "cancel": "Cancel",
+    "submit": "Submit"
+  },
+  "message": {
+    "deleteAttributeSuccessfully": "Delete attribute successfully",
+    "updateAttributeOptionSuccessfully": "Update attribute & option successfully",
+    "createAttributeSuccessfully": "Create Attribute successfully"
+  },
+  "validate": {
+    "name": "Name is required",
+    "attributeName": {
+      "minMax": "Attribute name must be from 2 to 50 characters",
+      "matches": "Attribute name must not contain leading spaces",
+      "required": "Attribute name is required"
+    },
+    "optionsName": {
+      "minMax": "Option name must be from 2 to 50 characters",
+      "matches": "Option name must not contain leading spaces",
+      "required": "Option name is required"
+    }
+  }
+}

@@ -1,36 +1,40 @@
-import React, { useEffect, useState } from 'react'
-import type { ReactElement } from 'react'
 import CircularProgress from '@mui/material/CircularProgress'
+import type { ReactElement } from 'react'
+import { useEffect, useState } from 'react'
 // import Snackbar from '@mui/material/Snackbar'
 // import MuiAlert from '@mui/material/Alert'
-import { useAppSelector } from 'src/store/hooks'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { Provider } from 'react-redux'
+import { useAppSelector } from 'src/store/hooks'
 import { store } from 'src/store/store'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import Snackbar from '@mui/material/Snackbar'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
+// import Snackbar from '@mui/material/Snackbar'
+// import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import Cookies from 'js-cookie'
 // import { Shadows } from '@mui/material/styles/shadows'
 // import vi_VN from 'antd/lib/locale/vi_VN'
 // import 'moment/locale/vi'
-
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 // next
 import { useRouter } from 'next/router'
+import { SnackbarProvider } from 'notistack'
+import { callAPI } from 'src/services/jwt-axios'
+import { useTranslation } from 'next-i18next'
 
 // Snackbar
-type SnackbarType = {
-  open: boolean
-  autoHideDuration?: number
-  message: string
-  type: 'error' | 'warning' | 'info' | 'success'
-}
+// type SnackbarType = {
+//   open: boolean
+//   autoHideDuration?: number
+//   message: string
+//   type: 'error' | 'warning' | 'info' | 'success'
+// }
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-})
+// const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+//   props,
+//   ref
+// ) {
+//   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+// })
 // Snackbar
 type Props = {
   children: ReactElement
@@ -40,7 +44,7 @@ const theme = createTheme({
   palette: {
     // mode: 'dark',
     primary: {
-      main: '#34DC75',
+      main: '#1DB46A',
     },
     error: {
       main: '#BA2532',
@@ -64,70 +68,62 @@ const theme = createTheme({
 })
 
 const InnerLayout = ({ children }: Props) => {
-  const notificationApp = useAppSelector((state) => state.notification)
-  const loading = useAppSelector((state) => state.loading)
+  const router = useRouter()
+  // const { t, i18n } = useTranslation()
 
-  // Snackbar
-  const [valueSnackbar, setValueSnackbar] = useState<SnackbarType>({
-    open: false,
-    autoHideDuration: 3000,
-    message: '',
-    type: 'success',
-  })
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    console.log(event)
-    if (reason === 'clickaway') {
-      return
-    }
-    setValueSnackbar({
-      ...valueSnackbar,
-      open: false,
-      message: '',
-    })
+  const loading = useAppSelector((state) => state.loading)
+  const userInfo = useAppSelector((state) => state.userInfo)
+  // const handleChangePagination = (e: any, page: number) => {
+  //   console.log(e)
+  //   router.replace({
+  //     search: `${objToStringParam({
+  //       ...router.query,
+  //       page: page,
+  //     })}`,
+  //   })
+  // }
+  console.log('Loading', userInfo)
+  if (
+    router.pathname.startsWith('/supplier') &&
+    (userInfo.data.user_type === 'MERCHANT' ||
+      userInfo.data.user_type === 'ADMIN')
+    // || userInfo.data.user_type === 'ADMIN'
+  ) {
+    router.push('/403')
+  }
+  if (
+    router.pathname.startsWith('/retailer') &&
+    (userInfo.data.user_type === 'SUPPLIER' ||
+      userInfo.data.user_type === 'ADMIN')
+    //  ||userInfo.data.user_type === 'ADMIN'
+  ) {
+    router.push('/403')
+  }
+  if (
+    router.pathname.startsWith('/admin') &&
+    (userInfo.data.user_type === 'SUPPLIER' ||
+      userInfo.data.user_type === 'MERCHANT')
+  ) {
+    router.push('/403')
   }
   useEffect(() => {
-    if (notificationApp.message) {
-      if (notificationApp.type === undefined) {
-        setValueSnackbar({
-          ...valueSnackbar,
-          open: true,
-          autoHideDuration: notificationApp.duration,
-          message: notificationApp.message,
-          type: 'success',
-        })
-      } else {
-        setValueSnackbar({
-          ...valueSnackbar,
-          open: true,
-          autoHideDuration: notificationApp.duration,
-          message: notificationApp.message,
-          type: notificationApp.type,
-        })
-      }
-    }
-  }, [notificationApp])
-  // Snackbar
-
+    callAPI({
+      url: '/api/error-code-from-db/',
+      method: 'get',
+    }).then((res) => {
+      const { data } = res.data
+      localStorage.setItem('error-code', JSON.stringify(data))
+    })
+  }, [])
+  console.log('loading state is', loading.isLoading)
   return (
     <div style={{ minHeight: '100vh' }}>
-      {children}
       {loading.isLoading && (
         <div className="loading">
           <CircularProgress />
         </div>
       )}
-      <Snackbar
-        open={valueSnackbar.open}
-        autoHideDuration={valueSnackbar.autoHideDuration}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity={valueSnackbar.type}>
-          {valueSnackbar.message}
-        </Alert>
-      </Snackbar>
+      {children}
     </div>
   )
 }
@@ -136,7 +132,7 @@ const WrapLayout = ({ children }: Props) => {
   const router = useRouter()
   const token = Boolean(Cookies.get('token'))
   const [mounted, setMounted] = useState<boolean>(false)
-
+  const { i18n } = useTranslation()
   useEffect(() => {
     if (
       (router.asPath === '/login' ||
@@ -163,7 +159,37 @@ const WrapLayout = ({ children }: Props) => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <InnerLayout>{children}</InnerLayout>
+        <SnackbarProvider autoHideDuration={3000} maxSnack={15}>
+          <InnerLayout>
+            <>
+              <Select
+                onChange={(e) => {
+                  console.log('e', e.target.value)
+                  console.log('router', router)
+                  i18n.changeLanguage(`${e.target?.value}`)
+                  router.push(router.asPath, undefined, {
+                    locale: e.target.value as string,
+                  })
+                }}
+                value={i18n.language}
+                size="small"
+                sx={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  minWidth: '50px',
+                  background: 'white',
+                  borderRadius: '8px',
+                }}
+                className="language-setting"
+              >
+                <MenuItem value="en">EN</MenuItem>
+                <MenuItem value="es">ES</MenuItem>
+              </Select>
+              {children}
+            </>
+          </InnerLayout>
+        </SnackbarProvider>
       </ThemeProvider>
     </Provider>
   )

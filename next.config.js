@@ -2,8 +2,9 @@
 const withPlugins = require('next-compose-plugins')
 const withImages = require('next-images')
 const withLess = require('next-with-less')
+const { i18n } = require('./next-i18next.config')
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   swcMinify: true,
   images: {
     // limit of 25 deviceSizes values
@@ -37,16 +38,18 @@ const nextConfig = {
     // the following are experimental features, and may cause breaking changes
   },
   pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
-  async redirects() {
-    return [
-      {
-        source: '/products',
-        destination: '/404',
-        permanent: true,
-      },
-    ]
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/404',
+  //       permanent: true,
+  //     },
+  //   ]
+  // },
+  distDir: 'build',
   output: 'standalone',
+  i18n,
 }
 
 module.exports = withPlugins(

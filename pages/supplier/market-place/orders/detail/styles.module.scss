@@ -1,0 +1,58 @@
+.image-wrapper {
+  border: 1px solid #e1e6ef;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+.list-status {
+  :global {
+    li {
+      background: none !important;
+    }
+  }
+}
+
+.input-number {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.input-number-refund {
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  width: 100%;
+  background-color: white;
+
+  :global {
+    .MuiInputBase-input {
+      border-radius: 20px;
+    }
+    .MuiTextField-root {
+      width: 100%;
+    }
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+      font-size: 1.4rem;
+      overflow: hidden;
+      border-color: #e1e6ef;
+    }
+    .MuiOutlinedInput-notchedOutline {
+      border-width: 1px !important;
+      border-color: #e1e6ef;
+    }
+    .MuiInputBase-multiline {
+      padding: 0px;
+    }
+    .MuiInputBase-input {
+      padding: 10px 15px;
+    }
+  }
+}

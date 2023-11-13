@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src: url('fonts/icomoon.eot?1qezje');
-  src: url('fonts/icomoon.eot?1qezje#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?1qezje') format('truetype'),
-    url('fonts/icomoon.woff?1qezje') format('woff'),
-    url('fonts/icomoon.svg?1qezje#icomoon') format('svg');
+  src: url('fonts/icomoon.eot?q695kt');
+  src: url('fonts/icomoon.eot?q695kt#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?q695kt') format('truetype'),
+    url('fonts/icomoon.woff?q695kt') format('woff'),
+    url('fonts/icomoon.svg?q695kt#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -26,35 +26,47 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-Package:before {
-  content: '\e907';
+.icon-cancelstatus-converted:before {
+  content: '\e90c';
 }
-.icon-icon-edit:before {
+.icon-BatteryFull:before {
+  content: '\e905';
+}
+.icon-BatteryHigh:before {
   content: '\e906';
 }
-.icon-icoMoon_apple:before {
+.icon-BatteryLow:before {
+  content: '\e907';
+}
+.icon-BatteryMedium:before {
+  content: '\e908';
+}
+.icon-Crosshair:before {
+  content: '\e90b';
+}
+.icon-BatteryEmpty:before {
+  content: '\e904';
+}
+.icon-markeroffline:before {
+  content: '\e909';
+  color: #bababa;
+}
+.icon-markeronline:before {
+  content: '\e90a';
+  color: #34dc75;
+}
+.icon-phone:before {
+  content: '\e902';
+  color: #bababa;
+}
+.icon-symbol:before {
+  content: '\e903';
+  color: #bababa;
+}
+.icon-Frame-599:before {
   content: '\e900';
 }
-.icon-icoMoon_facebook:before {
+.icon-Path_33961:before {
   content: '\e901';
-  color: #1976d2;
-}
-.icon-icoMoon_google .path1:before {
-  content: '\e902';
-  color: rgb(255, 193, 7);
-}
-.icon-icoMoon_google .path2:before {
-  content: '\e903';
-  margin-left: -0.947265625em;
-  color: rgb(255, 61, 0);
-}
-.icon-icoMoon_google .path3:before {
-  content: '\e904';
-  margin-left: -0.947265625em;
-  color: rgb(76, 175, 80);
-}
-.icon-icoMoon_google .path4:before {
-  content: '\e905';
-  margin-left: -0.947265625em;
-  color: rgb(25, 118, 210);
+  color: #e02d3c;
 }

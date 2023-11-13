@@ -1,0 +1,51 @@
+{
+  "title": "External Supplier",
+  "search": "Search...",
+  "create": "Create",
+  "thereAreNoExternalToShow": " There Are No External To Show",
+  "businessName": "Business Name",
+  "phoneNumber": "Phone Number",
+  "email": "Email",
+  "address": "Address",
+  "rowsPerPage": "Rows Per Page",
+  "edit": "Edit",
+  "delete": "Delete",
+  "deleteExternalSupplier": "Delete External Supplier",
+  "areYouSureToDeleteThisExternalSupplier": "Are You Sure To Delete This External Supplier?",
+  "no": "No",
+  "yes": "Yes",
+  "createExternalSuppler": " CREATE EXTERNAL SUPPLER",
+  "updateExternalSuppler": "UPDATE EXTERNAL SUPPLER",
+  "streetAddress": " Street Address",
+  "city": "City",
+  "state": "State",
+  "postalCode": "Postal Code",
+  "cancel": " Cancel",
+  "submit": " Submit",
+  "message": {
+    "theExternalSupplierHasBeenDeletedSuccessfully": "The External Supplier Has Been Deleted Successfully",
+    "createExternalSupplierSuccessfully": "Create external supplier successfully",
+    "somethingsWentWrong": "Somethings gone wrong, please try again or contact Salonbookly if the issue persists: Error message common",
+    "updateExternalSupplierSuccessfully": "Update external supplier successfully"
+  },
+  "validate": {
+    "email": "Email invalid",
+    "name": {
+      "required": "The field is required",
+      "min": "Business name must be at least 2 characters",
+      "max": "Business name must be at most 50 characters",
+      "matches": "Business name invalid"
+    },
+    "phoneNumber": "Phone Number invalid",
+    "address": {
+      "max": "Address must be at least 255 characters",
+      "matches": "Address invalid"
+    },
+    "city": "City must be at least 500 characters",
+    "postalCode": {
+      "min": "Postal zip code must be at least 5 characters",
+      "max": "Postal zip code must be at most 9 characters",
+      "test": "Postal zip code does not match City/State"
+    }
+  }
+}

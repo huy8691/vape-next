@@ -47,6 +47,16 @@ const registerApi = (
   })
 }
 
+const organizationInfoApi = (data: {
+  organization_refferal: string
+}): Promise<AxiosResponse<RegisterResponseType>> => {
+  return callAPI({
+    url: '/api/organization/info/',
+    method: 'post',
+    data: data,
+  })
+}
+
 export {
   getMonthlyPurchaseApi,
   getMonthlySaleApi,
@@ -54,4 +64,5 @@ export {
   getFindUsOverApi,
   registerApi,
   checkMailApi,
+  organizationInfoApi,
 }

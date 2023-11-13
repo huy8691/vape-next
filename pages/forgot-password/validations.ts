@@ -1,20 +1,35 @@
 import * as Yup from 'yup'
+import { TFunction } from 'i18next'
 
-const schema = Yup.object().shape({
-  email: Yup.string()
-    .email('Email must be a valid email')
-    .max(255)
-    .required('Email is a required field'),
-})
-
-const schemaPassword = Yup.object().shape({
-  new_password: Yup.string()
-    .required('Password is required')
-    .min(8, 'Must contain 8 characters'),
-  confirmPassword: Yup.string()
-    .required('Confirm password is required')
-    .min(8, 'Must contain 8 characters')
-    .oneOf([Yup.ref('new_password'), null], 'Passwords must match'),
-})
+const schema = (t: TFunction<['forgot-password']>) => {
+  return Yup.object().shape({
+    email: Yup.string()
+      .email(t('forgot-password:invalidEmail'))
+      .max(255)
+      .required(t('forgot-password:emailIsARequiredField')),
+  })
+}
+const schemaPassword = (t: TFunction<['forgot-password']>) => {
+  return Yup.object().shape({
+    new_password: Yup.string()
+      .required(t('forgot-password:passwordIsRequired'))
+      .min(8, t('forgot-password:mustContain_8Characters'))
+      .matches(
+        /^[^\s]+(\s+[^\s]+)*$/,
+        t('forgot-password:notAllowSpaceAtTheFirstAndLastCharacter')
+      ),
+    confirmPassword: Yup.string()
+      .required(t('forgot-password:confirmPassword'))
+      .min(8, t('forgot-password:mustContain_8Characters'))
+      .matches(
+        /^[^\s]+(\s+[^\s]+)*$/,
+        t('forgot-password:notAllowSpaceAtTheFirstAndLastCharacter')
+      )
+      .oneOf(
+        [Yup.ref('new_password'), null],
+        t('forgot-password:passwordsMustMatch')
+      ),
+  })
+}
 
 export { schema, schemaPassword }

@@ -1,0 +1,98 @@
+{
+  "title": "Shipping Configuration",
+  "shippingCarrierConfiguration": "Shipping Carrier Configuration",
+  "shippingFeeConfiguration": "Shipping Fee Configuration",
+  "shippingAddressConfiguration": "Shipping Address Configuration",
+  "messenger": {
+    "updateStatusSuccessfully": "Update status successfully",
+    "configShippingPriceSuccessfully": "Config shipping price successfully",
+    "configShippingAddressSuccessfully": "Config shipping address successfully"
+  },
+  "retailer": "Retailer",
+  "freeForAllRetailer": "Free for all Retailer",
+  "excludedId": "Excluded id",
+  "selectRetailers": "Select Retailers",
+  "freeForSpecificRetailer": "Free for specific Retailer",
+  "selectedId": "Selected id",
+  "freeBasedOnTotalBilling": "Free based on total billing",
+  "billingAmountThreshold": "Billing Amount Threshold",
+  "customer": "Customer",
+  "freeForAllCustomer": "Free for all Customer",
+  "selectCustomer": "Select Customer",
+  "name": "Name",
+  "address": "Address",
+  "email": "Email",
+  "phoneNumber": "Phone number",
+  "rowsPerPage": "Rows per page",
+  "cancel": "Cancel",
+  "select": "Select",
+  "businessOwnerName": "Business/Owner Name",
+  "federalTaxId": "Federal tax ID",
+  "pickUpLocation": "Pick Up Location",
+  "thisAddressWillBeSetAsDefaultPickupLocationYouCanChangeItWhenProcessingYourOrder": "This address will be set as default pickup location. You can change it when processing your order.",
+  "city": "City",
+  "state": "State",
+  "postalZipcode": "Postal zipcode",
+  "contactName": "Contact Name",
+  "returnLocation": "Return Location",
+  "defineAReturnAddressForHandlingCanceledOrders": "Define a return address for handling canceled orders",
+  "submit": "Submit",
+  "validate": {
+    "location": {
+      "address": "Location is required",
+      "latitude": "Location is required",
+      "longitude": "Location is required"
+    },
+    "phoneNumber": "Phone number is a required",
+    "receiverName": {
+      "required": "Receiver Name field is required",
+      "min": "Receiver name must be at least 2 characters",
+      "max": "Receiver name must be at most 50 characters",
+      "matches": "Receiver name invalid"
+    },
+    "city": {
+      "required": "City field is required",
+      "min": "City must be at least 2 characters",
+      "max": "City must be at most 500 characters"
+    },
+    "state": {
+      "name": "State field is required",
+      "abbreviation": "State field is required"
+    },
+    "stateReturn": {
+      "name": "State field is required",
+      "abbreviation": "State field is required"
+    },
+    "postal_zipcode": {
+      "required": "Postal zip code field is required",
+      "min": "Postal zip code must be at least 5 characters",
+      "max": "Postal zip code must be at most 9 characters",
+      "test": "Postal zip code does not match City/State"
+    },
+    "postalZipcodeReturn": {
+      "required": "Postal zip code field is required",
+      "min": "Postal zip code must be at least 5 characters",
+      "max": "Postal zip code must be at most 9 characters",
+      "test": "Postal zip code does not match City/State"
+    },
+    "locationReturn": {
+      "address": "Location is required",
+      "latitude": "Location is required",
+      "longitude": "Location is required"
+    },
+    "receiverNameReturn": {
+      "required": "Receiver Name field is required",
+      "min": "Receiver name must be at least 2 characters",
+      "max": "Receiver name must be at most 50 characters",
+      "matches": "Receiver name invalid"
+    },
+    "cityReturn": {
+      "required": "City field is required",
+      "min": "City must be at least 2 characters",
+      "max": "City must be at most 500 characters"
+    }
+  },
+  "enterPhoneNumber": "Enter phone number",
+  "searchCustomerByName": "Search Customer by name...",
+  "searchRetailerByName": "Search Retailer by name"
+}

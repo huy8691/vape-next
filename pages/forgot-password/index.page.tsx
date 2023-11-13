@@ -38,7 +38,7 @@ import type { NextPageWithLayout } from 'pages/_app.page'
 import dynamic from 'next/dynamic'
 const ReactCodeInput = dynamic(import('react-code-input'))
 import Cookies from 'js-cookie'
-import { Eye, EyeSlash } from 'phosphor-react'
+import { Eye, EyeSlash } from '@phosphor-icons/react'
 // other
 
 // custom style
@@ -62,7 +62,10 @@ import {
   setNewPasswordApi,
 } from './forgetPasswordAPI'
 import { loadingActions } from 'src/store/loading/loadingSlice'
-import { notificationActions } from 'src/store/notification/notificationSlice'
+import { useEnqueueSnackbar } from 'src/components/enqueueSnackbar'
+import { handlerGetErrMessage } from 'src/utils/global.utils'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
 
 const TypographyH1Custom = styled(Typography)({
   fontSize: '14px',
@@ -82,6 +85,7 @@ const ButtonSubmitCustom = styled(ButtonCustom)(() => ({
 }))
 
 const ForgotPassword: NextPageWithLayout = () => {
+  const { t } = useTranslation('forgot-password')
   const router = useRouter()
   const token = Boolean(Cookies.get('token'))
   if (token) {
@@ -96,17 +100,23 @@ const ForgotPassword: NextPageWithLayout = () => {
   const [error, setError] = useState(false)
 
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showPassword2, setShowPassword2] = useState<boolean>(false)
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
   }
+  const handleClickShowPassword2 = () => {
+    setShowPassword2(!showPassword2)
+  }
+
+  const [pushMessage] = useEnqueueSnackbar()
 
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema(t)),
   })
 
   // check password
@@ -115,7 +125,7 @@ const ForgotPassword: NextPageWithLayout = () => {
     control: controlPassword,
     formState: { errors: errorsPassword },
   } = useForm({
-    resolver: yupResolver(schemaPassword),
+    resolver: yupResolver(schemaPassword(t)),
     mode: 'all',
   })
 
@@ -126,22 +136,13 @@ const ForgotPassword: NextPageWithLayout = () => {
         const data = response.data
         setStateCheckMail(values.email)
         dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: data.message,
-          })
-        )
+        pushMessage(data?.message, 'success')
         setStateActiveStep('2')
       })
-      .catch((error) => {
-        const data = error.response?.data
+      .catch(({ response }) => {
+        const { status, data } = response
         dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
+        pushMessage(handlerGetErrMessage(status, data), 'error')
       })
   }
 
@@ -157,22 +158,13 @@ const ForgotPassword: NextPageWithLayout = () => {
         .then((response) => {
           const data = response.data
           dispatch(loadingActions.doLoadingSuccess())
-          dispatch(
-            notificationActions.doNotification({
-              message: data.message,
-            })
-          )
+          pushMessage(data.message, 'success')
           setStateActiveStep('3')
         })
-        .catch((error) => {
-          const data = error.response?.data
+        .catch(({ response }) => {
+          const { status, data } = response
           dispatch(loadingActions.doLoadingFailure())
-          dispatch(
-            notificationActions.doNotification({
-              message: data?.message ? data?.message : 'Error',
-              type: 'error',
-            })
-          )
+          pushMessage(handlerGetErrMessage(status, data), 'error')
         })
     }
   }
@@ -187,11 +179,7 @@ const ForgotPassword: NextPageWithLayout = () => {
       .then((response) => {
         const data = response.data
         dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: data.message,
-          })
-        )
+        pushMessage(data.message, 'success')
         // set count down
         const time = Math.floor(Date.now() / 1000)
         Cookies.set('timeCountCookies', time.toString())
@@ -208,15 +196,10 @@ const ForgotPassword: NextPageWithLayout = () => {
           })
         }, 1000)
       })
-      .catch((error) => {
-        const data = error.response?.data
+      .catch(({ response }) => {
+        const { status, data } = response
         dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
+        pushMessage(handlerGetErrMessage(status, data), 'error')
       })
   }
   const onSubmitPassword = (values: any) => {
@@ -229,24 +212,15 @@ const ForgotPassword: NextPageWithLayout = () => {
       .then((response) => {
         const data = response.data
         dispatch(loadingActions.doLoadingSuccess())
-        dispatch(
-          notificationActions.doNotification({
-            message: data.message,
-          })
-        )
+        pushMessage(data.message, 'success')
         setTimeout(() => {
           router.push('/login')
         }, 2000)
       })
-      .catch((error) => {
-        const data = error.response?.data
+      .catch(({ response }) => {
+        const { status, data } = response
         dispatch(loadingActions.doLoadingFailure())
-        dispatch(
-          notificationActions.doNotification({
-            message: data?.message ? data?.message : 'Error',
-            type: 'error',
-          })
-        )
+        pushMessage(handlerGetErrMessage(status, data), 'error')
       })
   }
 
@@ -326,7 +300,7 @@ const ForgotPassword: NextPageWithLayout = () => {
   return (
     <div className={classes['forgot-password-page']}>
       <Head>
-        <title>Forgot your password | Vape</title>
+        <title>{t('forgotYourPassword')} | TWSS</title>
       </Head>
       <div className={classes['forgot-password-page__container']}>
         <div className={classes['forgot-password-page__content']}>
@@ -334,7 +308,7 @@ const ForgotPassword: NextPageWithLayout = () => {
             <Link href="/">
               <a>
                 <Image
-                  src="/images/logo.svg"
+                  src={'/' + '/images/logo.svg'}
                   alt="Logo"
                   width="133"
                   height="52"
@@ -347,10 +321,10 @@ const ForgotPassword: NextPageWithLayout = () => {
               <TabPanel value="1">
                 <Box mb={4} style={{ textAlign: 'center' }}>
                   <TypographyH1Custom variant="h1" mb={2}>
-                    Forgot your password?
+                    {t('forgotYourPassword')}?
                   </TypographyH1Custom>
                   <Typography variant="body2">
-                    Don’t worry, we will help you to setup a new one
+                    {t('donTWorryWeWillHelpYouToSetupANewOne')}
                   </Typography>
                 </Box>
                 <form
@@ -368,7 +342,7 @@ const ForgotPassword: NextPageWithLayout = () => {
                             htmlFor="email"
                             error={!!errors.email}
                           >
-                            Email
+                            {t('email')}
                           </InputLabelCustom>
                           <FormControl fullWidth>
                             <TextFieldCustom
@@ -389,7 +363,7 @@ const ForgotPassword: NextPageWithLayout = () => {
                       size="large"
                       type="submit"
                     >
-                      Next
+                      {t('next')}
                     </ButtonSubmitCustom>
                   </Stack>
                 </form>
@@ -397,11 +371,10 @@ const ForgotPassword: NextPageWithLayout = () => {
               <TabPanel value="2">
                 <Box mb={4} style={{ textAlign: 'center' }}>
                   <TypographyH1Custom variant="h1" mb={2}>
-                    Forgot your password?
+                    {t('forgotYourPassword')}?
                   </TypographyH1Custom>
                   <TypographyBodyCustom variant="body2">
-                    Please enter security code that we’ve sent to your email
-                    address
+                    {t('pleaseEnterSecurityCodeThatWeVeSentToYourEmailAddress')}
                   </TypographyBodyCustom>
                 </Box>
                 <Box style={{ textAlign: 'center' }}>
@@ -413,7 +386,7 @@ const ForgotPassword: NextPageWithLayout = () => {
                     // value={pinCode}
                   />
                   <Typography variant="body2" mb={3}>
-                    Don’t receive code?
+                    {t('donTReceiveCode')}
                     <span
                       className={`${
                         classes['forgot-password-page__resendOTP']
@@ -422,16 +395,16 @@ const ForgotPassword: NextPageWithLayout = () => {
                       }`}
                       onClick={() => handleResendTokenCode()}
                     >
-                      Request again
+                      {t('requestAgain')}
                     </span>
                   </Typography>
                   {stateCount > 0 && stateCount < 60 && (
                     <Typography variant="body2" mb={3}>
-                      Please retry in{' '}
+                      {t('pleaseRetryIn')}{' '}
                       <span className={classes['forgot-password-page__count']}>
                         {stateCount}
                       </span>{' '}
-                      seconds
+                      {t('seconds')}
                     </Typography>
                   )}
 
@@ -442,18 +415,19 @@ const ForgotPassword: NextPageWithLayout = () => {
                     onClick={() => handleCheckPinCode()}
                     disabled={pinCode.length < 6 ? true : false}
                   >
-                    Next
+                    {t('next')}
                   </ButtonSubmitCustom>
                 </Box>
               </TabPanel>
               <TabPanel value="3">
                 <Box mb={4} style={{ textAlign: 'center' }}>
                   <TypographyH1Custom variant="h1" mb={2}>
-                    Set New Password
+                    {t('setNewPassword')}
                   </TypographyH1Custom>
                   <TypographyBodyCustom variant="body2">
-                    Your new password must be different to previously used
-                    passwords.
+                    {t(
+                      'yourNewPasswordMustBeDifferentToPreviouslyUsedPasswords'
+                    )}
                   </TypographyBodyCustom>
                 </Box>
                 <form onSubmit={handleSubmitPassword(onSubmitPassword)}>
@@ -468,7 +442,7 @@ const ForgotPassword: NextPageWithLayout = () => {
                             htmlFor="outlined-adornment-password"
                             error={!!errorsPassword.new_password}
                           >
-                            New password
+                            {t('newPassword')}
                           </InputLabelCustom>
                           <TextFieldPasswordCustom fullWidth variant="outlined">
                             <OutlinedInput
@@ -481,9 +455,9 @@ const ForgotPassword: NextPageWithLayout = () => {
                                     onClick={handleClickShowPassword}
                                   >
                                     {showPassword ? (
-                                      <EyeSlash size={24} />
-                                    ) : (
                                       <Eye size={24} />
+                                    ) : (
+                                      <EyeSlash size={24} />
                                     )}
                                   </IconButton>
                                 </InputAdornment>
@@ -510,22 +484,22 @@ const ForgotPassword: NextPageWithLayout = () => {
                             htmlFor="outlined-adornment-password"
                             error={!!errorsPassword.confirmPassword}
                           >
-                            Confirm password
+                            {t('confirmPassword')}
                           </InputLabelCustom>
                           <TextFieldPasswordCustom fullWidth variant="outlined">
                             <OutlinedInput
-                              type={showPassword ? 'text' : 'password'}
+                              type={showPassword2 ? 'text' : 'password'}
                               {...field}
                               endAdornment={
                                 <InputAdornment position="end">
                                   <IconButton
                                     aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
+                                    onClick={handleClickShowPassword2}
                                   >
-                                    {showPassword ? (
-                                      <EyeSlash size={24} />
-                                    ) : (
+                                    {showPassword2 ? (
                                       <Eye size={24} />
+                                    ) : (
+                                      <EyeSlash size={24} />
                                     )}
                                   </IconButton>
                                 </InputAdornment>
@@ -547,7 +521,7 @@ const ForgotPassword: NextPageWithLayout = () => {
                       size="large"
                       type="submit"
                     >
-                      Reset Password
+                      {t('resetPassword')}
                     </ButtonSubmitCustom>
                   </Stack>
                 </form>
@@ -557,12 +531,25 @@ const ForgotPassword: NextPageWithLayout = () => {
         </div>
         <TypographyTextCustom variant="body1">
           <Link href="/login">
-            <a className={classes.link}>Back to Sign in</a>
+            <a className={classes.link}>{t('backToSignIn')}</a>
           </Link>
         </TypographyTextCustom>
       </div>
     </div>
   )
+}
+
+export const getStaticProps = async ({ locale }: { locale: string }) => {
+  return {
+    props: {
+      locale,
+      ...(await serverSideTranslations(locale, [
+        'common',
+        'account',
+        'forgot-password',
+      ])),
+    },
+  }
 }
 
 ForgotPassword.getLayout = function getLayout(page: ReactElement) {

@@ -1,0 +1,172 @@
+{
+  "title": "Orden Externa",
+  "waitingForApproved": "Esperando Aprobación",
+  "approved": "Aprobado",
+  "readyForShipping": "Listo para Envío",
+  "delivering": "Entregando",
+  "delivered": "Entregado",
+  "cancelled": "Cancelado",
+  "completed": "Completado",
+  "waitingForPayment": "Esperando Pago",
+  "paid": "Pagado",
+  "delayPayment": "Pago Retrasado",
+  "refunded": "Reembolsado",
+  "partiallyPaid": "Parcialmente Pagado",
+  "search": "Buscar...",
+  "createExternalOrder": "Crear Orden Externa",
+  "thereAreNoExternalOrderToShow": "No hay Órdenes Externas para Mostrar",
+  "orderNumber": "Número de Orden",
+  "orderDate": "Fecha de la Orden",
+  "orderStatus": "Estado de la Orden",
+  "paymentStatus": "Estado de Pago",
+  "orderBilling": "Facturación de la Orden",
+  "externalSupplier": "Proveedor Externo",
+  "rowsPerPage": "Filas por Página",
+  "filter": "Filtrar",
+  "selectExternalSupplier": "Seleccionar Proveedor Externo",
+  "selectStatus": "Seleccionar estado",
+  "selectPaymentStatus": "Seleccionar estado de pago",
+  "cancel": "Cancelar",
+  "reset": "Reiniciar",
+  "detail": "Detalle",
+  "externalOrder": "ORDEN EXTERNA",
+  "externalOrderDetail": "DETALLE DEL PEDIDO EXTERNO",
+  "supplierName": "Nombre del Proveedor",
+  "phoneNumber": "Número de Teléfono",
+  "email": "Correo Electrónico",
+  "streetAddress": "Dirección",
+  "deliveryInformation": "Información de Entrega",
+  "billingOverview": "Resumen de Facturación",
+  "subtotal": "Total parcial",
+  "discount": "Descuento",
+  "tax": "Impuesto",
+  "total": "Total",
+  "delete": "Eliminar",
+  "edit": "Editar",
+  "invoice": "Factura",
+  "products": "Productos",
+  "thereAreNoProductsToShow": "No hay Productos para Mostrar",
+  "deleteExternalOrder": "Eliminar Orden Externa",
+  "areYouSureToDeleteThisExternalOrder": "¿Estás seguro de eliminar esta Orden Externa?",
+  "no": "No",
+  "yes": "Sí",
+  "youOnlyCanSelectProductsFromExternalSuppliers": "Solo puedes seleccionar productos de proveedores externos",
+  "selectProduct": "Seleccionar Producto",
+  "unitPrice": "Precio Unitario",
+  "quantity": "Cantidad",
+  "orderInfo": "Información de la Orden",
+  "change": "Cambiar",
+  "createAddress": "Crear Dirección",
+  "state": "Estado",
+  "postal": "Código Postal",
+  "city": "Ciudad",
+  "noteForSupplier": "Nota para el Proveedor",
+  "billingInfo": "Información de Facturación",
+  "discountAmount": "Cantidad de Descuento",
+  "taxAmount": "Cantidad de Impuesto",
+  "totalAmount": "Cantidad Total",
+  "submit": "Enviar",
+  "addressBook": "Libreta de Direcciones",
+  "updateAddress": "Actualizar Dirección",
+  "default": "Predeterminado",
+  "addNewAddress": "Agregar Nueva Dirección",
+  "confirm": "Confirmar",
+  "addressName": "Nombre de la Dirección",
+  "receiverName": "Nombre del Receptor",
+  "address": "Dirección",
+  "postalZipcode": "Código Postal",
+  "createExternalSuppler": "CREAR PROVEEDOR EXTERNO",
+  "businessName": "Nombre de la Empresa",
+  "CreateExternalOrder": "Crear Orden Externa",
+  "addNew": "Agregar nuevo",
+  "notes": "Notas",
+  "enterYourNote": "Ingresa tu nota...",
+  "code": "Código",
+  "productName": "Nombre del Producto",
+  "category": "Categoría",
+  "retailPrice": "Precio Minorista",
+  "brand": "Marca",
+  "manufacturer": "Fabricante",
+  "status": "Estado",
+  "haveVariant": "Tiene Variante",
+  "action": "Acción",
+  "active": "Activo",
+  "deactivated": "Desactivado",
+  "name": "Nombre",
+  "message": {
+    "theExternalOrderHasBeenDeletedSuccessfully": "La Orden Externa ha sido eliminada exitosamente",
+    "changeAddressSuccessfully": "Se ha cambiado la dirección exitosamente",
+    "createAddressSuccess": "Creación de Dirección Exitosa",
+    "updateAddressSuccess": "Actualización de Dirección Exitosa",
+    "createExternalOrderSuccessfully": "Creación de Orden Externa Exitosa",
+    "updateExternalOrderSuccessfully": "Actualizar Orden Externa Con Éxito",
+    "updateExternalSupplierSuccessfully": "Actualización del proveedor externo exitosa",
+    "somethingsWentWrong": "Algo salió mal, por favor inténtalo de nuevo o contacta a Salonbookly si el problema persiste: Mensaje de error común",
+    "createExternalSupplierSuccessfully": "Creación de proveedor externo exitosa"
+  },
+  "validate": {
+    "name": {
+      "required": "Se requiere el nombre de la dirección",
+      "min": "El nombre de la dirección debe tener al menos 2 caracteres",
+      "max": "El nombre de la dirección debe tener como máximo 50 caracteres",
+      "matches": "Nombre de dirección no válido"
+    },
+    "phoneNumber": {
+      "required": "Se requiere el número de teléfono",
+      "matches": "Número de teléfono no válido",
+      "typeError": "Número de teléfono no válido"
+    },
+    "address": {
+      "required": "Se requiere la dirección",
+      "min": "La dirección debe tener al menos 2 caracteres",
+      "max": "La dirección debe tener como máximo 50 caracteres",
+      "matches": "Dirección no válida"
+    },
+    "receiverName": {
+      "required": "Se requiere el nombre del receptor",
+      "min": "El nombre del receptor debe tener al menos 2 caracteres",
+      "max": "El nombre del receptor debe tener como máximo 50 caracteres",
+      "matches": "Nombre del receptor no válido"
+    },
+    "city": {
+      "required": "Se requiere la ciudad",
+      "min": "La ciudad debe tener al menos 2 caracteres",
+      "max": "La ciudad debe tener como máximo 500 caracteres"
+    },
+    "state": {
+      "required": "Se requiere el estado"
+    },
+    "postalCode": {
+      "required": "Se requiere el código postal",
+      "min": "El código postal debe tener al menos 5 caracteres",
+      "max": "El código postal debe tener como máximo 9 caracteres",
+      "test": "El código postal no coincide con la ciudad/estado"
+    },
+    "externalSupplier": {
+      "required": "Se requiere el proveedor externo"
+    },
+    "code": {
+      "min": "El código del cupón debe tener entre 6 y 50 caracteres",
+      "max": "El código del cupón debe tener entre 6 y 50 caracteres"
+    },
+    "discountAmount": {
+      "minMax": "La cantidad de descuento debe estar entre $0.01 y $10,000,000"
+    },
+    "taxAmount": {
+      "minMax": "La cantidad de impuesto debe estar entre $0.01 y $10,000,000"
+    },
+    "items": {
+      "test": "La orden externa debe tener al menos un artículo",
+      "quantity": "Se requiere el campo de cantidad",
+      "price": "Se requiere el campo de precio unitario",
+      "minMax": "El precio unitario debe estar entre $0.01 y $10,000,000"
+    },
+    "email": "Correo electrónico no válido",
+    "nameBusiness": {
+      "required": "El campo es requerido",
+      "min": "El nombre de la empresa debe tener al menos 2 caracteres",
+      "max": "El nombre de la empresa debe tener como máximo 50 caracteres",
+      "matches": "Nombre de la empresa no válido"
+    }
+  }
+}

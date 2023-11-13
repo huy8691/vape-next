@@ -1,0 +1,32 @@
+@import 'styles/colors.scss';
+
+.item-product {
+  font-size: 1.4rem;
+  height: 100%;
+  position: relative;
+  &__icon-hear {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    z-index: 10;
+  }
+  &__category {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+  &__name {
+    margin-bottom: 5px !important;
+    font-size: 1.4rem !important;
+  }
+  &__price {
+    color: $error;
+    margin-bottom: 5px;
+    &__unit {
+      font-size: 12px;
+      text-transform: lowercase;
+    }
+  }
+  &__code {
+    font-size: 1rem;
+  }
+}
